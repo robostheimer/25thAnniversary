@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+.axis text {
+  font: 11px sans-serif;
+  color:#0057a5;
+}
+
+.axis path {
+  display: none;
+}
+
+.axis line {
+  fill: none;
+  stroke: #0057a5;
+  shape-rendering: crispEdges;
+}
+
+.grid-background {
+  fill: #A5D0EA;
+}
+
+.grid line,
+.grid path {
+  fill: none;
+  stroke: #fff;
+  stroke-opacity:.25;
+  shape-rendering: crispEdges;
+}
+
+.grid .minor.tick line {
+  stroke-opacity: .5;
+}
+
+.brush .extent {
+  stroke: #0057a5;
+  fill-opacity: .7;
+  
+  shape-rendering: crispEdges;
+  fill:#ffffff
+}
+
+</style>
+<body>
+<script src="/bower_components/d3/d3.v3.min.js"></script>
+<script>
+d3.json("json/timeline.json", function(error, data) {
+  console.log(data.feed.entry);
+  var dataset = data.feed.entry;
+  d3. select(".canvas"). selectAll("p") 
+  	.data( dataset) 
+  	.enter() 
+  	.append("div")   	
+  	.text(function(d){return 'please make the background color: '+d.color.$t+':'+ d.description.$t})
+	.style("background",function(d){return d.color.$t});
+
+
+var margin = {top: 200, right: 40, bottom: 100, left: 40},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+var x = d3.time.scale()
+    .domain([new Date(1990, 1, 1), new Date(2015, 12, 31) - 1])
+    .range([0, width]);
+
+var brush = d3.svg.brush()
+    .x(x)
+    .extent([new Date(2009, 1, 01), new Date(2009, 12, 31)])
+    .on("brushend", brushended);
+
+var svg = d3.select(".svg").append("svg")
+    .data(dataset) 
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+svg.append("rect")
+    //.attr("class", "grid-background")
+    .attr("width", width/4)
+    .attr("height", height)
+    .style('fill', '#0057a5');
+
+svg.append('rect')
+	.attr('width',width/4)
+	.attr('height', height)
+	.attr('x',width*.25)
+	.style('fill', '#0492CE');			
+
+svg.append('rect')
+	.attr('width',width/4)
+	.attr('height', height)
+	.attr('x',width*.5)
+	.style('fill', '#198E81');
+
+svg.append('rect')
+	.attr('width',width/4)
+	.attr('height', height)
+	.attr('x',width*.75)
+	.style('fill', '#EBBD1E');
+svg.append("g")
+	
+    .attr("class", "x grid")
+    .attr("transform", "translate(0," + height + ")")
+   
+    .call(d3.svg.axis()
+        .scale(x)
+        .orient("bottom")
+        .ticks(d3.time.months, 6)
+        .tickSize(-height)
+        .tickFormat(""))
+  	.selectAll(".tick")
+    .classed("minor", function(d) { return d.getHours(); });
+
+svg.append("g")
+
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.svg.axis()
+      .scale(x)
+      .orient("bottom")
+      //.ticks(d3.time.months)
+      .tickPadding(0))
+  .selectAll("text")
+    .attr("x", 6)
+    .style("text-anchor", null);
+
+var gBrush = svg.append("g")
+    .attr("class", "brush")
+    .call(brush)
+    .call(brush.event);
+
+gBrush.selectAll("rect")
+    .attr("height", height);
+
+function brushended() {
+  if (!d3.event.sourceEvent) return; // only transition after input
+  var extent0 = brush.extent(),
+      extent1 = extent0.map(d3.time.year.round);
+
+  // if empty when rounded, use floor & ceil instead
+  if (extent1[0] >= extent1[1]) {
+    extent1[0] = d3.time.year.floor(extent0[0]);
+    extent1[1] = d3.time.year.ceil(extent0[1]);
+  }
+
+  d3.select(this).transition()
+      .call(brush.extent(extent1))
+      .call(brush.event);
+}
+     
+});
+
+
+
+
+</script>
+<div class="canvas"></div>
+<div class="svg"></div>
