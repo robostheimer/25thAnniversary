@@ -119,13 +119,13 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 						items.years.push(
 							{'year':items[y].gsx$year.$t, 'state': 'notselected', color:items[y].gsx$color.$t, classy:'hider',noSubnav:true,
 								subNav :[
-								{name:"alumni", state:'notselected', checked:'notselected', color:'dkblue', 'year':items[y].gsx$year.$t, on_off:'off' }, 
-								{name:"images",state:'notselected', checked:'notselected', color:'yellow', 'year':items[y].gsx$year.$t, on_off:'off' },
-								{name:'dates', state:'notselected', checked:'notselected', color:'foam', 'year':items[y].gsx$year.$t, on_off:'off' }, 
-								{name:'profile', state:'notselected', checked:'notselected', color:'blue', 'year':items[y].gsx$year.$t, on_off:'off' },
-								{name:"quotes", state:'notselected', checked:'notselected', color:'green', 'year':items[y].gsx$year.$t, on_off:'off' },  
-								{name:"map", state:'notselected', checked:'notselected', color:'dkstblue', 'year':items[y].gsx$year.$t, on_off:'off' }, 
-								{name:"stats", state:'notselected', checked:'notselected', color:'ltgreen', 'year':items[y].gsx$year.$t, on_off:'off' }, 
+								{name:"alumni", state:'notselected', checked:'notselected', color:'dkblue', 'year':items[y].gsx$year.$t, on_off:'off','classy':'icon-newspaper dkblue' }, 
+								{name:"images",state:'notselected', checked:'notselected', color:'yellow', 'year':items[y].gsx$year.$t, on_off:'off','classy':'icon-images yellow' },
+								{name:'dates', state:'notselected', checked:'notselected', color:'foam', 'year':items[y].gsx$year.$t, on_off:'off', 'classy':'icon-calendar foam' }, 
+								{name:'profile', state:'notselected', checked:'notselected', color:'blue', 'year':items[y].gsx$year.$t, on_off:'off', 'classy':'icon-news blue' },
+								{name:"quotes", state:'notselected', checked:'notselected', color:'green', 'year':items[y].gsx$year.$t, on_off:'off', 'classy':'icon-bubble green' },  
+								{name:"map", state:'notselected', checked:'notselected', color:'dkstblue', 'year':items[y].gsx$year.$t, on_off:'off', 'classy':'icon-map dkstblue' }, 
+								{name:"stats", state:'notselected', checked:'notselected', color:'ltgreen', 'year':items[y].gsx$year.$t, on_off:'off', 'classy':'icon-stats ltgreen' }, 
 								]
 						});
 					}
@@ -193,7 +193,7 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 							
 						}
 				}*/
-				console.log(items);
+				//console.log(items);
 				return items;
 		});	
 		

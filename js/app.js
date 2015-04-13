@@ -2,7 +2,7 @@
 
 /* App Module */
 //var teachernamehash = window.location.hash.split('/')[2];
-var TAS_Anniversary = angular.module('TAS_Anniversary', ['ngRoute', 'ngSanitize', 'ngAnimate','ngTouch','angulartics', 'angulartics.google.analytics','Alumni' ]);
+var TAS_Anniversary = angular.module('TAS_Anniversary', ['ngRoute', 'ngSanitize', 'ngAnimate','ngTouch','angulartics', 'angulartics.google.analytics','Timeline', 'Story' ]);
 TAS_Anniversary.config(['$routeProvider',
   function($routeProvider) {
    $routeProvider.
@@ -13,22 +13,22 @@ TAS_Anniversary.config(['$routeProvider',
      when('/:feature',
     {
     	templateUrl:'partials/features.html',
+    	controller:'storyController',
+    	
+    }).
+     when('/:home',
+    {
+    	templateUrl:'partials/cards.html',
     	//controller:'hashedLocation',
     	
     }).
      
     otherwise({
-      	templateUrl: 'partials/home.html',
+      	templateUrl: 'partials/cards.html',
         redirectTo: '/home/'
         //controller:'partials/home.html'
      });
 
-
-
-
-
-
-     // use the HTML5 History API
 		
 
   }])

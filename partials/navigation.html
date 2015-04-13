@@ -31,13 +31,13 @@
 					</div>
 					<nav class="subnav" ng-hide="noSubnav==true" >
 						<ul>
-							<li ng-click="changeNavClass(item,item.subNav[0])" class="{{item.subNav[0].state}}">
+							<li  ng-repeat="subNav in item.subNav" ng-click="changeNavClass(item, subNav)" class="{{subNav.state}}">
 								<div>
-									<span class="icon-newspaper dkblue"></span>
+									<span class="{{subNav.classy}}"></span>
 								</div>
 							</li>
 							
-							<li ng-click="changeNavClass(item,item.subNav[1])" class="{{item.subNav[1].state}}">
+							<!--<li ng-click="changeNavClass(item,item.subNav[1])" class="{{item.subNav[1].state}}">
 								<div>
 									<span class="icon-images yellow"></span>
 								</div>
@@ -68,7 +68,7 @@
 								<div>
 									<span class="icon-stats ltgreen"></span>
 								</div>
-							</li>	
+							</li>	-->
 						</ul>
 					</nav>
 				</li>

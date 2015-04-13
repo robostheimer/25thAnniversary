@@ -3,19 +3,18 @@
 /* Directives */
 
 TAS_Anniversary.directive('naviGation', function($injector, $compile, $q) {
-	
 
 	var linkFunction = function(scope, elm, attr) {
 		scope.navWidth = $('.navigation').width();
-		
+
 		//scope.listWidth = $('.nav_ul ').width();
 		//scope.threequarterWidth= scope.yearsWidth*.75;
-		
-		scope.marginLeft=0;
-		
+
+		scope.marginLeft = 0;
+
 		scope.next = function(item, iteration) {
 
-			if (scope.marginLeft < (scope.yearsWidth*.95)-scope.navWidth) {
+			if (scope.marginLeft < (scope.yearsWidth * .95) - scope.navWidth) {
 				scope.marginLeft += iteration;
 
 			} else {
@@ -23,14 +22,14 @@ TAS_Anniversary.directive('naviGation', function($injector, $compile, $q) {
 			}
 
 			var item = '#' + item;
-			
+
 			$(item).css({
 				'transition' : 'transform 0ms',
 				'-webkit-transition' : 'transform 0ms',
 				'transform-origin' : '0px 0px 0px',
 				'transform' : 'translate(-' + scope.marginLeft + 'px, 0px) scale(1) translateZ(0px)'
 			});
-			
+
 		};
 		scope.prev = function(item, iteration) {
 			if (attr.length == "") {
@@ -45,7 +44,7 @@ TAS_Anniversary.directive('naviGation', function($injector, $compile, $q) {
 				scope.marginLeft -= iteration;
 
 			} else {
-				scope.marginLeft = (scope.yearsWidth*.95)-scope.navWidth;
+				scope.marginLeft = (scope.yearsWidth * .95) - scope.navWidth;
 			}
 
 			var item = '#' + item;
@@ -62,8 +61,82 @@ TAS_Anniversary.directive('naviGation', function($injector, $compile, $q) {
 	return {
 		restrict : 'AE',
 		scope : true,
-		templateUrl: 'partials/navigation.html',
+		templateUrl : 'partials/navigation.html',
 		link : linkFunction,
+	};
+}).directive('bottomPostion', function() {
+	return {
+		restrict : 'AE',
+
+		link : function(scope, element) {
+
+			$(element).css({
+				'top' : $(window).height() - ($('.navigation_holder').height() * 2) - 10,
+				'height' : $(window).height()
+			});
+			//element.parent().append('<span class="spinner"></span>');
+
+		}
+	};
+}).directive('sectionHeight', function() {
+	return {
+		restrict : 'AE',
+
+		link : function(scope, element) {
+
+			$(element).css({
+				'height' : ($(window).height() - ($('article h2').height() + $('article h4').height() + $(window).height() * .235) - 20)
+			});
+
+		}
+	};
+}).directive("scroll", function($window) {
+	return {
+		link: function(scope, element, attrs) {
+			scope.whereto=$(window).height() - ($('.navigation_holder').height() * 2) - 10;
+			scope.chevron={name:'up', state:'inactive', top:scope.whereto};
+			scope.chevron.classy='icon-chevron-up';
+			
+
+			
+			/*angular.element($window).bind("scroll", function() {
+			if (this.pageYOffset >= 1) {
+				$(element).removeClass('icon-chevron-up');
+				$(element).addClass('icon-chevron-down');
+				$('article').animate({'top': '0'});
+				//scope.chevron.state = 'active';
+				
+			} else {
+				$(element).addClass('icon-chevron-up');
+				$(element).removeClass('icon-chevron-down');
+				scope.chevron.state = 'inactive';
+				//$('article').animate({'top': scope.whereto}, 'slow');
+			}
+			scope.$apply();
+			});
+			element.bind('click', function(){
+				
+				scope.controlChevron();
+					
+				});
+				
+			*/
+		scope.controlChevron=function()
+		{
+			if(scope.chevron.state=='inactive')
+				{
+					
+					scope.chevron.state='active';
+					scope.chevron.classy='icon-chevron-down';
+					$('article').animate({'top': '0'}, 'slow');
+				}
+				else{
+					scope.chevron.state='inactive';
+					scope.chevron.classy='icon-chevron-up';
+					$('article').animate({'top': scope.whereto}, 'slow');
+				}
+		};
+		}
 	};
 }).directive('wpCarousel', function(HomepageData) {
 
@@ -181,32 +254,27 @@ TAS_Anniversary.directive('naviGation', function($injector, $compile, $q) {
 
 		}
 	};
-}).directive('slideShow', function(Alumni,POW, $timeout, $q, $injector) {
+}).directive('slideShow', function(Alumni, POW, $timeout, $q, $injector) {
 
 	return {
 		restrict : 'AE',
 		scope : true,
 		templateUrl : 'partials/slideshow.html',
-		link : function(scope,element, attrs, tabsCtrl) {
-			scope.checkContents=false;
-			if(attrs.service =='POW')
-			{
-				scope.name="Photos of the Week";
-				scope.tagline="Snapshots of learning"
+		link : function(scope, element, attrs, tabsCtrl) {
+			scope.checkContents = false;
+			if (attrs.service == 'POW') {
+				scope.name = "Photos of the Week";
+				scope.tagline = "Snapshots of learning"
+			} else {
+				scope.name = "Alumni Association";
+				scope.tagline = "The Cruise is just the beginning..."
 			}
-			else{
-				scope.name="Alumni Association";
-				scope.tagline="The Cruise is just the beginning..."
-			}
-			scope.windowWidth=window.innerWidth;
-			$injector.get(attrs.service).getData().then(function(data)
-			{
-				
-			scope.slides = data;
-			
-			scope.checkContents =true;
-						
-		
+			scope.windowWidth = window.innerWidth;
+			$injector.get(attrs.service).getData().then(function(data) {
+
+				scope.slides = data;
+
+				scope.checkContents = true;
 
 				scope.slideimages = [];
 				//////////////Preload the first 3 images//////////////
@@ -214,41 +282,39 @@ TAS_Anniversary.directive('naviGation', function($injector, $compile, $q) {
 				////////////////No preloading for image number 4 and greater///////////
 				for (var z = 0; z < scope.slides.length; z++) {
 					scope.slides[z].finalImage = scope.slides[z].src;
-					  scope.slides[z].isLoading=true;
-					   scope.image= new Image() 
-					  scope.image.src= scope.slides[z].src;
-					  scope.image.isLoading=true;
-					  
-     					scope.preload(scope.image, z);
+					scope.slides[z].isLoading = true;
+					scope.image = new Image()
+					scope.image.src = scope.slides[z].src;
+					scope.image.isLoading = true;
+
+					scope.preload(scope.image, z);
 				}
 				scope.slides[0].visible = true;
 				scope.slides[0].classy = 'active';
 				scope.playhider = true;
 
 			});
-			scope.preload = function(img, number)
-			{
-				 $(img).bind('load', function(){
-					img.isLoading=false;
-					scope.slides[number].isLoading=false;				
+			scope.preload = function(img, number) {
+				$(img).bind('load', function() {
+					img.isLoading = false;
+					scope.slides[number].isLoading = false;
 					scope.$apply();
-					});
+				});
 			};
 			scope.timer
 			scope.remaining = scope.timer / 1000;
 
 			var sliderFunc = function() {
-				
+
 				scope.timeout = $timeout(function() {
 					scope.remaining--;
 					scope.next();
-					
+
 					scope.timer = $timeout(sliderFunc, 5000);
 				}, 5000);
 			};
 
 			sliderFunc();
-			
 
 			/*scope.$on('$destroy', function() {
 			 $timeout.cancel(timer); // when the scope is getting destroyed, cancel the timer
@@ -324,7 +390,6 @@ TAS_Anniversary.directive('naviGation', function($injector, $compile, $q) {
 		replace : true,
 		templateUrl : 'partials/pagination.html',
 		link : function(scope, element, attrs, routeParams) {
-			
 
 			scope.prevPageDisabled = function() {
 				return scope.currentPage === 0 ? "disabled" : "";
@@ -455,19 +520,19 @@ TAS_Anniversary.directive('naviGation', function($injector, $compile, $q) {
 			scope.windowHeight = newValue.h;
 			if (window.innerWidth > 960) {
 				scope.imgWidth = 199;
-				scope.containerWidth=199
+				scope.containerWidth = 199
 			} else if (window.innerWidth < 960 && window.innerWidth >= 800) {
 				scope.imgWidth = 218;
-				scope.containerWidth=238;
+				scope.containerWidth = 238;
 			} else if (window.innerWidth < 799 && window.innerWidth >= 640) {
 				scope.imgWidth = 261
 				scope.containerWidth = 281
 			} else if (window.innerWidth < 639 && window.innerWidth >= 480) {
 				scope.imgWidth = 185;
-				scope.containerWidth=195;
+				scope.containerWidth = 195;
 			} else {
 				scope.imgWidth = 261;
-				scope.containerWidth=281;
+				scope.containerWidth = 281;
 			}
 			scope.styles = function() {
 				return {
@@ -524,19 +589,19 @@ TAS_Anniversary.directive('naviGation', function($injector, $compile, $q) {
 			scope.windowHeight = newValue.h;
 			if (window.innerWidth > 960) {
 				scope.windowWidth = 220;
-				scope.containerWidth=225
+				scope.containerWidth = 225
 			} else if (window.innerWidth < 960 && window.innerWidth >= 800) {
 				scope.windowWidth = 220;
-				scope.containerWidth=240
+				scope.containerWidth = 240
 			} else if (window.innerWidth < 800 && window.innerWidth >= 640) {
 				scope.windowWidth = 170
-				scope.containerWidth=170
+				scope.containerWidth = 170
 			} else if (window.innerWidth < 640 && window.innerWidth >= 480) {
 				scope.windowWidth = 315
-				scope.containerWidth=335
+				scope.containerWidth = 335
 			} else {
 				scope.windowWidth = 190
-				scope.containerWidth =200
+				scope.containerWidth = 200
 			}
 
 		}, true);
@@ -791,19 +856,19 @@ TAS_Anniversary.directive('naviGation', function($injector, $compile, $q) {
 		scope.$watch(scope.getWindowDimensions, function(newValue, oldValue) {
 			scope.windowHeight = newValue.h;
 			if (window.innerWidth > 1200) {
-				scope.timelineMove = parseInt(attrs.x)+$(window).width();
-				scope.timelineExtend= $(window.width*.8);
-			}
-			else if (window.innerWidth > 960&&window.innerWidth<1200) {
-				scope.timelineWidth = parseInt(attrs.x)+$(window).width();
+				scope.timelineMove = parseInt(attrs.x) + $(window).width();
+				scope.timelineExtend = $(window.width * .8);
+			} else if (window.innerWidth > 960 && window.innerWidth < 1200) {
+				scope.timelineWidth = parseInt(attrs.x) + $(window).width();
 			} else if (window.innerWidth < 960 && window.innerWidth >= 800) {
-				scope.timelineWidth = 600+$('svg_us').width();
+				scope.timelineWidth = 600 + $('svg_us').width();
 			} else if (window.innerWidth < 799 && window.innerWidth >= 640) {
-				scope.timelineWidth = 500+$('svg_us').width();
+				scope.timelineWidth = 500 + $('svg_us').width();
 			} else if (window.innerWidth < 640 && window.innerWidth >= 470) {
-				scope.timelindWidth = 390+$('svg_us').width();;
+				scope.timelindWidth = 390 + $('svg_us').width();
+				;
 			} else {
-				scope.timelineWidth = 240+$('svg_us').width();
+				scope.timelineWidth = 240 + $('svg_us').width();
 			}
 			scope.styles = function() {
 				return {
@@ -843,7 +908,7 @@ TAS_Anniversary.directive('naviGation', function($injector, $compile, $q) {
 	return {
 		restrict : 'A',
 		link : function(scope, element, attrs) {
-			
+
 			element.bind('load', function() {
 				if (attrs.number == 0) {
 					$('.loading').addClass('ng-hide');
@@ -891,66 +956,64 @@ TAS_Anniversary.directive('naviGation', function($injector, $compile, $q) {
 
 		}
 	};
-}).directive('featureImage', function(){
-    return function(scope, element, attrs){
-        var url = attrs.featureImage;
-        element.css({
-            'background-image': 'url(' + url +')',
-            'background-size' : 'cover'
-        });
-    };
-}).directive("ngTouchmove", function () {
-  return {
-    controller: function ($scope, $element, $attrs) {
-      $element.bind('touchstart', onTouchStart);
-      
-      function onTouchStart(event) {
-        event.preventDefault();
-        $element.bind('touchmove', onTouchMove);
-        $element.bind('touchend', onTouchEnd);
-      };
-      
-      function onTouchMove(event) {
-          var method = '$scope.' + $element.context.getAttribute('ng-touchmove');
-          $scope.$apply(function () {
-              eval(method);
-          });
-      };
-      
-      function onTouchEnd(event) {
-        event.preventDefault();
-        $element.unbind('touchmove', onTouchMove);
-        $element.unbind('touchend', onTouchEnd);
-      };
-    }
-  };
-})
-.directive("ngTouchstart", function () {
-  return {
-    controller: function ($scope, $element, $attrs) {
-      $element.bind('touchstart', onTouchStart);
-      
-      function onTouchStart(event) {
-        var method = '$scope.' + $element.context.getAttribute('ng-touchstart');
-        $scope.$apply(function () {
-          eval(method);
-        });
-      };
-    }
-  };
-})
-.directive("ngTouchend", function () {
-  return {
-    controller: function ($scope, $element, $attrs) {
-      $element.bind('touchend', onTouchEnd);
-      
-      function onTouchEnd(event) {
-        var method = '$scope.' + $element.context.getAttribute('ng-touchend');
-        $scope.$apply(function () {
-          eval(method);
-        });
-      };
-    }
-  };
+}).directive('featureImage', function() {
+	return function(scope, element, attrs) {
+		var url = attrs.featureImage;
+		element.css({
+			'background-image' : 'url(' + url + ')',
+			'background-size' : 'cover'
+		});
+	};
+}).directive("ngTouchmove", function() {
+	return {
+		controller : function($scope, $element, $attrs) {
+			$element.bind('touchstart', onTouchStart);
+
+			function onTouchStart(event) {
+				event.preventDefault();
+				$element.bind('touchmove', onTouchMove);
+				$element.bind('touchend', onTouchEnd);
+			};
+
+			function onTouchMove(event) {
+				var method = '$scope.' + $element.context.getAttribute('ng-touchmove');
+				$scope.$apply(function() {
+					eval(method);
+				});
+			};
+
+			function onTouchEnd(event) {
+				event.preventDefault();
+				$element.unbind('touchmove', onTouchMove);
+				$element.unbind('touchend', onTouchEnd);
+			};
+		}
+	};
+}).directive("ngTouchstart", function() {
+	return {
+		controller : function($scope, $element, $attrs) {
+			$element.bind('touchstart', onTouchStart);
+
+			function onTouchStart(event) {
+				var method = '$scope.' + $element.context.getAttribute('ng-touchstart');
+				$scope.$apply(function() {
+					eval(method);
+				});
+			};
+		}
+	};
+}).directive("ngTouchend", function() {
+	return {
+		controller : function($scope, $element, $attrs) {
+			$element.bind('touchend', onTouchEnd);
+
+			function onTouchEnd(event) {
+				var method = '$scope.' + $element.context.getAttribute('ng-touchend');
+				$scope.$apply(function() {
+					eval(method);
+				});
+			};
+		}
+	};
 });
 
