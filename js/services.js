@@ -2,7 +2,266 @@
 
 /* Services */
 /////////////////////////////////HomePage/////////////////////////////////////////////
+TAS_Anniversary.factory('Teacher', ['$http', '$routeParams', '$location', '$rootScope', '$sce',
+function($http, $routeParams, $location, $rootScope, $sce) {
+	return{
+		createTeacherList :function(item){
+			var teachers = {data:[], years:[]};
 
+			var year = $location.path().split('/')[1].split('/')[0];
+
+			return $http.jsonp('https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+TeacherLastName%2CTeacherFirstName%2CShipType%2C+Ship%2C+ShipUrl%2C+CruiseURL%2C+Mission%2C+CruiseDates%2C+SubjectsTaught%2C+School%2C+City%2C+State%2C+Image%2C+Grades%2C+SchoolURL%2C+WordPressURL%2C+Year+FROM+1Xh5kWI_ZHd-PZRuPcgrV_oS13HHN6JGtRK4s75Mn+ORDER%20BY+Year%22&&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK').then(function(result) {
+				if (result.data.rows != undefined) {
+
+					forEach (result.data.rows,function(item){
+        			var o = result.data.rows.indexOf(item);	
+        				teachers.data.push({
+							lastname : item[0],
+							lastname_forDOM : DigPatt(item[0].replace(' ', '')),
+							firstname : item[1],
+							headline: item[1]+' '+DigPatt(item[0].replace(' ', ''))+', ' +item[16]+' Teacher at Sea',
+							shiptype : item[2],
+							ship : item[3],
+							shipurl : item[0][4],
+							cruiseurl : item[5],
+							mission : item[6],
+							dates : item[7],
+							subjects : item[8],
+							school : item[9],
+							city : item[10],
+							state : item[11],
+							image : item[12].split('?')[0],
+							grades : item[13],
+							schoolurl : item[14],
+							wordpressurl : item[15],
+							year : item[16],
+							subjects1 : item[8].split('&&')[0],
+							subjects2 : item[8].split('&&')[1],
+							school1 : item[9].split('&&')[0],
+							school2 : item[9].split('&&')[1],
+							schoolurl1 : item[14].split('&&')[0],
+							schoolurl2 : item[14].split('&&')[1],
+							tabIndex : 150 + o,
+							checkContents : true,
+							classy: 'icon-news',
+							template:'profile',
+							color: 'blue',
+							colorCode: '4, 146, 206',
+							type :'profile',
+							id:o,
+							randomnumber: Math.floor(Math.random()*51)
+							
+
+						});
+						teachers.years.push(item[16])
+
+					});
+				return teachers;	
+				}
+				else{
+					
+					var year = $location.path().split('/')[1].split('/')[0]
+					return $http.get('/JSONBackups/TeacherFusionTable.json').then(function(result) {
+					forEach (result.data.rows,function(item){
+        			var o = result.data.rows.indexOf(item);	if (item[16] == year) {
+							teachers.push({
+								lastname : item[0],
+								lastname_forDOM : DigPatt(item[0].replace(' ', '')),
+								firstname : item[1],
+								headline: item[1]+' '+DigPatt(item[0].replace(' ', ''))+', ' +item[16]+' Teacher at Sea',
+								shiptype : item[2],
+								ship : item[3],
+								shipurl : item[0][4],
+								cruiseurl : item[5],
+								mission : item[6],
+								dates : item[7],
+								subjects : item[8],
+								school : item[9],
+								city : item[10],
+								state : item[11],
+								image : item[12].split('?')[0],
+								grades : item[13],
+								schoolurl : item[14],
+								wordpressurl : item[15],
+								year : item[16],
+								subjects1 : item[8].split('&&')[0],
+								subjects2 : item[8].split('&&')[1],
+								school1 : item[9].split('&&')[0],
+								school2 : item[9].split('&&')[1],
+								schoolurl1 : item[14].split('&&')[0],
+								schoolurl2 : item[14].split('&&')[1],
+								tabIndex : 150 + o,
+								checkContents : true,
+								classy: 'icon-news',
+								template:'profile',
+								color: 'blue',
+								colorCode: '4, 146, 206',
+								type :'profile',
+								id:o,
+								randomnumber: Math.floor(Math.random()*51)
+
+							});
+							teachers.years.push(item[16])
+
+						}
+					});
+					return teachers;
+				});
+
+				}
+				
+			}, function(error) {
+				var teachers = [];
+				var year = $location.path().split('/')[1].split('/')[0]
+				return $http.get('/JSONBackups/TeacherFusionTable.json').then(function(result) {
+					console.log($routeParams.year)
+					forEach (result.data.rows,function(item){
+        			var o = result.data.rows.indexOf(item);	if (item[16] == year) {
+							teachers.push({
+								lastname : item[0],
+								lastname_forDOM : DigPatt(item[0].replace(' ', '')),
+								firstname : item[1],
+								headline: item[1]+' '+DigPatt(item[0].replace(' ', ''))+', ' +item[16]+' Teacher at Sea', 
+								shiptype : item[2],
+								ship : item[3],
+								shipurl : item[0][4],
+								cruiseurl : item[5],
+								mission : item[6],
+								dates : item[7],
+								subjects : item[8],
+								school : item[9],
+								city : item[10],
+								state : item[11],
+								image : item[12].split('?')[0],
+								grades : item[13],
+								schoolurl : item[14],
+								wordpressurl : item[15],
+								year : item[16],
+								subjects1 : item[8].split('&&')[0],
+								subjects2 : item[8].split('&&')[1],
+								school1 : item[9].split('&&')[0],
+								school2 : item[9].split('&&')[1],
+								schoolurl1 : item[14].split('&&')[0],
+								schoolurl2 : item[14].split('&&')[1],
+								tabIndex : 150 + o,
+								checkContents : true,
+								template:'profile',
+								color: 'blue',
+								colorCode: '4, 146, 206',
+								type :'profile',
+								id:o,
+								randomnumber: Math.floor(Math.random()*51)
+
+							});
+							teachers.years.push(item[16])
+
+						}
+					});
+					return teachers;
+				});
+			});
+		}
+	};
+}]);
+TAS_Anniversary.factory('News', ['$http', '$routeParams', '$location', '$rootScope', '$sce',
+function($http, $routeParams, $location, $rootScope, $sce) {
+	return{
+	getNewsData :function(item){
+			///////////////////////////////Start Here////////////////////
+			var news = [];
+			var newsObj = {};
+			newsObj.checkContents = false;
+			return $http.jsonp('https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+ArticleYear%2C+Teacher%2C+MediaOutlet%2C+ArticleTitle%2C+MediaOutletURL%2C+ArticleURL+FROM+1EaTTZDozzJ0k3K2FMoD0O6JAfeiHcc6SB95f0hYv&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK').then(function(result) {
+				if (result.data.rows != undefined) {
+					
+					forEach (result.data.rows,function(item){ 
+					var o =result.data.rows.indexOf(item)
+						news.push({
+							articleyear : item[0],
+							year:item[0],
+							teacher : item[1],
+							mediaoutlet : item[2],
+							headline : item[3],
+							medioutleturl : item[4],
+							articleurl : item[5],
+							checkContents : true,
+							classy: 'icon-newspaper',
+							template:'news',
+							color: 'dkblue',
+							colorCode: '0, 87, 165',
+							type:'news',
+							randomnumber: Math.floor(Math.random()*51),
+							id:o
+						});
+
+					});
+				return news;
+				} else {
+					
+					/////////////if fusion table is empty but doesn't throw an error/////////
+					return $http.get('/JSONBackups/NewsFusionTable.json').then(function(result) {
+						forEach (result.data.rows,function(item){  
+							news.push({
+								articleyear : item[0],
+								year:item[0],
+								teacher : item[1],
+								mediaoutlet : item[2],
+								headline : item[3],
+								medioutleturl : item[4],
+								articleurl : item[5],
+								checkContents : true,
+								classy: 'icon-newspaper',
+								template:'news',
+								color: 'dkblue',
+								colorCode: '0, 87, 165',
+								type:'news',
+								randomnumber: Math.floor(Math.random()*51),
+								id:o
+								
+							});
+
+						});
+					
+					
+					
+				});
+				return news;	
+				}
+				//console.log(news);
+				
+
+			}, function(error) {
+				var news = [];
+				var newsObj = {};
+				newsObj.checkContents = false;
+				return $http.get('/JSONBackups/NewsFusionTable.json').then(function(result) {
+							forEach (result.data.rows,function(item){ 
+							news.push({
+								articleyear : item[0],
+								year:item[0],
+								teacher : item[1],
+								mediaoutlet : item[2],
+								headline : item[3],
+								medioutleturl : item[4],
+								articleurl : item[5],
+								checkContents : true,
+								classy: 'icon-newspaper',
+								template:'news',
+								colorCode: '0, 87, 165',
+								color:'dkblue',
+								type:'news',
+								randomnumber: Math.floor(Math.random()*51),
+								id:o
+							});
+
+						});
+					
+					return news;
+				});
+			});
+		},
+	};	
+}]);	
 
 TAS_Anniversary.factory('AlumniSpot', ['$http', '$routeParams', '$location', '$rootScope', '$sce',
 function($http, $routeParams, $location, $rootScope, $sce) {
@@ -12,85 +271,690 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 		getSpotData : function(region) {
 			var spot = [];
 			return $http.jsonp('https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+FirstName,LastName,ShortBody,LongBody,image,caption,PublishDate,Region+FROM+1z6kUehyfSNqaAGinvARZLYyjb7Dhk2F9rt49xHIV+ORDER%20BY+PublishDate+%22&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK').then(function(result) {
-				if (result.data.rows != null) {
+				if (result.data.rows != undefined) {
 					var d = new Date();
-					td = d.valueOf();
+					var td = d.valueOf();
 					result.data.rows.reverse();
-					for (var i = 0; i < 30; i++) {
-						var pd = new Date(result.data.rows[i][6]);
+					forEach (result.data.rows,function(item){
+       				 var i = result.data.rows.indexOf(item);	
+       				 var pd = new Date(item[6]);
 						var tpd = pd.valueOf();
 
-						if (result.data.rows[i][6] != '#' && td >= tpd && spot.length<=9) {
+						if (item[6] != '#' && td >= tpd) {
 							spot.push({
 								id : i,
-								firstname : result.data.rows[i][0],
-								lastname : result.data.rows[i][1],
-								shortbody : result.data.rows[i][2],
-								longbody : result.data.rows[i][3],
-								image : result.data.rows[i][4].split('?')[0],
-								caption : result.data.rows[i][5],
-								date : result.data.rows[i][6],
-								region : result.data.rows[i][7],
-								more_url : result.data.rows[i][5].replace(/ /g, '_'),
-								hash : '/indiv_spotlight/' + result.data.rows[i][0].replace(/ /g, '_') + '_' + result.data.rows[i][1].replace(/ /g, '_'),
+								headline:item[0]+' '+ item[1],
+								description : item[2],
+								longbody : item[3],
+								src : item[4].split('?')[0],
+								caption : item[5],
+								date : item[6],
+								year: item[6].split('/')[2],					
+								region : item[7],
+								more_url : item[5].replace(/ /g, '_'),
+								hash : '/indiv_spotlight/' + item[0].replace(/ /g, '_') + '_' + item[1].replace(/ /g, '_'),
 								dataloaded : true,
-								hider : true
-							});
+								tabIndex : 150 + i,
+								classy: 'icon-newspaper',
+								template:'news',
+								colorCode: '0, 87, 165',
+								color:'dkblue',
+								type:'news',
+								randomnumber: Math.floor(Math.random()*51)
+								
 
+
+							});
 						}
 
-					}
-
+					});
+					
+				return spot
 				}
-				return spot;
-			});
+				else{
+					return $http.get('JSONBackups/AlumniSpotlightTable.json').then(function(result) {
+					
+						var d = new Date();
+						var td = d.valueOf();
+						result.data.rows.reverse();
+						forEach (result.data.rows,function(item){
+        					var i = result.data.rows.indexOf(item);		
+        					var pd = new Date(item[6]);
+							var tpd = pd.valueOf();
 
-		},
-	};
+							if (item[6] != '#' && td >= tpd) {
+								spot.push({
+									id : i,
+									headline:item[0]+' '+ item[1],
+									description : item[2],
+									longbody : item[3],
+									src : item[4].split('?')[0],
+									caption : item[5],
+									date : item[6],
+									year: item[6].split('/')[2],
+									region : item[7],
+									more_url : item[5].replace(/ /g, '_'),
+									hash : '/indiv_spotlight/' + item[0].replace(/ /g, '_') + '_' + item[1].replace(/ /g, '_'),
+									dataloaded : true,
+									tabIndex : 150 + i,
+									classy: 'icon-newspaper',
+									template:'news',
+									colorCode: '0, 87, 165',
+									color:'dkblue',
+									type:'news',
+									randomnumber: Math.floor(Math.random()*51)
+
+
+								});
+							}
+
+					
+
+					});
+
+					return spot
+				});
+				
+				
+
+			}
+			},function(error){ 
+				return $http.get('JSONBackups/AlumniSpotlightTable.json').then(function(result) {
+					
+						var d = new Date();
+						var td = d.valueOf();
+						result.data.rows.reverse();
+						forEach (result.data.rows,function(item){
+        					var i = result.data.rows.indexOf(item);		
+        					var pd = new Date(item[6]);
+							var tpd = pd.valueOf();
+
+							if (item[6] != '#' && td >= tpd) {
+								spot.push({
+									id : i,
+									headline:item[0]+' '+ item[1],
+									description : item[2],
+									longbody : item[3],
+									src : item[4].split('?')[0],
+									caption : item[5],
+									date : item[6],
+									year: item[6].split('/')[2],
+									region : item[7],
+									more_url : item[5].replace(/ /g, '_'),
+									hash : '/indiv_spotlight/' + item[0].replace(/ /g, '_') + '_' + item[1].replace(/ /g, '_'),
+									dataloaded : true,
+									tabIndex : 150 + i,
+									classy: 'icon-newspaper',
+									template:'news',
+									colorCode: '0, 87, 165',
+									color:'dkblue',
+									type:'news',
+									randomnumber: Math.floor(Math.random()*51)
+
+								});
+							}
+
+					
+
+					});
+
+					return spot;
+				});
+				
+				});
+		}
+	};	
+			
 }]);
 
 TAS_Anniversary.factory('PhotosofWeek', ['$http', '$routeParams', '$location', '$rootScope', '$sce',
 function($http, $routeParams, $location, $rootScope, $sce) {
 
 	return {
-		getPOW : function() {
+		getPOW :function(item){
 			var pow = [];
-			return $http.jsonp('https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+PhotoURL,PhotoCaption,PhotoDescription,ShortDescription,BlogURL,PhotoCredit,BlogTitle,PublishDate, Keywords+FROM+19WBCSYuVJh1O2KaThKQJpLLn0VF6w3rHhbKtZMVf+ORDER%20BY+PublishDate+%22&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK').then(function(result) {
+			return $http.jsonp('https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+PhotoURL,PhotoCaption,Facebook,ShortDescription,BlogURL,PhotoCredit,BlogTitle,PublishDate,Keywords,Tweet+FROM+19WBCSYuVJh1O2KaThKQJpLLn0VF6w3rHhbKtZMVf+ORDER%20BY+PublishDate+%22&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK').then(function(result) {
 				if (result.data.rows != null) {
 					var d = new Date();
 					var td = d.valueOf();
 					result.data.rows.reverse();
-					for (var i = 0; i < 30; i++) {
-						var pd = new Date(result.data.rows[i][7]);
+					forEach (result.data.rows,function(item){
+        			var i = result.data.rows.indexOf(item);	var pd = new Date(item[7]);
 						var tpd = pd.valueOf();
 						
-					
-						//var nshd=tpd+604800000;
-						if (result.data.rows[i][7] != '#' && (td>=tpd)&&pow.length<9) {
+						if (item[7] != '#' && td >= tpd) {
 							pow.push({
 								id : i,
-								image : result.data.rows[i][0],
-								caption : result.data.rows[i][1],
-								description : result.data.rows[i][2].replace(/<p>/g, '').replace(/<\/p>/g, ''),
-								shortdescription : result.data.rows[i][3].replace(/<p>/g, '').replace(/<\/p>/g, ''),
-								parent : result.data.rows[i][4],
-								credit : result.data.rows[i][5],
-								post_title : Slicer(result.data.rows[i][6], 40) + '...',
-								date : result.data.rows[i][7],
-								keywords : result.data.rows[i][8],
-								titleSnippet : Slicer(result.data.rows[i][1], 70) + '...',
-								dataloaded : true
+								src : item[0],
+								headline : item[1].replace(/<p>/g, '').replace(/<\/p>/g, ''),
+								description : item[2].replace(/<p>/g, '').replace(/<\/p>/g, ''),
+								shortdescription : item[3].replace(/<p>/g, '').replace(/<\/p>/g, ''),
+								parent : item[4],
+								credit : item[5],
+								post_title : item[6],
+								date : item[7],
+								year: item[7].split('/')[2],
+								keywords : item[8],
+								dataloaded : true,
+								tabIndex : (150 + (i + 7)),
+								classy:'icon-images',
+								template:'pow',
+								colorCode:'235, 189, 30',
+								color:'yellow',
+								type:'image',
+								randomnumber: Math.floor(Math.random()*51)
 							});
 						}
 
+					});
+				return pow;
+				}
+				else{
+					return $http.get('/JSONBAckups/POWFusionTable.json').then(function(result)
+					{
+					var d = new Date();
+						var td = d.valueOf();
+						result.data.rows.reverse();
+						forEach (result.data.rows,function(item){
+       						var i = result.data.rows.indexOf(item);		
+       						var pd = new Date(item[7]);
+							var tpd = pd.valueOf()
+
+							if (item[7] != '#' && td >= tpd) {
+								pow.push({
+									id : i,
+									src : item[0],
+									headline : item[1].replace(/<p>/g, '').replace(/<\/p>/g, ''),
+									description : item[2].replace(/<p>/g, '').replace(/<\/p>/g, ''),
+									shortdescription : item[3].replace(/<p>/g, '').replace(/<\/p>/g, ''),
+									parent : item[4],
+									credit : item[5],
+									post_title : item[6],
+									date : item[7],
+									year: item[7].split('/')[2],
+									keywords : item[8],
+									dataloaded : true,
+									tabIndex : (150 + (i + 7)),
+									classy:'icon-images',
+									template:'pow',
+									colorCode:'235, 189, 30',
+									color:'yellow',
+									type:'image',
+									randomnumber: Math.floor(Math.random()*51)
+								});
+							}
+
+						});
+						return pow;
+					});
+				}
+
+				
+			}, function(error){
+				return $http.get('/JSONBAckups/POWFusionTable.json').then(function(result)
+					{
+					var d = new Date();
+						var td = d.valueOf();
+						result.data.rows.reverse();
+						forEach (result.data.rows,function(item){
+        				var i = result.data.rows.indexOf(item);		var pd = new Date(item[7]);
+							var tpd = pd.valueOf()
+
+							if (item[7] != '#' && td >= tpd) {
+								pow.push({
+									id : i,
+									src : item[0],
+									headline : item[1].replace(/<p>/g, '').replace(/<\/p>/g, ''),
+									description : item[2].replace(/<p>/g, '').replace(/<\/p>/g, ''),
+									shortdescription : item[3].replace(/<p>/g, '').replace(/<\/p>/g, ''),
+									parent : item[4],
+									credit : item[5],
+									post_title : item[6],
+									date : item[7],
+									year: item[7].split('/')[2],
+									keywords : item[8],
+									dataloaded : true,
+									tabIndex : (150 + (i + 7)),
+									classy:'icon-images',
+									template:'pow',
+									colorCode:'235, 189, 30',
+									color:'yellow',
+									type:'image',
+									randomnumber: Math.floor(Math.random()*51)
+								});
+							}
+
+						});
+						return pow;
+					});
+			});
+		},
+		getNonPOW: function()
+		{
+			var nonpow = [];
+			return $http.jsonp('https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+ShortDescription,PhotoURL,PhotoCredit,BlogURL,BlogTitle,BlogExcerpt,PhotoCaption,Year+FROM+1kdK3LUF2jyyI0GCnoE3TihNmzJnr7azWtMNRdHuw&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK').then(function(result) {
+				if (result.data.rows != null) {
+				
+					
+					forEach (result.data.rows,function(item){
+       				 var i = result.data.rows.indexOf(item);
+							nonpow.push({
+								id : i,
+								src : item[1],
+								headline : item[6].replace(/<p>/g, '').replace(/<\/p>/g, ''),
+								description : item[0].replace(/<p>/g, '').replace(/<\/p>/g, ''),
+								parent : item[3],
+								credit : item[2],
+								post_title : item[4],
+								description:item[5],
+								year:item[7],
+								dataloaded : true,
+								tabIndex : (150 + (i + 7)),
+								classy:'icon-images',
+								template:'pow',
+								colorCode:'235, 189, 30',
+								color:'yellow',
+								type:'image',
+								randomnumber: Math.floor(Math.random()*51)
+							});
+					});
+
+					
+				return nonpow
+				}
+				else{
+					return $http.get('/JSONBAckups/POWFusionTable.json').then(function(result)
+					{
+						forEach (result.data.rows,function(item){
+        var i = result.data.rows.indexOf(item);
+							nonpow.push({
+								id : i,
+								src : item[1],
+								headline : item[6].replace(/<p>/g, '').replace(/<\/p>/g, ''),
+								description : item[0].replace(/<p>/g, '').replace(/<\/p>/g, ''),
+								parent : item[3],
+								credit : item[2],
+								post_title : item[4],
+								description:item[5],
+								year:item[7],
+								dataloaded : true,
+								tabIndex : (150 + (i + 7)),
+								classy:'icon-images',
+								template:'pow',
+								colorCode:'235, 189, 30',
+								color:'yellow',
+								type:'image',
+								randomnumber: Math.floor(Math.random()*51)
+							});
+						});
+						return nonpow
+					});
+				}	
+					
+			}, function(error){
+				return $http.get('/JSONBAckups/POWFusionTable.json').then(function(result)
+					{
+						forEach (result.data.rows,function(item){
+        					var i = result.data.rows.indexOf(item);
+							nonpow.push({
+								id : i,
+								src : item[1],
+								headline : item[6].replace(/<p>/g, '').replace(/<\/p>/g, ''),
+								description : item[0].replace(/<p>/g, '').replace(/<\/p>/g, ''),
+								parent : item[3],
+								credit : item[2],
+								post_title : item[4],
+								description:item[5],
+								year:item[7],
+								dataloaded : true,
+								tabIndex : (150 + (i + 7)),
+								classy:'icon-images',
+								template:'pow',
+								colorCode:'235, 189, 30',
+								color:'yellow',
+								type:'image',
+								randomnumber: Math.floor(Math.random()*51)
+							});
+						});
+						return nonpow
+					});
+				});
+		}
+	};
+}]);
+
+TAS_Anniversary.factory('Quotes', ['$http', '$routeParams', '$location', '$rootScope', '$sce',
+function($http, $routeParams, $location, $rootScope, $sce){
+return{
+	getQuotesData :function(item){
+			var quotes = [];
+			return $http.jsonp('https://spreadsheets.google.com/feeds/list/0Ak_vKEBczgcYdHczblprYk9WalhQTzhnY0h5Sm10Z3c/1/public/values?alt=json&callback=JSON_CALLBACK').then(function(result) {
+				if(result!=undefined)
+				{
+				quotes = result.data.feed.entry;
+				forEach(quotes,function(quote) {
+					var i=quotes.indexOf(quote);
+					quote.id = i;
+					quote.gsx$tn.$t = quotes[i].gsx$tn.$t;
+					quote.tabIndex = i + 200;
+					//quote.headline=quote[0]+' '+ quote.item[1];
+					quote.classy= 'icon-bubble';
+					quote.template= 'quotes';
+					quote.colorCode= '25, 142, 129';
+					quote.year = quote.gsx$year.$t;
+					quote.color='green';
+					quote.type='quote';
+					id=i;
+					randomnumber= Math.floor(Math.random()*51)
+				});
+
+				return quotes;
+				}
+				else{
+					return $http.get('/JSONBackups/Quotes.json').then(function(result) {
+					quotes = result.data.feed.entry;
+					forEach(quotes,function(quote) {
+						var i=quotes.indexOf(quote);
+						quote.id = i;
+						quote.gsx$tn.$t = quotes[i].gsx$tn.$t;
+						quote.tabIndex = i + 200;
+						quote.headline=item[0]+' '+ item[1];
+						quote.classy= 'icon-bubble';
+						quote.template= 'quotes';
+						quote.colorCode= '25, 142, 129';
+						quote.year = quote.gsx$year.$t;
+						quote.color='green';
+						quote.type='quote';
+						id=i;
+						randomnumber= Math.floor(Math.random()*51)
+					});
+
+					return quotes;
+
+				});
+				}
+			}, function(error) {
+				
+				return $http.get('JSONBackups/Quotes.json').then(function(result) {
+					quotes = result.data.feed.entry;
+					forEach(quotes,function(quote) {
+					var i=quotes.indexOf(quote);
+						quote.id = i;
+						quote.gsx$tn.$t = quotes[i].gsx$tn.$t;
+						quote.tabIndex = i + 200;
+						quote.headline=item[0]+' '+ item[1];
+						quote.classy= 'icon-bubble';
+						quote.template= 'quotes';
+						quote.colorCode= '25, 142, 129';
+						quote.year = quote.gsx$year.$t;
+						quote.color='green';
+						quote.type='quote';
+						id=i;
+						randomnumber= Math.floor(Math.random()*51)
+					});
+
+					return quotes;
+
+				});
+			});
+		}
+	};		
+}]);	
+
+TAS_Anniversary.factory('Lessons', ['$http', '$routeParams', '$location', '$rootScope', '$sce',
+function($http, $routeParams, $location, $rootScope, $sce){
+return{
+	getLessonData : function(teachername) {
+			
+			
+
+			return $http.jsonp('https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+LastName%2CFirstName%2CState%2C+YearSailed%2C+GradeLevel%2C+Size%2C+Title%2C+Keywords%2C+Objective%2C+Description%2C+URL%2c+Topics+FROM+17OXuyYjiIvxjr1Yd3DZ-SI-dzp-soOuTDNOHoSOA+ORDER%20BY+LastName"&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK').then(function(result) {
+				if (result.data.rows != undefined) {
+					var lesson = [];
+					
+					forEach(result.data.rows,function(item){
+						var o = result.data.rows.indexOf(item);
+						lesson.push({
+							lastname : item[0],
+							firstname : item[1],
+							state : item[2],
+							year : item[3],
+							grades : item[4],
+							gradesArr : item[4].split(','),
+							size : item[5],
+							headline : item[6],
+							keywords : item[7],
+							keywordArr : item[7].split(','),
+							objective : item[8],
+							description : item[9],
+							url : item[10],
+							topics : item[11],
+							checkContents : true,
+							id : o,
+							favorite : 'off',
+							classy: 'icon-chalkboard2' ,
+							template: 'lesson',
+							colorCode:'0, 51, 80',
+							color:'dkstblue',
+							type:'lesson',
+							randomnumber: Math.floor(Math.random()*51)
+						});
+						
+					});
+					return lesson;
+				}
+				else{
+					var lesson = [];
+					return $http.get('/JSONBackups/LessonsTable.json').then(function(result) {
+					var name = $routeParams.teachername.replace('*', ' ')
+
+					forEach(data.rows.length,function(item){
+						var o = result.data.rows.indexOf(item);
+						var name_comp = item[1] + ' ' + item[0]
+
+						if (name.toLowerCase() == name_comp.toLowerCase()) {
+							lesson.push({
+								lastname : item[0],
+								firstname : item[1],
+								state : item[2],
+								year : item[3],
+								grades : item[4],
+								gradesArr : item[4].split(','),
+								size : item[5],
+								headline : item[6],
+								keywords : item[7],
+								keywordArr : item[7].split(','),
+								objective : item[8],
+								description : item[9],
+								url : item[10],
+								topics : item[11],
+								checkContents : true,
+								id : o,
+								favorite : 'off',
+								classy: 'icon-chalkboard2',
+								template: 'lesson',
+								colorCode:'0, 51, 80',
+								color:'dkstblue',
+								type:'lesson',
+								randomnumber: Math.floor(Math.random()*51)
+
+							});
+						}
+					});
+
+					return lesson;
+					});
 					}
 
-				}
-				return pow;
+				
+
+			}, function(error) {
+
+				var lesson = [];
+				return $http.get('/JSONBackups/LessonsTable.json').then(function(result) {
+					var name = $routeParams.teachername.replace('*', ' ')
+
+					forEach(data.rows.length,function(item){
+						var o = result.data.rows.indexOf(item);
+						var name_comp = item[1] + ' ' + item[0]
+
+						if (name.toLowerCase() == name_comp.toLowerCase()) {
+							lesson.push({
+								lastname : item[0],
+								firstname : item[1],
+								state : item[2],
+								year : item[3],
+								grades : item[4],
+								gradesArr : item[4].split(','),
+								size : item[5],
+								headline : item[6],
+								keywords : item[7],
+								keywordArr : item[7].split(','),
+								objective : item[8],
+								description : item[9],
+								url : item[10],
+								topics : item[11],
+								checkContents : true,
+								id : o,
+								favorite : 'off', 
+								classy: 'icon-chalkboard2',
+								template: 'lesson',
+								colorCode:'0, 51, 80',
+								color:'dkstblue',
+								type:'lesson',
+								randomnumber: Math.floor(Math.random()*51)
+
+
+							});
+						}
+					});
+
+					return lesson;
+				});
 			});
 		},
 	};
 }]);
+
+TAS_Anniversary.factory('CombineData', ['AlumniSpot','PhotosofWeek','Teacher','News','Lessons', 'Quotes','$q',
+function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $q) {
+	return{
+		DataCombine: function()
+		{
+		var deferred = $q.defer();
+		var teachers=[];
+		var pow=[];
+		var news=[];
+		var spot=[];
+		var quotes =[];
+		var alldata ={data:[],years:[]};
+		
+				Teacher.createTeacherList().then(function(data){
+				teachers = data.reverse();
+				teachers.years=[];
+				forEach(teachers, function(obj){
+					obj.isLoading=true;
+					if(obj.year==undefined)
+						{
+						teachers.years.push(obj.date.split('/')[2]);
+						}
+						else{
+						teachers.years.push(obj.year);
+						}
+					});
+					teachers.years = removeDuplicatesArr(teachers.years);
+					teachers.years.sort();
+					
+					alldata.data=alldata.data.concat(teachers);
+					alldata.years = alldata.years.concat(teachers.years);
+					
+					PhotosofWeek.getPOW().then(function(data){
+					var pow = data;
+					PhotosofWeek.getNonPOW().then(function(data){
+						var nonpow=data;
+						pow = pow.concat(nonpow); 
+						pow.years = []
+						forEach(pow, function(obj){
+							
+							if(obj.year==undefined)
+							{
+							pow.years.push(obj.date.split('/')[2]);
+							}
+							else{
+								pow.years.push(obj.year);
+							}
+							obj.color='yellow'
+						});
+						pow.years = removeDuplicatesArr(pow.years);
+						pow = pow;
+						alldata.data=alldata.data.concat(pow);
+						alldata.years = alldata.years.concat(pow.years);
+					
+						AlumniSpot.getSpotData().then(function(data){
+							spot = data;
+							
+							spot.years=[];
+								News.getNewsData().then(function(data){
+								spot =spot.concat(data);
+								spot.years=[];
+								forEach(spot, function(obj){
+								if(obj.articleyear==undefined)
+								{
+								spot.years.push(obj.date.split('/')[2]);
+								}
+								else{
+									spot.years.push(obj.articleyear);
+								}	
+								obj.color='dkblue';
+								});
+								
+								spot.years = removeDuplicatesArr(spot.years);
+								alldata.data=alldata.data.concat(spot);
+								alldata.years = alldata.years.concat(spot.years);
+								
+								
+									Lessons.getLessonData().then(function(data){
+									lessons = data;
+									lessons.years=[];
+									forEach(lessons, function(obj){
+										lessons.years.push(obj.year);
+										obj.color='dkstblue';
+									});
+									lessons.years = removeDuplicatesArr(lessons.years);
+									alldata.data=alldata.data.concat(lessons);
+									alldata.years = alldata.years.concat(lessons.years);
+					
+										Quotes.getQuotesData().then(function(data){
+										quotes = data;
+										quotes.years=[];
+										forEach(quotes, function(obj){
+											quotes.years.push(obj.gsx$year.$t);
+											obj.color='green';
+										});
+										
+										quotes.years = removeDuplicatesArr(quotes.years);
+										alldata.data=alldata.data.concat(quotes);
+										alldata.years = alldata.years.concat(quotes.years);
+										alldata.years = removeDuplicatesArr(alldata.years);
+										alldata.data = SortObj('year', alldata.data);
+										
+										return alldata.data;
+										
+										//for(alldata.years, function(year))
+									});
+				
+								});
+							});
+						});
+					});
+					
+				});
+			});
+		
+		}
+	};
+}]);	
+
 TAS_Anniversary.factory('Timeline', ['$http', '$routeParams', '$location', '$rootScope', '$sce',
 function($http, $routeParams, $location, $rootScope, $sce) {
 	return{
@@ -112,88 +976,26 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 				items.years=[];
 				var tmpTxt=''
 				
-				for(var y=0; y<items.length; y++)
+				forEach(items, function(item)
 				{
-					if(!tmpTxt.match(items[y].gsx$year.$t))
+					if(!tmpTxt.match(item.gsx$year.$t))
 					{
 						items.years.push(
-							{'year':items[y].gsx$year.$t, 'state': 'notselected', color:items[y].gsx$color.$t, classy:'hider',noSubnav:true,
+							{'year':item.gsx$year.$t, 'state': 'notselected', color:item.gsx$color.$t, classy:'hider',noSubnav:true,
 								subNav :[
-								{name:"alumni", state:'notselected', checked:'notselected', color:'dkblue', 'year':items[y].gsx$year.$t, on_off:'off','classy':'icon-newspaper dkblue' }, 
-								{name:"images",state:'notselected', checked:'notselected', color:'yellow', 'year':items[y].gsx$year.$t, on_off:'off','classy':'icon-images yellow' },
-								{name:'dates', state:'notselected', checked:'notselected', color:'foam', 'year':items[y].gsx$year.$t, on_off:'off', 'classy':'icon-calendar foam' }, 
-								{name:'profile', state:'notselected', checked:'notselected', color:'blue', 'year':items[y].gsx$year.$t, on_off:'off', 'classy':'icon-news blue' },
-								{name:"quotes", state:'notselected', checked:'notselected', color:'green', 'year':items[y].gsx$year.$t, on_off:'off', 'classy':'icon-bubble green' },  
-								{name:"map", state:'notselected', checked:'notselected', color:'dkstblue', 'year':items[y].gsx$year.$t, on_off:'off', 'classy':'icon-map dkstblue' }, 
-								{name:"stats", state:'notselected', checked:'notselected', color:'ltgreen', 'year':items[y].gsx$year.$t, on_off:'off', 'classy':'icon-stats ltgreen' }, 
+								{name:"alumni", state:'notselected', checked:'notselected', color:'dkblue', 'year':item.gsx$year.$t, on_off:'off','classy':'icon-newspaper dkblue' }, 
+								{name:"images",state:'notselected', checked:'notselected', color:'yellow', 'year':item.gsx$year.$t, on_off:'off','classy':'icon-images yellow' },
+								{name:'dates', state:'notselected', checked:'notselected', color:'foam', 'year':item.gsx$year.$t, on_off:'off', 'classy':'icon-calendar foam' }, 
+								{name:'profile', state:'notselected', checked:'notselected', color:'blue', 'year':item.gsx$year.$t, on_off:'off', 'classy':'icon-news blue' },
+								{name:"quotes", state:'notselected', checked:'notselected', color:'green', 'year':item.gsx$year.$t, on_off:'off', 'classy':'icon-bubble green' },  
+								{name:"lessons", state:'notselected', checked:'notselected', color:'dkstblue', 'year':item.gsx$year.$t, on_off:'off', 'classy':'icon-chalkboard2 dkstblue' }, 
+								{name:"stats", state:'notselected', checked:'notselected', color:'ltgreen', 'year':item.gsx$year.$t, on_off:'off', 'classy':'icon-stats ltgreen' }, 
 								]
 						});
 					}
-					tmpTxt+=items[y].gsx$year.$t+',';
-				}
+					tmpTxt+=item.gsx$year.$t+',';
+				});
 				
-				/*for(var y=0; y<months; y++)
-				{
-					if(month<=11)
-					{
-					month++;
-					items.push({text_x:parseInt(number*15),text_y:parseInt(number*15), rect_x:parseInt(number*(window.innerWidth*.95/months)), width: (window.innerWidth/months)*6,rect_y:parseInt(number*25), month: (month), year:year, color:'', data:{}});
-					number++;
-					}
-					else{
-						month=0;
-						month++;
-						year++;
-						items.push({text_x:parseInt(number*15),text_y:parseInt(number*15), rect_x:parseInt(number*(window.innerWidth*.95/months)), width: (window.innerWidth/months)*6,rect_y:parseInt(number*25), month: (month), year:year, color:'', data:{}});
-						number++;
-						
-					}
-						if(items[y].year>=1990 && items[y].year<=1996)
-						{
-							items[y].color="#0057a5";
-							
-						}
-						else if(items[y].year>=1997 && items[y].year<=2003)
-						{
-							items[y].color='#0492CE'
-						}
-						else if(items[y].year>=2004 && items[y].year<2009)
-						{
-							items[y].color='#198E81'
-						}
-						else{
-							items[y].color='#EBBD1E'
-						}
-						
-					
-					
-				}
-				for(var z=0; z<items.length; z++)
-				{
-					var arr=[];
-					for(var x=0; x<data.data.feed.entry.length; x++)
-					{
-						
-						if(parseInt(data.data.feed.entry[x].date.$t.split('/')[0])==items[z].month)
-						{
-							
-							if(parseInt(items[z].year)==parseInt(data.data.feed.entry[x].date.$t.split('/')[2]))
-							{
-							
-							arr.push(data.data.feed.entry[x]);
-							items[z].data = arr;
-							}
-						}
-					}
-					if(z%6==0)
-						{
-							console.log(arr)
-							items[z].data=arr;
-							items.rect.push(items[z]);
-							
-						}
-				}*/
-				//console.log(items);
 				return items;
 		});	
 		

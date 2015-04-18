@@ -9,9 +9,8 @@ angular.module('Timeline', [])
 	var arr=[];
 	$scope.allchecked='notselected';
 	Timeline.getTimelineData().then(function(data){
+		
 		$scope.items = data;
-		//$scope.subNav = $scope.items.years;
-		//console.log($scope.subNav);
 		$scope.windowWidth = window.innerWidth;
 		$scope.windowWidth = $scope.windowWidth*.92;
 		$scope.yearsWidth = $scope.items.years.length*75;
@@ -22,7 +21,6 @@ angular.module('Timeline', [])
 		if($scope.navWidth>($scope.windowWidth*.9))
 		{
 			$scope.noArrows = true;
-			
 		}
 		else{
 			$scope.noArrows=false;
@@ -66,43 +64,20 @@ angular.module('Timeline', [])
 				var index = $scope.arr.indexOf(obj1);
 				$scope.arr.splice(index, 1);
 				console.log(obj1.subNav);
-				/*forEach(obj1.subNav, function(subNav){
-					forEachIn(subNav, function(name,value){
-					console.log(name+':'+value);
-				
-					});
-				});*/
 				forEach(obj1.subNav, function(subNav){
 					subNav.state='notselected';
-					//subNav.checked='notselected';
-					//subNav.on_off='off';
 				});
-				/*for (var y=0; y<obj1.subNav.length;y++)
-				{
-				obj1.subNav[y].state = "notselected";
 				
-				}*/
 				//////////Makes sure that if not all main nav items are selected, that no checkboxes light up
 				forEach($scope.items.years, function(year){
 					forEach(year.subNav, function(item){
 
 						item.checked='notselected';
 						item.on_off='off';
-
 					});
-					//console.log(years)
+					
 				});
-				//console.log($scope.items.years);
-				/*for(var x=0; x<$scope.items.years.length; x++)
-				{
-					for(var y=0; y<$scope.items.years[x].subNav.length; y++)	
-					{
-						
-						$scope.items.years[x].subNav[y].checked='notselected';
-						$scope.items.years[x].subNav[y].on_off='off';
-						console.log($scope.items.years[x].subNav[y].checked);
-					}
-				}*/
+		
 			}/////////////Button Not Active
 			else
 			{
@@ -113,13 +88,8 @@ angular.module('Timeline', [])
 				
 				forEach(obj1.subNav, function(subNav){
 					subNav.state='selected';
-					//subNav.checked='selected';
 				});
-				/*for (var y=0; y<obj1.subNav.length;y++)
-				{
-				obj1.subNav[y].state = "selected";
 				
-				}*/
 				/////////////Loops through the items to see if all years buttons are lit up; if so this makes sure that the checkbox is also filled in
 				forEach($scope.items.years, function(year){
 					if(year.state=='selected'){
@@ -132,7 +102,6 @@ angular.module('Timeline', [])
 							if(item.state=='selected')
 								{
 									$scope.changeNavCheck(item.name, item.checked, 'off');
-									
 								}
 							});
 						}
@@ -141,32 +110,11 @@ angular.module('Timeline', [])
 					
 				});
 				
-				
-				/*for(var x=0; x<$scope.items.years.length; x++)
-				{
-					if($scope.items.years[x].state=='selected')
-					{
-						holder_arr.push($scope.items.years[x]);
-						if(holder_arr.length==$scope.items.years.length)
-						{
-							for(var y=0; y<$scope.items.years[x].subNav.length; y++)
-							{
-								if($scope.items.years[x].subNav[y].state=='selected')
-								{
-									$scope.changeNavCheck($scope.items.years[x].subNav[y].name, $scope.items.years[x].subNav[y].checked, 'off');
-								}
-							}
-						}
-					}
-				}*/
 			}
 		}
 		//////////////controls SubNav Toggle///////////
 		else{
 			$scope.allchecked='notselected';
-			
-			/*if(obj1.state=="selected")
-			{*/
 				if(obj2.state=='selected')
 				{
 					
@@ -197,83 +145,6 @@ angular.module('Timeline', [])
 								
 						});
 					});
-					
-					/*for(var a = 0; a<$scope.items.years.length; a++)
-					{
-						$scope.items.years[a].state="notselected";
-						for(var z=0; z<$scope.items.years[a].subNav.length; z++)
-						{
-							if($scope.items.years[a].state=='selected' && $scope.items.years[a].subNav[z].state=="selected"  && !nameStr.match($scope.items.years[a].year))
-							{
-							 $scope.arr.push($scope.items.years[a]);	
-							 nameStr+=$scope.items.years[a].year;
-							}
-								if(obj2.name==$scope.items.years[a].subNav[z].name)
-								{
-									$scope.items.years[a].subNav[z].checked='notselected';
-									$scope.items.years[a].subNav[z].on_off='off';
-									
-								}
-								if($scope.items.years[a].subNav[z].state=="selected")
-								{
-									$scope.items.years[a].state='selected';
-								}
-								
-						}	
-						
-					}*/
-					
-					
-					/*arr.push(obj2.state);
-					if(arr.length==obj1.subNav.length){
-						obj1.state='notselected';
-					}*/
-					//obj2.checked=false;
-					
-					////////////runs the changeNavCheck function for when a subnav item is clicked off/////////////////
-					//$scope.changeNavCheck(obj2.name, false, 'one');
-					
-				/*}
-				else
-				{
-					obj2.state='selected';
-					var holder_arr=[];
-					/////////////Loops through the items to see if all icon buttons are lit up; if so this makes sure that the checkbox is  filled in
-					forEach($scope.items.years, function(year){
-						forEach(year.subNav, function(item){
-							if(obj2.name=item.name && item.state=='selected' )
-								{
-									holder_arr.push(item);
-									if(holder_arr.length==$scope.items.years.length){
-									$scope.changeNavCheck(item.name, item.checked, 'off');
-									}
-								}	
-							
-						});
-					});
-					/*for(var x=0; x<$scope.items.years.length; x++)
-					{
-							
-							for(var y=0; y<$scope.items.years[x].subNav.length; y++)
-							{
-								
-								if(obj2.name==$scope.items.years[x].subNav[y].name &&$scope.items.years[x].subNav[y].state=='selected' )
-								{
-									holder_arr.push($scope.items.years[x].subNav[y]);
-									if(holder_arr.length==$scope.items.years.length){
-									$scope.changeNavCheck($scope.items.years[x].subNav[y].name, $scope.items.years[x].subNav[y].checked, 'off');
-									}
-									
-									
-								}
-							}
-							
-							
-					}
-					
-							
-					console.log(holder_arr.length);
-				}*/
 			}
 			else if(obj2.state=='notselected'){
 					var holder_arr=[];
@@ -284,54 +155,33 @@ angular.module('Timeline', [])
 					/////////////Loops through the items to see if all icon buttons are lit up; if so this makes sure that the checkbox is  filled in
 					forEach($scope.items.years, function(year){
 						forEach(year.subNav, function(item){
-						//console.log(item);	
-						
+						var y=year.subNav.indexOf(item);	
+						//console.log(obj2.name+':'+item.name+':'+item.state)
 						if(obj2.name==item.name && item.state=='selected')
 								{	
 									holder_arr.push(item);
-									//console.log(holder_arr);
-								}	
-								if(holder_arr.length==$scope.items.years.length){
-										
-									$scope.changeNavCheck(item.name, item.checked, 'off');
+									
+								}
+								if(holder_arr.length==$scope.items.years.length && y== year.subNav.length-1){
+									$scope.changeNavCheck(obj2.name, item.checked, 'off');
 								}
 						});
 					});
 					
-					/*for(var x=0; x<$scope.items.years.length; x++)
-					{
-							
-							for(var y=0; y<$scope.items.years[x].subNav.length; y++)
-							{
-								
-								if(obj2.name==$scope.items.years[x].subNav[y].name &&$scope.items.years[x].subNav[y].state=='selected' )
-								{
-									holder_arr.push($scope.items.years[x].subNav[y]);
-									if(holder_arr.length==$scope.items.years.length){
-										
-									$scope.changeNavCheck($scope.items.years[x].subNav[y].name, $scope.items.years[x].subNav[y].checked, 'off');
-									}
-									
-									
-								}
-							}
-							
-							
-					}*/
-					console.log($scope.items.years);
+					
+					
 			}
 			
 		}
 		
 	};
 	
-	$scope.changeNavCheck = function(type, allselected,on_off, howmany)
+	$scope.changeNavCheck = function(type, allselected,on_off)
 	{
 		/////////////If gray top check box is activated, all boxes and check boxes are given a fill///////////////
 			
 		if(type == "all")
 		{
-			
 				if(allselected == 'notselected')
 				{
 					
@@ -359,38 +209,12 @@ angular.module('Timeline', [])
 			}	
 			
 		}
-		/////////////If a subnav is deactivated, this deactivates the checkbox from whence it is a child///////////////
-		/*else if(howmany=='one')
-		{
-			console.log(howmany)
-			for(var a = 0; a<$scope.items.years.length; a++)
-			{
-				for(var z=0; z<$scope.items.years[0].subNav.length; z++)
-				{
-					if($scope.items.years[a].subNav[z].name==type){
-				
-					$scope.items.years[a].subNav[z].checked='notselected';
-					
-					}
-				}
-			}
-			
-		}*/
+		
 		/////////////////If a single checkbox is pushed, this activates or deactivates that box based on the checked property of the 
 		////////////////subNav properties of the years array	
 		else
 		{
-			/*for(var a = 0; a<$scope.items.years.length; a++)
-				{
-					if($scope.allchecked==true)
-					{
-					$scope.items.years[a].state='selected';	
-					}
-					else{
-						$scope.items.years[a].state='notselected';
-					}	
-				}	
-				*/
+			
 				///////////////If checkbox is clicked, this lights up the proper row and adds items to the $scope.arr variable
 				//////////////Which is used in the else conditional to light up the proper icons when all checkboxes are unclicked.
 				if(on_off=='off')
@@ -434,53 +258,38 @@ angular.module('Timeline', [])
 				else				
 				{
 					$scope.allchecked='notselected';
-					
+					var count=0;
 					forEach($scope.items.years, function(year){
 								
 								year.state='notselected';	
 								/////////////Turns off all subnavigation icons for particular checkbox////////////////
 								forEach(year.subNav, function(item){
+									count = count+1;
 									item.on_off='off';
 									if(item.state=='selected' && item.name==type)
 									{
-										
 										item.checked ='notselected';
 										item.on_off='off'
 										item.state ='notselected';
 																				
 
 									}
-									else if(item='selected' && item.name!=type)
-									{
-										
-										item.on_off='off';
-										//item.checked ='selected';
+									else if(item.state=='selected'&& item.name!=type){
+										item.checked='selected';
+										item.on_off='on'
 										item.state ='selected';
-										if(item.state=="selected")
-										{
-											year.state='selected';	
-											
+										year.state='selected';
 										}
-
+									else{
+										item.checked ='notselected';
+										item.on_off='off'
+										item.state ='notselected';
 									}
+									
 									
 									
 								});
-								///////////Loops through $scope.arr and makes sure that the years that are held in $scope.arr light up/are selected
-							
-								/*for(var b=0; b<$scope.arr.length;b++)
-								{
-									
-									if($scope.arr[b].year==$scope.items.years[c].year)
-									{
-										//console.log($scope.arr[b])
-										$scope.arr[b].state='selected';
-										//$scope.items.years[c].state=$scope.arr[b].state;
-										
-									}
-									
-																	
-								}*/	
+								
 						
 					});
 					
@@ -489,16 +298,74 @@ angular.module('Timeline', [])
 		}
 	};
 	
-	
-	
-	
-	
 }]);
-angular.module('Story', [])
-.controller('storyController', ['$scope','Timeline', function($scope, Timeline)
+angular.module('Story', ['infinite-scroll'])
+.controller('storyController', ['AlumniSpot','PhotosofWeek','Teacher','News','Lessons', 'Quotes','$scope',
+function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $scope)
 {
 	
-
+	var alldata={};
+	alldata.data=[];
+	alldata.years=[];
+	$scope.iterator=50;
+	$scope.start_index=-50;
+	$scope.end_index = 0
+	$scope.runApp=function()
+	{
+		
+		
+		
+		Teacher.createTeacherList().then(function(data){
+		var teachers = data.data.reverse();
+			alldata.years = data.years
+			alldata.data=alldata.data.concat(teachers);
+			
+			PhotosofWeek.getPOW().then(function(data){
+			var pow = data;
+				PhotosofWeek.getNonPOW().then(function(data){
+					var nonpow=data;
+					pow = pow.concat(nonpow); 
+					alldata.data=alldata.data.concat(pow);
+					AlumniSpot.getSpotData().then(function(data){
+						var spot = data;
+							News.getNewsData().then(function(data){
+							spot =spot.concat(data);
+							alldata.data=alldata.data.concat(spot);
+						Lessons.getLessonData().then(function(data){
+								var lessons = data;
+								alldata.data=alldata.data.concat(lessons);
+									Quotes.getQuotesData().then(function(data){
+									var quotes = data;
+									alldata.data=alldata.data.concat($scope.quotes);
+									alldata.data = SortObjDsc('randomnumber', alldata.data);
+									$scope.alldata_all = alldata.data;
+									alldata.data=alldata.data.slice($scope.start_index,$scope.end_index);									
+									alldata.years=removeDuplicatesArr(alldata.years);
+									$scope.alldata = alldata;
+								});
+			
+							});
+						});
+					});
+				});
+				
+			});
+		});
+		
+	};
+	
+	$scope.addMore=function()	
+	{
+		$scope.start_index =$scope.start_index+$scope.iterator;
+		$scope.end_index = $scope.end_index+$scope.iterator;
+		$scope.alldata.data=$scope.alldata.data.concat($scope.alldata_all.slice($scope.start_index, $scope.end_index));
+		
+		
+	};
+	
+	$scope.runApp();
+	
+	
 }]);
 
 
@@ -587,6 +454,7 @@ function createTitleFromURL(str)
 	
 }
 
+////////////////Checks for a specific property in an array of objects and makes sure that the value of that property is not duplicated	
 function removeDuplicatesArr(array){
 	var unique = [];
     for ( i = 0; i < array.length; i++ ) {
@@ -601,12 +469,7 @@ function removeDuplicatesArr(array){
 }
 ////////////////Checks for a specific property in an array of objects and makes sure that the value of that property is not duplicated	
 function removeDuplicatesArrObj(array, property, checkmatch){
-	console.log(checkmatch);
 	var unique={title:[], finalArr:[]};
-	var tmpArr=[];
-	forEach(array, function(item){
-		tmpArr.push(item[property]);
-	});
 	if(checkmatch==true)
 	{
 		
@@ -632,6 +495,46 @@ function removeDuplicatesArrObj(array, property, checkmatch){
 	}
 	return unique.finalArr;
 }
+ 
+ function preventDuplicates(comparer, array, property, type)
+ {
+ 	var tmpArr=[];
+ 	///////////Adds to  the Beginning
+	if(type = 'splice'){
+	 	forEach(comparer, function(compare)
+		{
+			tmpArr =removeDuplicatesArrObj(comparer, property, true);
+			array.splice(0, 0, compare)	
+		});
+	}
+	//////////Adds to end///////////
+	else{
+		forEach(comparer, function(compare)
+			{
+				tmpArr =removeDuplicatesArrObj(comparer, property, true);
+				array.push(compare)	
+			});
+	}	
+ 	array = removeDuplicatesArrObj(array, property, true)
+ 		
+ 	return array;
+	
+ };
+ 
+ function compareArraysObj(array1, array2, property)
+ {
+ 	forEach(array1, function(item){
+ 		var x=array1.indexOf(item);
+ 		forEach(array2, function(item2){
+
+ 			if(item[property]==item2[property])
+ 			{
+ 				array1.splice(x, 1);
+ 			}
+ 		});
+ 	});
+	return array1;
+ }
 
 
 /////////For LoopArray of Strings and Numbers (not objects)///////////////
@@ -651,4 +554,33 @@ function forEachIn( object, action) {
 		if (Object.prototype.hasOwnProperty.call( object, property))
 			 action( property, object[ property]); 
 	 }
+ }
+ 
+ function SortObjAsc(property, obj)
+ {
+ 
+ 	var sortable =[];
+ 	obj.sort(
+ 		function(a, b){
+ 				 var aprop=a[property]
+				 var bprop =b[property]
+				 return bprop-aprop
+				});
+ 	
+ 	return obj.reverse();
+ }
+
+
+ function SortObjDsc(property, obj)
+ {
+ 
+ 	var sortable =[];
+ 	obj.sort(
+ 		function(a, b){
+ 				 var aprop=a[property]
+				 var bprop =a[property]
+				 return aprop-bprop
+				});
+ 	
+ 	return obj;
  }

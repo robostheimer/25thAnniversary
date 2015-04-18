@@ -64,7 +64,63 @@ TAS_Anniversary.directive('naviGation', function($injector, $compile, $q) {
 		templateUrl : 'partials/navigation.html',
 		link : linkFunction,
 	};
-}).directive('bottomPostion', function() {
+	
+	//////////////<div feature-image="{{slide.src}}?w={{windowWidth}}" color="{{slide.background_color}}" ng-hide="slide.isLoading==true">
+}).directive('caRd', function($compile, $q) {
+	
+	var Profile = '<div class="col-md-3 {{item.color}} loading" id="loader{{item.id}}" isLoading="{{item.isLoading}}" color="{{item.colorCode}}" ><img src="/images/NOAA-Logo.gif" alt="loading"/></div><div id="image{{item.id}}" resize-card feature-image="{{item.image}}" color="{{item.colorCode}}" class="col-md-3 {{item.color}}" ng-show="item.isLoading==false" blend="soft-light" alpha="1"> <div class="card-text"><h3>{{item.headline}}</h3><p> {{item.description}}</p>{{item.school}}<br>{{item.city}}, {{item.state}}<br>{{item.shiptype}} {{item.ship}}</p></div><div class="card-button"><button><a href="/#/{{item.year}}/{{item.firstname}}*{{item.lastname}}" role="button">View details »</a></button></div><br></div>';
+	var News = '<div class="col-md-3 {{item.color}}"> <h3>{{item.headline}}</h3><p> {{item.description}}</p><p><a class="btn btn-default" href="#" role="button">View details »</a></p></div>';
+	var Pow = '<div class="col-md-3 {{item.color}}"> <h3>{{item.headline}}</h3><p> {{item.description}}</p><p><a class="btn btn-default" href="#" role="button">View details »</a></p></div>';
+	var Lesson = '<div class="col-md-3 {{item.color}}"> <h3>{{item.headline}}</h3><p> {{item.description}}</p><p><a class="btn btn-default" href="#" role="button">View details »</a></p></div>';
+	var Quotes = '';
+
+	var getTemplate = function(contentType) {
+		var template = '';
+
+		switch(contentType) {
+		case 'news':
+			template = News;
+			break;
+		case 'profile':
+			template = Profile;
+			break;
+		case 'pow':
+			template = Pow;
+			break;
+		case 'lesson':
+			template = Lesson;
+			break;
+		
+		case 'quotes':
+			template = Quotes;
+			break;
+
+		}
+
+		return template;
+
+	};
+	return {
+		
+		restrict : 'AE',
+		scope : true,
+		link : function(scope, elm, attr) {
+			var z=0;
+			var images = [];
+			
+			elm.html(getTemplate(attr.type));
+			var deferred = $q.defer();
+
+			$compile(elm.contents())(scope);
+			deferred.resolve();
+			deferred.promise.then(function() {
+			    
+			});
+		}
+	};
+})
+
+.directive('bottomPostion', function() {
 	return {
 		restrict : 'AE',
 
@@ -474,7 +530,7 @@ TAS_Anniversary.directive('naviGation', function($injector, $compile, $q) {
 			});
 		}
 	};
-}).directive('resizeTasa', function($window) {
+}).directive('resizeCard', function($window) {
 	return function(scope, element) {
 		var w = angular.element($window);
 		scope.getWindowDimensions = function() {
@@ -485,14 +541,22 @@ TAS_Anniversary.directive('naviGation', function($injector, $compile, $q) {
 		};
 		scope.$watch(scope.getWindowDimensions, function(newValue, oldValue) {
 			scope.windowHeight = newValue.h;
-			if (window.innerWidth > 1000) {
-				scope.windowWidth = 215
-			} else if (window.innerWidth < 1000 && window.innerWidth >= 800) {
-				scope.windowWidth = 170
-			} else if (window.innerWidth < 800 && window.innerWidth >= 640) {
-				scope.windowWidth = 138;
+			if (window.innerWidth > 1960) {
+				scope.windowWidth = window.innerWidth*.1466
+			} else if (window.innerWidth < 1600 && window.innerWidth >= 1281) {
+				scope.windowWidth = window.innerWidth*.18
+			} else if (window.innerWidth < 1280 && window.innerWidth >= 1025) {
+				scope.windowWidth = window.innerWidth*.23
+			}else if (window.innerWidth < 1024 && window.innerWidth >= 768) {
+				scope.windowWidth = window.innerWidth*.31
+			}else if (window.innerWidth < 767 && window.innerWidth >= 640) {
+				scope.windowWidth = window.innerWidth*.48
+			}else if (window.innerWidth < 639 && window.innerWidth >= 480) {
+				scope.windowWidth = window.innerWidth*.48
+			}else if (window.innerWidth < 479 && window.innerWidth >= 321) {
+				scope.windowWidth = window.innerWidth*.98
 			} else {
-				scope.windowWidth = 120
+				scope.windowWidth = window.innerWidth*.98
 			}
 			scope.styles = function() {
 				return {
@@ -507,383 +571,8 @@ TAS_Anniversary.directive('naviGation', function($injector, $compile, $q) {
 			scope.$apply();
 		});
 	};
-}).directive('resizeHome', function($window) {
-	return function(scope, element) {
-		var w = angular.element($window);
-		scope.getWindowDimensions = function() {
-			return {
-				'h' : w.height(),
-				'w' : w.width()
-			};
-		};
-		scope.$watch(scope.getWindowDimensions, function(newValue, oldValue) {
-			scope.windowHeight = newValue.h;
-			if (window.innerWidth > 960) {
-				scope.imgWidth = 199;
-				scope.containerWidth = 199
-			} else if (window.innerWidth < 960 && window.innerWidth >= 800) {
-				scope.imgWidth = 218;
-				scope.containerWidth = 238;
-			} else if (window.innerWidth < 799 && window.innerWidth >= 640) {
-				scope.imgWidth = 261
-				scope.containerWidth = 281
-			} else if (window.innerWidth < 639 && window.innerWidth >= 480) {
-				scope.imgWidth = 185;
-				scope.containerWidth = 195;
-			} else {
-				scope.imgWidth = 261;
-				scope.containerWidth = 281;
-			}
-			scope.styles = function() {
-				return {
-					'height' : (newValue.h - 100) + 'px',
-					'width' : (newValue.w - 100) + 'px'
-				};
-			};
-
-		}, true);
-
-		w.bind('resize', function() {
-			scope.$apply();
-		});
-	};
-}).directive('resizeCurrent', function($window) {
-	return function(scope, element) {
-		var w = angular.element($window);
-		scope.getWindowDimensions = function() {
-			return {
-				'h' : w.height(),
-				'w' : w.width()
-			};
-		};
-		scope.$watch(scope.getWindowDimensions, function(newValue, oldValue) {
-			scope.windowHeight = newValue.h;
-			if (window.innerWidth > 960) {
-				scope.windowWidth = 175
-			} else if (window.innerWidth < 960 && window.innerWidth >= 800) {
-				scope.windowWidth = 220
-			} else if (window.innerWidth < 800 && window.innerWidth >= 640) {
-				scope.windowWidth = 175
-			} else if (window.innerWidth < 640 && window.innerWidth >= 480) {
-				scope.windowWidth = 190
-			} else {
-				scope.windowWidth = 125
-			}
-
-		}, true);
-
-		w.bind('resize', function() {
-			scope.$apply();
-		});
-	};
-}).directive('resizeSocial', function($window) {
-	return function(scope, element) {
-		var w = angular.element($window);
-		scope.getWindowDimensions = function() {
-			return {
-				'h' : w.height(),
-				'w' : w.width()
-			};
-		};
-		scope.$watch(scope.getWindowDimensions, function(newValue, oldValue) {
-			scope.windowHeight = newValue.h;
-			if (window.innerWidth > 960) {
-				scope.windowWidth = 220;
-				scope.containerWidth = 225
-			} else if (window.innerWidth < 960 && window.innerWidth >= 800) {
-				scope.windowWidth = 220;
-				scope.containerWidth = 240
-			} else if (window.innerWidth < 800 && window.innerWidth >= 640) {
-				scope.windowWidth = 170
-				scope.containerWidth = 170
-			} else if (window.innerWidth < 640 && window.innerWidth >= 480) {
-				scope.windowWidth = 315
-				scope.containerWidth = 335
-			} else {
-				scope.windowWidth = 190
-				scope.containerWidth = 200
-			}
-
-		}, true);
-
-		w.bind('resize', function() {
-			scope.$apply();
-		});
-	};
-}).directive('resizeTabs', function($window) {
-	return function(scope, element) {
-		var w = angular.element($window);
-		scope.getWindowDimensions = function() {
-			return {
-				'h' : w.height(),
-				'w' : w.width()
-			};
-		};
-		scope.$watch(scope.getWindowDimensions, function(newValue, oldValue) {
-			scope.windowH = newValue.h;
-			if (window.innerWidth > 960) {
-				scope.topImageWidth = 250;
-				scope.bottomImageWidth = 200;
-			} else if (window.innerWidth < 960 && window.innerWidth >= 800) {
-				scope.topImageWidth = 250;
-				scope.bottomImageWidth = 200;
-			} else if (window.innerWidth < 800 && window.innerWidth >= 640) {
-				scope.topImageWidth = 250;
-				scope.bottomImageWidth = 200;
-			} else if (window.innerWidth < 640 && window.innerWidth >= 470) {
-				scope.topImageWidth = 250;
-				scope.bottomImageWidth = 150;
-			} else {
-				scope.topImageWidth = 250;
-				scope.bottomImageWidth = 150;
-			}
-			scope.styles = function() {
-				return {
-					'height' : (newValue.h - 100) + 'px',
-					'width' : (newValue.w - 100) + 'px'
-				};
-			};
-
-		}, true);
-
-		w.bind('resize', function() {
-			scope.$apply();
-		});
-	};
-}).directive('resizeProfile', function($window) {
-	return function(scope, element) {
-		var w = angular.element($window);
-		scope.getWindowDimensions = function() {
-			return {
-				'h' : w.height(),
-				'w' : w.width()
-			};
-		};
-		scope.$watch(scope.getWindowDimensions, function(newValue, oldValue) {
-			scope.windowH = newValue.h;
-			if (window.innerWidth > 960) {
-
-				scope.topImageWidth = 400;
-				scope.video = 250;
-			} else if (window.innerWidth < 960 && window.innerWidth >= 800) {
-				scope.topImageWidth = 320;
-				scope.video = 200
-			} else if (window.innerWidth < 799 && window.innerWidth >= 640) {
-				scope.topImageWidth = 220;
-				scope.video = 190
-			} else if (window.innerWidth < 640 && window.innerWidth >= 470) {
-				scope.topImageWidth = 220;
-			} else {
-				scope.topImageWidth = 280;
-				scope.video = 150;
-			}
-
-		}, true);
-
-		w.bind('resize', function() {
-			scope.$apply();
-		});
-	};
-}).directive('resizeClass', function($window) {
-	return function(scope, element) {
-		var w = angular.element($window);
-		scope.getWindowDimensions = function() {
-			return {
-				'h' : w.height(),
-				'w' : w.width()
-			};
-		};
-		scope.$watch(scope.getWindowDimensions, function(newValue, oldValue) {
-			scope.windowH = newValue.h;
-			if (window.innerWidth > 960) {
-
-				scope.tnWidth = 100;
-			} else if (window.innerWidth < 960 && window.innerWidth >= 800) {
-				scope.tnWidth = 100;
-			} else if (window.innerWidth < 800 && window.innerWidth >= 640) {
-				scope.tnWidth = 100;
-			} else if (window.innerWidth < 640 && window.innerWidth >= 470) {
-				scope.tnWidth = 75;
-			} else {
-				scope.tnWidth = 75;
-
-			}
-
-		}, true);
-
-		w.bind('resize', function() {
-			scope.$apply();
-		});
-	};
-}).directive('resizeList', function($window) {
-	return function(scope, element) {
-		var w = angular.element($window);
-		scope.getWindowDimensions = function() {
-			return {
-				'h' : w.height(),
-				'w' : w.width()
-			};
-		};
-		scope.$watch(scope.getWindowDimensions, function(newValue, oldValue) {
-			scope.windowH = newValue.h;
-			if (window.innerWidth > 960) {
-				scope.bigPow = 500
-				scope.tnWidth = 200;
-			} else if (window.innerWidth < 960 && window.innerWidth >= 800) {
-				scope.bigPow = 400
-				scope.tnWidth = 150;
-			} else if (window.innerWidth < 800 && window.innerWidth >= 640) {
-				scope.bigPow = 300
-				scope.tnWidth = 150;
-			} else if (window.innerWidth < 640 && window.innerWidth >= 480) {
-				scope.bigPow = 290
-				scope.tnWidth = 298;
-			} else {
-				scope.bigPow = 290
-				scope.tnWidth = 290;
-			}
-
-		}, true);
-
-		w.bind('resize', function() {
-			scope.$apply();
-		});
-	};
-}).directive('resizesearchBlog', function($window) {
-	return function(scope, element) {
-		var w = angular.element($window);
-		scope.getWindowDimensions = function() {
-			return {
-				'h' : w.height(),
-				'w' : w.width()
-			};
-		};
-		scope.$watch(scope.getWindowDimensions, function(newValue, oldValue) {
-			scope.windowH = newValue.h;
-			if (window.innerWidth > 960) {
-				scope.search_blog = 100;
-
-			} else if (window.innerWidth < 960 && window.innerWidth >= 800) {
-				scope.search_blog = 100;
-			} else if (window.innerWidth < 800 && window.innerWidth >= 640) {
-				scope.search_blog = 85;
-			} else if (window.innerWidth < 640 && window.innerWidth >= 470) {
-				scope.search_blog = 75;
-			} else {
-				scope.search_blog = 75
-			}
-
-		}, true);
-
-		w.bind('resize', function() {
-			scope.$apply();
-		});
-	};
-}).directive('resizesearchImage', function($window) {
-	return function(scope, element) {
-		var w = angular.element($window);
-		scope.getWindowDimensions = function() {
-			return {
-				'h' : w.height(),
-				'w' : w.width()
-			};
-		};
-		scope.$watch(scope.getWindowDimensions, function(newValue, oldValue) {
-			scope.windowH = newValue.h;
-			if (window.innerWidth > 960) {
-				scope.search_image = 150;
-
-			} else if (window.innerWidth < 960 && window.innerWidth >= 800) {
-				scope.search_image = 150;
-			} else if (window.innerWidth < 800 && window.innerWidth >= 640) {
-				scope.search_image = 125;
-			} else if (window.innerWidth < 640 && window.innerWidth >= 470) {
-				scope.search_image = 110;
-			} else {
-				scope.search_image = 100
-			}
-
-		}, true);
-
-		w.bind('resize', function() {
-			scope.$apply();
-		});
-	};
-}).directive('resizeBigimage', function($window) {
-	return function(scope, element) {
-		var w = angular.element($window);
-		scope.getWindowDimensions = function() {
-			return {
-				'h' : w.height(),
-				'w' : w.width()
-			};
-		};
-		scope.$watch(scope.getWindowDimensions, function(newValue, oldValue) {
-			scope.windowHeight = newValue.h;
-			if (window.innerWidth > 960) {
-				scope.bigImageWidth = 650
-			} else if (window.innerWidth < 960 && window.innerWidth >= 800) {
-				scope.bigImageWidth = 600
-			} else if (window.innerWidth < 799 && window.innerWidth >= 640) {
-				scope.bigImageWidth = 500
-			} else if (window.innerWidth < 640 && window.innerWidth >= 470) {
-				scope.bigImageWidth = 390;
-			} else {
-				scope.bigImageWidth = 240
-			}
-			scope.styles = function() {
-				return {
-					'height' : (newValue.h - 100) + 'px',
-					'width' : (newValue.w - 100) + 'px'
-				};
-			};
-
-		}, true);
-
-		w.bind('resize', function() {
-			scope.$apply();
-		});
-	};
-}).directive('resizeTimeline', function($window) {
-	return function(scope, element, attrs) {
-		var w = angular.element($window);
-		scope.getWindowDimensions = function() {
-			return {
-				'h' : w.height(),
-				'w' : w.width()
-			};
-		};
-		scope.$watch(scope.getWindowDimensions, function(newValue, oldValue) {
-			scope.windowHeight = newValue.h;
-			if (window.innerWidth > 1200) {
-				scope.timelineMove = parseInt(attrs.x) + $(window).width();
-				scope.timelineExtend = $(window.width * .8);
-			} else if (window.innerWidth > 960 && window.innerWidth < 1200) {
-				scope.timelineWidth = parseInt(attrs.x) + $(window).width();
-			} else if (window.innerWidth < 960 && window.innerWidth >= 800) {
-				scope.timelineWidth = 600 + $('svg_us').width();
-			} else if (window.innerWidth < 799 && window.innerWidth >= 640) {
-				scope.timelineWidth = 500 + $('svg_us').width();
-			} else if (window.innerWidth < 640 && window.innerWidth >= 470) {
-				scope.timelindWidth = 390 + $('svg_us').width();
-				;
-			} else {
-				scope.timelineWidth = 240 + $('svg_us').width();
-			}
-			scope.styles = function() {
-				return {
-					'height' : (newValue.h - 100) + 'px',
-					'width' : (newValue.w - 100) + 'px'
-				};
-			};
-
-		}, true);
-
-		w.bind('resize', function() {
-			scope.$apply();
-		});
-	};
-}).directive('imageonload', function() {
+})
+.directive('imageonload', function() {
 	return {
 		restrict : 'A',
 
@@ -956,15 +645,143 @@ TAS_Anniversary.directive('naviGation', function($injector, $compile, $q) {
 
 		}
 	};
-}).directive('featureImage', function() {
-	return function(scope, element, attrs) {
+}).directive('featureImage', function($window) {
+	return {
+		link: function(scope, element, attrs) {
+		var w = angular.element($window);
 		var url = attrs.featureImage;
-		element.css({
-			'background-image' : 'url(' + url + ')',
-			'background-size' : 'cover'
+		var color = attrs.color;
+		var blend =attrs.blend;
+		var alpha =attrs.alpha
+		var id = attrs.id;
+		var loader =id.replace('image', 'loader')
+		scope.getWindowDimensions = function() {
+			return {
+				'h' : w.height(),
+				'w' : w.width()
+			};
+		};
+		scope.$watch(scope.getWindowDimensions, function(newValue, oldValue) {
+			scope.windowHeight = newValue.h;
+			if (window.innerWidth > 1960) {
+				scope.windowWidth = window.innerWidth*.1466
+			} else if (window.innerWidth < 1600 && window.innerWidth >= 1281) {
+				scope.windowWidth = window.innerWidth*.18
+			} else if (window.innerWidth < 1280 && window.innerWidth >= 1025) {
+				scope.windowWidth = window.innerWidth*.23
+			}else if (window.innerWidth < 1024 && window.innerWidth >= 768) {
+				scope.windowWidth = window.innerWidth*.31
+			}else if (window.innerWidth < 767 && window.innerWidth >= 640) {
+				scope.windowWidth = window.innerWidth*.48
+			}else if (window.innerWidth < 639 && window.innerWidth >= 480) {
+				scope.windowWidth = window.innerWidth*.48
+			}else if (window.innerWidth < 479 && window.innerWidth >= 321) {
+				scope.windowWidth = window.innerWidth*.98
+			} else {
+				scope.windowWidth = window.innerWidth*.98
+			}
+			url = url+'?w='+scope.windowWidth;
+			scope.styles = function() {
+				return {
+					'height' : (newValue.h - 100) + 'px',
+					'width' : (newValue.w - 100) + 'px'
+				};
+			};
+			element.css({
+			'background-image' : 'url(' + url +')',
+			'background-color': 'rgba('+color+',' +alpha+')',
+			'background-size' : 'cover',
+			'background-blend-mode': blend
+			});
+			element.isLoading="true"
+		//console.log(url)
+			var image= new Image() ;
+		   // console.log(url);
+			image.src=url;
+		  	image.isLoading=true;
+		  	
+		  	$(image).bind('load', function(){
+		  			$('#'+loader).addClass('ng-hide');
+					$('#'+id).removeClass('ng-hide');
+					//scope.alldata[number].isLoading=false;		
+					//console.log(scope.alldata[number].isLoading)	
+					scope.$apply();
+					});
+
+		}, true);
+
+		w.bind('resize', function() {
+			scope.$apply();
 		});
+		
+
+			scope.preload = function(img, number)
+			{
+				 
+			};
+
+		}
 	};
-}).directive("ngTouchmove", function() {
+}).directive('featureImageBig', function($window) {
+	return {
+		link: function(scope, element, attrs) {
+		var w = angular.element($window);
+		var url = attrs.featureImageBig;
+		var color = attrs.color;
+		var blend =attrs.blend;
+		var alpha = attrs.alpha;
+		scope.getWindowDimensions = function() {
+			return {
+				'h' : w.height(),
+				'w' : w.width()
+			};
+		};
+		scope.$watch(scope.getWindowDimensions, function(newValue, oldValue) {
+			
+				scope.windowWidth = window.innerWidth;
+			
+			scope.styles = function() {
+				return {
+					'height' : (newValue.h - 100) + 'px',
+					'width' : (newValue.w - 100) + 'px'
+				};
+			};
+			element.css({
+			'background-image' : 'url(' + url + '?w='+scope.windowWidth+')',
+			'background-color': 'rgba('+color+', '+alpha+')',
+			'background-size' : 'cover',
+			'background-blend-mode':blend
+			});
+			element.isLoading="true"
+		//console.log(url)
+			var image= new Image() ;
+		   // console.log(url);
+			image.src=url;
+		  	scope.isLoading=true;
+		  	///console.log(scope.image);
+		  	$(image).bind('load', function(){
+					scope.isLoading=false
+					//scope.alldata[number].isLoading=false;		
+					//console.log(scope.alldata[number].isLoading)	
+					scope.$apply();
+					});
+
+		}, true);
+
+		w.bind('resize', function() {
+			scope.$apply();
+		});
+		
+
+			scope.preload = function(img, number)
+			{
+				 
+			};
+
+		}
+	};
+})
+.directive("ngTouchmove", function() {
 	return {
 		controller : function($scope, $element, $attrs) {
 			$element.bind('touchstart', onTouchStart);

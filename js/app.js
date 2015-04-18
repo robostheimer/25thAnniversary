@@ -2,13 +2,13 @@
 
 /* App Module */
 //var teachernamehash = window.location.hash.split('/')[2];
-var TAS_Anniversary = angular.module('TAS_Anniversary', ['ngRoute', 'ngSanitize', 'ngAnimate','ngTouch','angulartics', 'angulartics.google.analytics','Timeline', 'Story' ]);
+var TAS_Anniversary = angular.module('TAS_Anniversary', ['ngRoute', 'ngSanitize', 'ngAnimate','ngTouch','angulartics', 'angulartics.google.analytics','Timeline', 'Story', 'infinite-scroll' ]);
 TAS_Anniversary.config(['$routeProvider',
   function($routeProvider) {
    $routeProvider.
   	  when('/cards/', {
         templateUrl: 'partials/cards.html',
-       //controller: 'Timeline'
+       controller: 'storyController'
       }).
      when('/:feature',
     {
@@ -19,14 +19,14 @@ TAS_Anniversary.config(['$routeProvider',
      when('/:home',
     {
     	templateUrl:'partials/cards.html',
-    	//controller:'hashedLocation',
+    		controller:'storyController',
     	
     }).
      
     otherwise({
       	templateUrl: 'partials/cards.html',
-        redirectTo: '/home/'
-        //controller:'partials/home.html'
+        redirectTo: '/home/',
+        controller:'storyController',
      });
 
 		
