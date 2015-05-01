@@ -2,7 +2,7 @@
 
 /* Directives */
 
-TAS_Anniversary.directive('naviGation', function($injector, $compile, $q) {
+TAS_Site.directive('naviGation', function($injector, $compile, $q) {
 
 	var linkFunction = function(scope, elm, attr) {
 		scope.navWidth = $('.navigation').width();
@@ -67,11 +67,12 @@ TAS_Anniversary.directive('naviGation', function($injector, $compile, $q) {
 	
 	//////////////<div feature-image="{{slide.src}}?w={{windowWidth}}" color="{{slide.background_color}}" ng-hide="slide.isLoading==true">
 }).directive('caRd', function($compile, $q) {
-	
-	var Profile = '<div class="col-md-3 {{item.color}} loading" id="loader{{item.id}}" isLoading="{{item.isLoading}}" color="{{item.colorCode}}" ><img src="/images/NOAA-Logo.gif" alt="loading"/></div><div id="image{{item.id}}" resize-card feature-image="{{item.image}}" color="{{item.colorCode}}" class="col-md-3 {{item.color}}" ng-show="item.isLoading==false" blend="soft-light" alpha="1"> <div class="card-text"><h3>{{item.headline}}</h3><p> {{item.description}}</p>{{item.school}}<br>{{item.city}}, {{item.state}}<br>{{item.shiptype}} {{item.ship}}</p></div><div class="card-button"><button><a href="/#/{{item.year}}/{{item.firstname}}*{{item.lastname}}" role="button">View details »</a></button></div><br></div>';
-	var News = '<div class="col-md-3 {{item.color}}"> <h3>{{item.headline}}</h3><p> {{item.description}}</p><p><a class="btn btn-default" href="#" role="button">View details »</a></p></div>';
-	var Pow = '<div class="col-md-3 {{item.color}}"> <h3>{{item.headline}}</h3><p> {{item.description}}</p><p><a class="btn btn-default" href="#" role="button">View details »</a></p></div>';
-	var Lesson = '<div class="col-md-3 {{item.color}}"> <h3>{{item.headline}}</h3><p> {{item.description}}</p><p><a class="btn btn-default" href="#" role="button">View details »</a></p></div>';
+	/////
+	var Profile = '<div id="image{{item.id}}" resize-card feature-image="{{item.image}}" color="{{item.colorCode}}" class="col-md-3 {{item.color}}" ng-show="item.isLoading==false" blend="soft-light" alpha="1"> <div class="icon_right"><span class="icon-profile"></span></div><div class="card-text"><h3>{{item.headline}}</h3></div><div class="card-button"><button class="{{item.color}}"><a href="/#/{{item.year}}/{{item.firstname}}*{{item.lastname}}" role="button">View Profile »</a></button></div><br></div>';
+	var News = '<div id="news{{item.id}}" resize-card feature-image="{{item.src}}" color="{{item.colorCode}}" class="col-md-3 {{item.color}}" ng-show="item.isLoading==false" blend="soft-light" alpha="1"><div class="icon_right"><span class="icon-news"></span></div><div class="card-text"><h3 ng-bind-html="SkipValidation(item.headline)"></h3></div><div class="card-button"><button class="{{item.color}}"><a  href="#" role="button">Read the Story »</a></button></div></div>';
+	var Article = '<div class="col-md-3 {{item.color}}"><div class="icon_right"><span class="icon-news "></span></div> <div class="card-text"><h3 ng-bind-html="SkipValidation(item.headline)"></h3><p>Check out this article from <em> {{item.mediaoutlet}}</em>.<p></div><div class="card-button"><button class="{{item.color}}"><a  href="{{articleurl}}" role="button">Read Article »</a></button></div></div>';
+	var Pow = '<div id="pow{{item.id}}" resize-card feature-image="{{item.src}}" color="{{item.colorCode}}" class="col-md-3 {{item.color}}" ng-show="item.isLoading==false" blend="soft-light" alpha="1"> <div class="icon_right"><span class="icon-images "></span></div><div class="card-text"><h3 ng-bind-html="SkipValidation(item.powSlice)"></h3></div><div class="card-button"><button class="{{item.color}}"><a  href="#" role="button">Learn More »</a></button></div></div>';
+	var Lesson = '<div class="col-md-3 {{item.color}}"><div class="icon_right"><span class="icon-chalkboard2 "></span></div> <div class="card-text"><h3 ng-bind-html="SkipValidation(item.headline)">}</h3><p>{{item.lessonSlice}}</p></div><div class="card-button"><button class="{{item.color}}"><a href="{{item.url}}" target="_blank" role="button">View Lesson»</a></button></div></div>';
 	var Quotes = '';
 
 	var getTemplate = function(contentType) {
@@ -94,6 +95,9 @@ TAS_Anniversary.directive('naviGation', function($injector, $compile, $q) {
 		case 'quotes':
 			template = Quotes;
 			break;
+		case 'article':
+			template = Article;
+			break;	
 
 		}
 
@@ -694,7 +698,6 @@ TAS_Anniversary.directive('naviGation', function($injector, $compile, $q) {
 			'background-blend-mode': blend
 			});
 			element.isLoading="true"
-		//console.log(url)
 			var image= new Image() ;
 		   // console.log(url);
 			image.src=url;
@@ -715,11 +718,7 @@ TAS_Anniversary.directive('naviGation', function($injector, $compile, $q) {
 		});
 		
 
-			scope.preload = function(img, number)
-			{
-				 
-			};
-
+			
 		}
 	};
 }).directive('featureImageBig', function($window) {
@@ -773,10 +772,7 @@ TAS_Anniversary.directive('naviGation', function($injector, $compile, $q) {
 		});
 		
 
-			scope.preload = function(img, number)
-			{
-				 
-			};
+			
 
 		}
 	};
@@ -832,5 +828,36 @@ TAS_Anniversary.directive('naviGation', function($injector, $compile, $q) {
 			};
 		}
 	};
-});
+}).directive('ngDelay', ['$timeout', function ($timeout) {
+    return {
+        restrict: 'A',
+        scope: true,
+        compile: function (element, attributes) {
+            var expression = attributes['ngChange'];
+            if (!expression)
+                return;
+
+            var ngModel = attributes['ngModel'];
+            if (ngModel) attributes['ngModel'] = '$parent.' + ngModel;
+            attributes['ngChange'] = '$$delay.execute()';
+
+            return {
+                post: function (scope, element, attributes) {
+                    scope.$$delay = {
+                        expression: expression,
+                        delay: scope.$eval(attributes['ngDelay']),
+                        execute: function () {
+                            var state = scope.$$delay;
+                            state.then = Date.now();
+                            $timeout(function () {
+                                if (Date.now() - state.then >= state.delay)
+                                    scope.$parent.$eval(expression);
+                            }, state.delay);
+                        }
+                    };
+                }
+            };
+        }
+    };
+}]);;
 

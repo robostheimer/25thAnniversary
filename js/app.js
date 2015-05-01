@@ -2,8 +2,8 @@
 
 /* App Module */
 //var teachernamehash = window.location.hash.split('/')[2];
-var TAS_Anniversary = angular.module('TAS_Anniversary', ['ngRoute', 'ngSanitize', 'ngAnimate','ngTouch','angulartics', 'angulartics.google.analytics','Timeline', 'Story', 'infinite-scroll' ]);
-TAS_Anniversary.config(['$routeProvider',
+var TAS_Site = angular.module('TAS_Site', ['ngRoute', 'ngSanitize', 'ngAnimate','ngTouch','angulartics', 'angulartics.google.analytics','Timeline', 'Story', 'infinite-scroll' ]);
+TAS_Site.config(['$routeProvider',
   function($routeProvider) {
    $routeProvider.
   	  when('/cards/', {

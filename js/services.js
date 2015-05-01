@@ -2,8 +2,8 @@
 
 /* Services */
 /////////////////////////////////HomePage/////////////////////////////////////////////
-TAS_Anniversary.factory('Teacher', ['$http', '$routeParams', '$location', '$rootScope', '$sce',
-function($http, $routeParams, $location, $rootScope, $sce) {
+TAS_Site.factory('Teacher', ['$http', '$routeParams', '$location', '$rootScope', '$sce','HelperFunctions',
+function($http, $routeParams, $location, $rootScope, $sce, HelperFunctions) {
 	return{
 		createTeacherList :function(item){
 			var teachers = {data:[], years:[]};
@@ -13,16 +13,17 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 			return $http.jsonp('https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+TeacherLastName%2CTeacherFirstName%2CShipType%2C+Ship%2C+ShipUrl%2C+CruiseURL%2C+Mission%2C+CruiseDates%2C+SubjectsTaught%2C+School%2C+City%2C+State%2C+Image%2C+Grades%2C+SchoolURL%2C+WordPressURL%2C+Year+FROM+1Xh5kWI_ZHd-PZRuPcgrV_oS13HHN6JGtRK4s75Mn+ORDER%20BY+Year%22&&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK').then(function(result) {
 				if (result.data.rows != undefined) {
 
-					forEach (result.data.rows,function(item){
+					HelperFunctions.forEach (result.data.rows,function(item){
         			var o = result.data.rows.indexOf(item);	
         				teachers.data.push({
 							lastname : item[0],
-							lastname_forDOM : DigPatt(item[0].replace(' ', '')),
+							lastname_forDOM : HelperFunctions.DigPatt(item[0].replace(' ', '')),
 							firstname : item[1],
-							headline: item[1]+' '+DigPatt(item[0].replace(' ', ''))+', ' +item[16]+' Teacher at Sea',
+							name : item[1]+' '+HelperFunctions.DigPatt(item[0].replace(' ', '')),
+							headline: item[1]+' '+HelperFunctions.DigPatt(item[0].replace(' ', ''))+', ' +item[16]+' Teacher at Sea',
 							shiptype : item[2],
 							ship : item[3],
-							shipurl : item[0][4],
+							shipurl : item[4],
 							cruiseurl : item[5],
 							mission : item[6],
 							dates : item[7],
@@ -43,13 +44,14 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 							schoolurl2 : item[14].split('&&')[1],
 							tabIndex : 150 + o,
 							checkContents : true,
-							classy: 'icon-news',
+							classy: 'icon-profile',
 							template:'profile',
 							color: 'blue',
 							colorCode: '4, 146, 206',
 							type :'profile',
-							id:o,
-							randomnumber: Math.floor(Math.random()*51)
+							id:'teacher'+o,
+							randomnumber: Math.floor(Math.random()*51),
+							description:item[1]+' '+item[0]+'  of '+ item[10]+', ' +item[11]+ ' teaches '+item[8]+' at ' + item[9]+ 'and  will be aboard' + item[2]+' '+item[3]+ ' '+item[5]+ 'while scientist conduct a'+item[6] +' survey'
 							
 
 						});
@@ -62,13 +64,14 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 					
 					var year = $location.path().split('/')[1].split('/')[0]
 					return $http.get('/JSONBackups/TeacherFusionTable.json').then(function(result) {
-					forEach (result.data.rows,function(item){
+					HelperFunctions.forEach (result.data.rows,function(item){
         			var o = result.data.rows.indexOf(item);	if (item[16] == year) {
 							teachers.push({
 								lastname : item[0],
-								lastname_forDOM : DigPatt(item[0].replace(' ', '')),
+								lastname_forDOM : HelperFunctions.DigPatt(item[0].replace(' ', '')),
 								firstname : item[1],
-								headline: item[1]+' '+DigPatt(item[0].replace(' ', ''))+', ' +item[16]+' Teacher at Sea',
+								name : item[1]+' '+HelperFunctions.DigPatt(item[0].replace(' ', '')),
+								headline: item[1]+' '+HelperFunctions.DigPatt(item[0].replace(' ', ''))+', ' +item[16]+' Teacher at Sea',
 								shiptype : item[2],
 								ship : item[3],
 								shipurl : item[0][4],
@@ -92,13 +95,15 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 								schoolurl2 : item[14].split('&&')[1],
 								tabIndex : 150 + o,
 								checkContents : true,
-								classy: 'icon-news',
+								classy: 'icon-profile',
 								template:'profile',
 								color: 'blue',
 								colorCode: '4, 146, 206',
 								type :'profile',
-								id:o,
-								randomnumber: Math.floor(Math.random()*51)
+								id:'teacher'+o,
+								randomnumber: Math.floor(Math.random()*51),
+								description:item[6] +':'+item[11] +':'+item[3]+':'+item[13]+':'+item[8]+':'+item[9]+':'+item.year+':'+item.city+':'+item.state
+
 
 							});
 							teachers.years.push(item[16])
@@ -115,13 +120,14 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 				var year = $location.path().split('/')[1].split('/')[0]
 				return $http.get('/JSONBackups/TeacherFusionTable.json').then(function(result) {
 					console.log($routeParams.year)
-					forEach (result.data.rows,function(item){
+					HelperFunctions.forEach (result.data.rows,function(item){
         			var o = result.data.rows.indexOf(item);	if (item[16] == year) {
 							teachers.push({
 								lastname : item[0],
-								lastname_forDOM : DigPatt(item[0].replace(' ', '')),
+								lastname_forDOM : HelperFunctions.DigPatt(item[0].replace(' ', '')),
 								firstname : item[1],
-								headline: item[1]+' '+DigPatt(item[0].replace(' ', ''))+', ' +item[16]+' Teacher at Sea', 
+								name : item[1]+' '+HelperFunctions.DigPatt(item[0].replace(' ', '')),
+								headline: item[1]+' '+HelperFunctions.DigPatt(item[0].replace(' ', ''))+', ' +item[16]+' Teacher at Sea', 
 								shiptype : item[2],
 								ship : item[3],
 								shipurl : item[0][4],
@@ -149,8 +155,9 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 								color: 'blue',
 								colorCode: '4, 146, 206',
 								type :'profile',
-								id:o,
-								randomnumber: Math.floor(Math.random()*51)
+								id:'teacher'+o,
+								randomnumber: Math.floor(Math.random()*51),
+								description:item[6] +':'+item[11] +':'+item[3]+':'+item[13]+':'+item[8]+':'+item[9]+':'+item.year+':'+item.city+':'+item.state
 
 							});
 							teachers.years.push(item[16])
@@ -163,8 +170,8 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 		}
 	};
 }]);
-TAS_Anniversary.factory('News', ['$http', '$routeParams', '$location', '$rootScope', '$sce',
-function($http, $routeParams, $location, $rootScope, $sce) {
+TAS_Site.factory('News', ['$http', '$routeParams', '$location', '$rootScope', '$sce','HelperFunctions',
+function($http, $routeParams, $location, $rootScope, $sce, HelperFunctions) {
 	return{
 	getNewsData :function(item){
 			///////////////////////////////Start Here////////////////////
@@ -174,7 +181,7 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 			return $http.jsonp('https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+ArticleYear%2C+Teacher%2C+MediaOutlet%2C+ArticleTitle%2C+MediaOutletURL%2C+ArticleURL+FROM+1EaTTZDozzJ0k3K2FMoD0O6JAfeiHcc6SB95f0hYv&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK').then(function(result) {
 				if (result.data.rows != undefined) {
 					
-					forEach (result.data.rows,function(item){ 
+					HelperFunctions.forEach (result.data.rows,function(item){ 
 					var o =result.data.rows.indexOf(item)
 						news.push({
 							articleyear : item[0],
@@ -185,13 +192,14 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 							medioutleturl : item[4],
 							articleurl : item[5],
 							checkContents : true,
-							classy: 'icon-newspaper',
-							template:'news',
+							classy: 'icon-profile',
+							template:'article',
 							color: 'dkblue',
 							colorCode: '0, 87, 165',
-							type:'news',
+							type:'article',
 							randomnumber: Math.floor(Math.random()*51),
-							id:o
+							id:'article'+o,
+							description:item[0]+':'+item[2]+':'+item[3],
 						});
 
 					});
@@ -200,7 +208,7 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 					
 					/////////////if fusion table is empty but doesn't throw an error/////////
 					return $http.get('/JSONBackups/NewsFusionTable.json').then(function(result) {
-						forEach (result.data.rows,function(item){  
+						HelperFunctions.forEach (result.data.rows,function(item){  
 							news.push({
 								articleyear : item[0],
 								year:item[0],
@@ -210,13 +218,13 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 								medioutleturl : item[4],
 								articleurl : item[5],
 								checkContents : true,
-								classy: 'icon-newspaper',
-								template:'news',
+								classy: 'icon-profile',
+								template:'article',
 								color: 'dkblue',
 								colorCode: '0, 87, 165',
-								type:'news',
+								type:'article',
 								randomnumber: Math.floor(Math.random()*51),
-								id:o
+								id:'article'+o
 								
 							});
 
@@ -235,7 +243,7 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 				var newsObj = {};
 				newsObj.checkContents = false;
 				return $http.get('/JSONBackups/NewsFusionTable.json').then(function(result) {
-							forEach (result.data.rows,function(item){ 
+							HelperFunctions.forEach (result.data.rows,function(item){ 
 							news.push({
 								articleyear : item[0],
 								year:item[0],
@@ -245,13 +253,13 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 								medioutleturl : item[4],
 								articleurl : item[5],
 								checkContents : true,
-								classy: 'icon-newspaper',
-								template:'news',
+								classy: 'icon-profile',
+								template:'article',
 								colorCode: '0, 87, 165',
 								color:'dkblue',
-								type:'news',
+								type:'article',
 								randomnumber: Math.floor(Math.random()*51),
-								id:o
+								id:'article'+o
 							});
 
 						});
@@ -263,8 +271,8 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 	};	
 }]);	
 
-TAS_Anniversary.factory('AlumniSpot', ['$http', '$routeParams', '$location', '$rootScope', '$sce',
-function($http, $routeParams, $location, $rootScope, $sce) {
+TAS_Site.factory('AlumniSpot', ['$http', '$routeParams', '$location', '$rootScope', '$sce','HelperFunctions',
+function($http, $routeParams, $location, $rootScope, $sce,HelperFunctions) {
 
 	return {
 
@@ -275,7 +283,7 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 					var d = new Date();
 					var td = d.valueOf();
 					result.data.rows.reverse();
-					forEach (result.data.rows,function(item){
+					HelperFunctions.forEach (result.data.rows,function(item){
        				 var i = result.data.rows.indexOf(item);	
        				 var pd = new Date(item[6]);
 						var tpd = pd.valueOf();
@@ -284,8 +292,8 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 							spot.push({
 								id : i,
 								headline:item[0]+' '+ item[1],
-								description : item[2],
-								longbody : item[3],
+								description : item[2].replace(/"/g, ''),
+								longbody : item[3].replace(/"/g, ''),
 								src : item[4].split('?')[0],
 								caption : item[5],
 								date : item[6],
@@ -295,12 +303,13 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 								hash : '/indiv_spotlight/' + item[0].replace(/ /g, '_') + '_' + item[1].replace(/ /g, '_'),
 								dataloaded : true,
 								tabIndex : 150 + i,
-								classy: 'icon-newspaper',
+								classy: 'icon-profile',
 								template:'news',
 								colorCode: '0, 87, 165',
 								color:'dkblue',
 								type:'news',
-								randomnumber: Math.floor(Math.random()*51)
+								randomnumber: Math.floor(Math.random()*51),
+								id:'spot'+i
 								
 
 
@@ -317,7 +326,7 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 						var d = new Date();
 						var td = d.valueOf();
 						result.data.rows.reverse();
-						forEach (result.data.rows,function(item){
+						HelperFunctions.forEach (result.data.rows,function(item){
         					var i = result.data.rows.indexOf(item);		
         					var pd = new Date(item[6]);
 							var tpd = pd.valueOf();
@@ -326,8 +335,8 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 								spot.push({
 									id : i,
 									headline:item[0]+' '+ item[1],
-									description : item[2],
-									longbody : item[3],
+									description : item[2].replace(/"/g, ''),
+									longbody : item[3].replace(/"/g, ''),
 									src : item[4].split('?')[0],
 									caption : item[5],
 									date : item[6],
@@ -337,12 +346,13 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 									hash : '/indiv_spotlight/' + item[0].replace(/ /g, '_') + '_' + item[1].replace(/ /g, '_'),
 									dataloaded : true,
 									tabIndex : 150 + i,
-									classy: 'icon-newspaper',
+									classy: 'icon-profile',
 									template:'news',
 									colorCode: '0, 87, 165',
 									color:'dkblue',
 									type:'news',
-									randomnumber: Math.floor(Math.random()*51)
+									randomnumber: Math.floor(Math.random()*51),
+									id:'spot'+i
 
 
 								});
@@ -364,7 +374,7 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 						var d = new Date();
 						var td = d.valueOf();
 						result.data.rows.reverse();
-						forEach (result.data.rows,function(item){
+						HelperFunctions.forEach (result.data.rows,function(item){
         					var i = result.data.rows.indexOf(item);		
         					var pd = new Date(item[6]);
 							var tpd = pd.valueOf();
@@ -373,8 +383,8 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 								spot.push({
 									id : i,
 									headline:item[0]+' '+ item[1],
-									description : item[2],
-									longbody : item[3],
+									description : item[2].replace(/"/g, ''),
+									longbody : item[3].replace(/"/g, ''),
 									src : item[4].split('?')[0],
 									caption : item[5],
 									date : item[6],
@@ -384,12 +394,13 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 									hash : '/indiv_spotlight/' + item[0].replace(/ /g, '_') + '_' + item[1].replace(/ /g, '_'),
 									dataloaded : true,
 									tabIndex : 150 + i,
-									classy: 'icon-newspaper',
+									classy: 'icon-profile',
 									template:'news',
 									colorCode: '0, 87, 165',
 									color:'dkblue',
 									type:'news',
-									randomnumber: Math.floor(Math.random()*51)
+									randomnumber: Math.floor(Math.random()*51),
+									id:'spot'+i
 
 								});
 							}
@@ -407,8 +418,8 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 			
 }]);
 
-TAS_Anniversary.factory('PhotosofWeek', ['$http', '$routeParams', '$location', '$rootScope', '$sce',
-function($http, $routeParams, $location, $rootScope, $sce) {
+TAS_Site.factory('PhotosofWeek', ['$http', '$routeParams', '$location', '$rootScope', '$sce','HelperFunctions',
+function($http, $routeParams, $location, $rootScope, $sce, HelperFunctions) {
 
 	return {
 		getPOW :function(item){
@@ -418,7 +429,7 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 					var d = new Date();
 					var td = d.valueOf();
 					result.data.rows.reverse();
-					forEach (result.data.rows,function(item){
+					HelperFunctions.forEach (result.data.rows,function(item){
         			var i = result.data.rows.indexOf(item);	var pd = new Date(item[7]);
 						var tpd = pd.valueOf();
 						
@@ -426,9 +437,9 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 							pow.push({
 								id : i,
 								src : item[0],
-								headline : item[1].replace(/<p>/g, '').replace(/<\/p>/g, ''),
-								description : item[2].replace(/<p>/g, '').replace(/<\/p>/g, ''),
-								shortdescription : item[3].replace(/<p>/g, '').replace(/<\/p>/g, ''),
+								headline : item[1].replace(/<p>/g, '').replace(/<\/p>/g, '').replace(/"/g, ''),
+								description : item[2].replace(/<p>/g, '').replace(/<\/p>/g, '').replace(/"/g, ''),
+								shortdescription : item[3].replace(/<p>/g, '').replace(/<\/p>/g, '').replace(/"/g, ''),
 								parent : item[4],
 								credit : item[5],
 								post_title : item[6],
@@ -442,7 +453,8 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 								colorCode:'235, 189, 30',
 								color:'yellow',
 								type:'image',
-								randomnumber: Math.floor(Math.random()*51)
+								randomnumber: Math.floor(Math.random()*51),
+								id:'image'+i
 							});
 						}
 
@@ -450,12 +462,12 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 				return pow;
 				}
 				else{
-					return $http.get('/JSONBAckups/POWFusionTable.json').then(function(result)
+					return $http.get('/JSONBackups/POWFusionTable.json').then(function(result)
 					{
 					var d = new Date();
 						var td = d.valueOf();
 						result.data.rows.reverse();
-						forEach (result.data.rows,function(item){
+						HelperFunctions.forEach (result.data.rows,function(item){
        						var i = result.data.rows.indexOf(item);		
        						var pd = new Date(item[7]);
 							var tpd = pd.valueOf()
@@ -464,9 +476,9 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 								pow.push({
 									id : i,
 									src : item[0],
-									headline : item[1].replace(/<p>/g, '').replace(/<\/p>/g, ''),
-									description : item[2].replace(/<p>/g, '').replace(/<\/p>/g, ''),
-									shortdescription : item[3].replace(/<p>/g, '').replace(/<\/p>/g, ''),
+									headline : item[1].replace(/<p>/g, '').replace(/<\/p>/g, '').replace(/"/g, ''),
+									description : item[2].replace(/<p>/g, '').replace(/<\/p>/g, '').replace(/"/g, ''),
+									shortdescription : item[3].replace(/<p>/g, '').replace(/<\/p>/g, '').replace(/"/g, ''),
 									parent : item[4],
 									credit : item[5],
 									post_title : item[6],
@@ -480,7 +492,9 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 									colorCode:'235, 189, 30',
 									color:'yellow',
 									type:'image',
-									randomnumber: Math.floor(Math.random()*51)
+									randomnumber: Math.floor(Math.random()*51),
+									id:'image'+i
+
 								});
 							}
 
@@ -496,7 +510,7 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 					var d = new Date();
 						var td = d.valueOf();
 						result.data.rows.reverse();
-						forEach (result.data.rows,function(item){
+						HelperFunctions.forEach (result.data.rows,function(item){
         				var i = result.data.rows.indexOf(item);		var pd = new Date(item[7]);
 							var tpd = pd.valueOf()
 
@@ -504,9 +518,9 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 								pow.push({
 									id : i,
 									src : item[0],
-									headline : item[1].replace(/<p>/g, '').replace(/<\/p>/g, ''),
-									description : item[2].replace(/<p>/g, '').replace(/<\/p>/g, ''),
-									shortdescription : item[3].replace(/<p>/g, '').replace(/<\/p>/g, ''),
+									headline : item[1].replace(/<p>/g, '').replace(/<\/p>/g, '').replace(/"/g, ''),
+									description : item[2].replace(/<p>/g, '').replace(/<\/p>/g, '').replace(/"/g, ''),
+									shortdescription : item[3].replace(/<p>/g, '').replace(/<\/p>/g, '').replace(/"/g, ''),
 									parent : item[4],
 									credit : item[5],
 									post_title : item[6],
@@ -520,7 +534,9 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 									colorCode:'235, 189, 30',
 									color:'yellow',
 									type:'image',
-									randomnumber: Math.floor(Math.random()*51)
+									randomnumber: Math.floor(Math.random()*51),
+									id:'image'+i
+
 								});
 							}
 
@@ -536,13 +552,12 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 				if (result.data.rows != null) {
 				
 					
-					forEach (result.data.rows,function(item){
+					HelperFunctions.forEach (result.data.rows,function(item){
        				 var i = result.data.rows.indexOf(item);
 							nonpow.push({
-								id : i,
 								src : item[1],
-								headline : item[6].replace(/<p>/g, '').replace(/<\/p>/g, ''),
-								description : item[0].replace(/<p>/g, '').replace(/<\/p>/g, ''),
+								headline : item[6].replace(/<p>/g, '').replace(/<\/p>/g, '').replace(/"/g, ''),
+								description : item[0].replace(/<p>/g, '').replace(/<\/p>/g, '').replace(/"/g, ''),
 								parent : item[3],
 								credit : item[2],
 								post_title : item[4],
@@ -555,7 +570,9 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 								colorCode:'235, 189, 30',
 								color:'yellow',
 								type:'image',
-								randomnumber: Math.floor(Math.random()*51)
+								randomnumber: Math.floor(Math.random()*51),
+								id:'nonpow'+i
+
 							});
 					});
 
@@ -565,13 +582,12 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 				else{
 					return $http.get('/JSONBAckups/POWFusionTable.json').then(function(result)
 					{
-						forEach (result.data.rows,function(item){
+						HelperFunctions.forEach (result.data.rows,function(item){
         var i = result.data.rows.indexOf(item);
 							nonpow.push({
-								id : i,
 								src : item[1],
-								headline : item[6].replace(/<p>/g, '').replace(/<\/p>/g, ''),
-								description : item[0].replace(/<p>/g, '').replace(/<\/p>/g, ''),
+								headline : item[6].replace(/<p>/g, '').replace(/<\/p>/g, '').replace(/"/g, ''),
+								description : item[0].replace(/<p>/g, '').replace(/<\/p>/g, '').replace(/"/g, ''),
 								parent : item[3],
 								credit : item[2],
 								post_title : item[4],
@@ -584,7 +600,9 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 								colorCode:'235, 189, 30',
 								color:'yellow',
 								type:'image',
-								randomnumber: Math.floor(Math.random()*51)
+								randomnumber: Math.floor(Math.random()*51),
+								id:'nonpow'+i
+
 							});
 						});
 						return nonpow
@@ -594,10 +612,9 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 			}, function(error){
 				return $http.get('/JSONBAckups/POWFusionTable.json').then(function(result)
 					{
-						forEach (result.data.rows,function(item){
+						HelperFunctions.forEach (result.data.rows,function(item){
         					var i = result.data.rows.indexOf(item);
 							nonpow.push({
-								id : i,
 								src : item[1],
 								headline : item[6].replace(/<p>/g, '').replace(/<\/p>/g, ''),
 								description : item[0].replace(/<p>/g, '').replace(/<\/p>/g, ''),
@@ -613,7 +630,9 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 								colorCode:'235, 189, 30',
 								color:'yellow',
 								type:'image',
-								randomnumber: Math.floor(Math.random()*51)
+								randomnumber: Math.floor(Math.random()*51),
+								id:'nonpow'+i
+
 							});
 						});
 						return nonpow
@@ -623,8 +642,8 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 	};
 }]);
 
-TAS_Anniversary.factory('Quotes', ['$http', '$routeParams', '$location', '$rootScope', '$sce',
-function($http, $routeParams, $location, $rootScope, $sce){
+TAS_Site.factory('Quotes', ['$http', '$routeParams', '$location', '$rootScope', '$sce','HelperFunctions',
+function($http, $routeParams, $location, $rootScope, $sce, HelperFunctions){
 return{
 	getQuotesData :function(item){
 			var quotes = [];
@@ -632,9 +651,9 @@ return{
 				if(result!=undefined)
 				{
 				quotes = result.data.feed.entry;
-				forEach(quotes,function(quote) {
+				HelperFunctions.forEach(quotes,function(quote) {
 					var i=quotes.indexOf(quote);
-					quote.id = i;
+					quote.id = 'quote'+i;
 					quote.gsx$tn.$t = quotes[i].gsx$tn.$t;
 					quote.tabIndex = i + 200;
 					//quote.headline=quote[0]+' '+ quote.item[1];
@@ -644,7 +663,7 @@ return{
 					quote.year = quote.gsx$year.$t;
 					quote.color='green';
 					quote.type='quote';
-					id=i;
+					quote.description = quote.gsx$quote.$t;
 					randomnumber= Math.floor(Math.random()*51)
 				});
 
@@ -653,19 +672,19 @@ return{
 				else{
 					return $http.get('/JSONBackups/Quotes.json').then(function(result) {
 					quotes = result.data.feed.entry;
-					forEach(quotes,function(quote) {
+					HelperFunctions.forEach(quotes,function(quote) {
 						var i=quotes.indexOf(quote);
-						quote.id = i;
+						quote.id = 'quote'+i;
 						quote.gsx$tn.$t = quotes[i].gsx$tn.$t;
 						quote.tabIndex = i + 200;
-						quote.headline=item[0]+' '+ item[1];
+						//quote.headline=item[0]+' '+ item[1];
 						quote.classy= 'icon-bubble';
 						quote.template= 'quotes';
 						quote.colorCode= '25, 142, 129';
 						quote.year = quote.gsx$year.$t;
 						quote.color='green';
 						quote.type='quote';
-						id=i;
+						quote.description = quote.gsx$quote.$t;
 						randomnumber= Math.floor(Math.random()*51)
 					});
 
@@ -677,19 +696,19 @@ return{
 				
 				return $http.get('JSONBackups/Quotes.json').then(function(result) {
 					quotes = result.data.feed.entry;
-					forEach(quotes,function(quote) {
+					HelperFunctions.forEach(quotes,function(quote) {
 					var i=quotes.indexOf(quote);
-						quote.id = i;
+						quote.id = 'quote'+i;
 						quote.gsx$tn.$t = quotes[i].gsx$tn.$t;
 						quote.tabIndex = i + 200;
-						quote.headline=item[0]+' '+ item[1];
+						//quote.headline=item[0]+' '+ item[1];
 						quote.classy= 'icon-bubble';
 						quote.template= 'quotes';
 						quote.colorCode= '25, 142, 129';
 						quote.year = quote.gsx$year.$t;
 						quote.color='green';
 						quote.type='quote';
-						id=i;
+						quote.description = quote.gsx$quote.$t;
 						randomnumber= Math.floor(Math.random()*51)
 					});
 
@@ -701,8 +720,8 @@ return{
 	};		
 }]);	
 
-TAS_Anniversary.factory('Lessons', ['$http', '$routeParams', '$location', '$rootScope', '$sce',
-function($http, $routeParams, $location, $rootScope, $sce){
+TAS_Site.factory('Lessons', ['$http', '$routeParams', '$location', '$rootScope', '$sce','HelperFunctions',
+function($http, $routeParams, $location, $rootScope, $sce, HelperFunctions){
 return{
 	getLessonData : function(teachername) {
 			
@@ -712,7 +731,7 @@ return{
 				if (result.data.rows != undefined) {
 					var lesson = [];
 					
-					forEach(result.data.rows,function(item){
+					HelperFunctions.forEach(result.data.rows,function(item){
 						var o = result.data.rows.indexOf(item);
 						lesson.push({
 							lastname : item[0],
@@ -730,7 +749,7 @@ return{
 							url : item[10],
 							topics : item[11],
 							checkContents : true,
-							id : o,
+							id : 'lesson'+o,
 							favorite : 'off',
 							classy: 'icon-chalkboard2' ,
 							template: 'lesson',
@@ -741,6 +760,7 @@ return{
 						});
 						
 					});
+					
 					return lesson;
 				}
 				else{
@@ -748,7 +768,7 @@ return{
 					return $http.get('/JSONBackups/LessonsTable.json').then(function(result) {
 					var name = $routeParams.teachername.replace('*', ' ')
 
-					forEach(data.rows.length,function(item){
+					HelperFunctions.forEach(data.rows.length,function(item){
 						var o = result.data.rows.indexOf(item);
 						var name_comp = item[1] + ' ' + item[0]
 
@@ -769,7 +789,7 @@ return{
 								url : item[10],
 								topics : item[11],
 								checkContents : true,
-								id : o,
+								id :'lesson'+ o,
 								favorite : 'off',
 								classy: 'icon-chalkboard2',
 								template: 'lesson',
@@ -794,7 +814,7 @@ return{
 				return $http.get('/JSONBackups/LessonsTable.json').then(function(result) {
 					var name = $routeParams.teachername.replace('*', ' ')
 
-					forEach(data.rows.length,function(item){
+					HelperFunctions.forEach(data.rows.length,function(item){
 						var o = result.data.rows.indexOf(item);
 						var name_comp = item[1] + ' ' + item[0]
 
@@ -815,7 +835,7 @@ return{
 								url : item[10],
 								topics : item[11],
 								checkContents : true,
-								id : o,
+								id :'lesson'+ o,
 								favorite : 'off', 
 								classy: 'icon-chalkboard2',
 								template: 'lesson',
@@ -836,8 +856,8 @@ return{
 	};
 }]);
 
-TAS_Anniversary.factory('CombineData', ['AlumniSpot','PhotosofWeek','Teacher','News','Lessons', 'Quotes','$q',
-function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $q) {
+TAS_Site.factory('CombineData', ['AlumniSpot','PhotosofWeek','Teacher','News','Lessons', 'Quotes','$q','HelperFunctions',
+function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $q, HelperFunctions) {
 	return{
 		DataCombine: function()
 		{
@@ -852,7 +872,7 @@ function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $q) {
 				Teacher.createTeacherList().then(function(data){
 				teachers = data.reverse();
 				teachers.years=[];
-				forEach(teachers, function(obj){
+				HelperFunctions.forEach(teachers, function(obj){
 					obj.isLoading=true;
 					if(obj.year==undefined)
 						{
@@ -874,7 +894,7 @@ function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $q) {
 						var nonpow=data;
 						pow = pow.concat(nonpow); 
 						pow.years = []
-						forEach(pow, function(obj){
+						HelperFunctions.forEach(pow, function(obj){
 							
 							if(obj.year==undefined)
 							{
@@ -897,7 +917,7 @@ function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $q) {
 								News.getNewsData().then(function(data){
 								spot =spot.concat(data);
 								spot.years=[];
-								forEach(spot, function(obj){
+								HelperFunctions.forEach(spot, function(obj){
 								if(obj.articleyear==undefined)
 								{
 								spot.years.push(obj.date.split('/')[2]);
@@ -916,7 +936,7 @@ function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $q) {
 									Lessons.getLessonData().then(function(data){
 									lessons = data;
 									lessons.years=[];
-									forEach(lessons, function(obj){
+									HelperFunctions.forEach(lessons, function(obj){
 										lessons.years.push(obj.year);
 										obj.color='dkstblue';
 									});
@@ -927,7 +947,7 @@ function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $q) {
 										Quotes.getQuotesData().then(function(data){
 										quotes = data;
 										quotes.years=[];
-										forEach(quotes, function(obj){
+										HelperFunctions.forEach(quotes, function(obj){
 											quotes.years.push(obj.gsx$year.$t);
 											obj.color='green';
 										});
@@ -955,8 +975,8 @@ function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $q) {
 	};
 }]);	
 
-TAS_Anniversary.factory('Timeline', ['$http', '$routeParams', '$location', '$rootScope', '$sce',
-function($http, $routeParams, $location, $rootScope, $sce) {
+TAS_Site.factory('Timeline', ['$http', '$routeParams', '$location', '$rootScope', '$sce','HelperFunctions',
+function($http, $routeParams, $location, $rootScope, $sce, HelperFunctions) {
 	return{
 		getTimelineData:function()
 		{
@@ -976,17 +996,17 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 				items.years=[];
 				var tmpTxt=''
 				
-				forEach(items, function(item)
+				HelperFunctions.forEach(items, function(item)
 				{
 					if(!tmpTxt.match(item.gsx$year.$t))
 					{
 						items.years.push(
 							{'year':item.gsx$year.$t, 'state': 'notselected', color:item.gsx$color.$t, classy:'hider',noSubnav:true,
 								subNav :[
-								{name:"alumni", state:'notselected', checked:'notselected', color:'dkblue', 'year':item.gsx$year.$t, on_off:'off','classy':'icon-newspaper dkblue' }, 
+								{name:"alumni", state:'notselected', checked:'notselected', color:'dkblue', 'year':item.gsx$year.$t, on_off:'off','classy':'icon-profile dkblue' }, 
 								{name:"images",state:'notselected', checked:'notselected', color:'yellow', 'year':item.gsx$year.$t, on_off:'off','classy':'icon-images yellow' },
 								{name:'dates', state:'notselected', checked:'notselected', color:'foam', 'year':item.gsx$year.$t, on_off:'off', 'classy':'icon-calendar foam' }, 
-								{name:'profile', state:'notselected', checked:'notselected', color:'blue', 'year':item.gsx$year.$t, on_off:'off', 'classy':'icon-news blue' },
+								{name:'profile', state:'notselected', checked:'notselected', color:'blue', 'year':item.gsx$year.$t, on_off:'off', 'classy':'icon-profile blue' },
 								{name:"quotes", state:'notselected', checked:'notselected', color:'green', 'year':item.gsx$year.$t, on_off:'off', 'classy':'icon-bubble green' },  
 								{name:"lessons", state:'notselected', checked:'notselected', color:'dkstblue', 'year':item.gsx$year.$t, on_off:'off', 'classy':'icon-chalkboard2 dkstblue' }, 
 								{name:"stats", state:'notselected', checked:'notselected', color:'ltgreen', 'year':item.gsx$year.$t, on_off:'off', 'classy':'icon-stats ltgreen' }, 
@@ -1002,3 +1022,5 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 		}
 	};
 }]);	
+
+

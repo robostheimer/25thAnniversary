@@ -1,20 +1,46 @@
 <div ng-show="isLoadding==true" class="feature-big-loader"></div>
 	<div ng-hide = "isLoading==true" id = 'image0' class="stage_container_card" feature-image-big="https://teacheratsea.files.wordpress.com/2015/03/nsta-chicago.jpg" color='4, 146, 206' blend='overlay' alpha='1'>
-	<div></div>
+	<div>
+		
+	</div>
 </div>
 
 
-<section class="stage" >
-	<div class="container" infinite-scroll = "addMore()" infinite-scroll-distance="2" elmwin = 'elem' child='row' >
 	
-      <div class="row"  >
+	
+	<div class="internal_search" tabindex="151">
+			<form id="search" name="search" class="ng-pristine ng-valid">
+				<label style="visibility:hidden">Search Timeline</label>
+				<input type="text" name="search" value="" placeholder="Search Timeline"  ng-model="query" tabindex="152" ng-change="filterData(query); l" ng-delay="300">
+			</form>
+
+			<div class="search" aria-hidden="false" data-icon="Z" tabindex="153"><span class="icon-search"></span></div>
+
+		</div>	
+	
+	</div>
+	<div class="container"   >
+	<section ng-show="loading==true" style="width:111px; margin-left:auto; margin-right:auto;;height:107px; position: relative; background-repeat:no-repeat; background-image:url(/images/NOAA-Logo.gif);  margin-top: 20%;" ></section>
+	<section id="nofilter" class="stage" ng-hide="loading==true || filtered==true" ng-hide="filtered==false" infinite-scroll = "addMore()" infinite-scroll-distance="5" elmwin = 'elem' child='unfiltered'>
+      <div class="row" id="unfiltered" >
       <div  ng-repeat ="item in alldata.data">
 				
-       		<ca-rd type="{{item.template}}" image="{{item.image}}"></ca-rd>
+       		<ca-rd type="{{item.template}}" ></ca-rd>
        </div>
         
       </div>
-	<div class="clear"></div>
+     </section> 
+     <section id="filter" class="stage" ng-hide="filtered==false" infinite-scroll = "addMoreFiltered()" infinite-scroll-distance="5" elmwin = 'elem' child='filtered'>
+        <div class="row"  id="filtered">
+      <div  ng-repeat ="item in filteredArr.arr">
+				
+       		<ca-rd type="{{item.template}}"></ca-rd>
+       </div>
+        
+      </div>
+      
+	
     </div>
 </section>
 
+<div class="clear"></div>

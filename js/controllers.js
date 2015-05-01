@@ -64,13 +64,13 @@ angular.module('Timeline', [])
 				var index = $scope.arr.indexOf(obj1);
 				$scope.arr.splice(index, 1);
 				console.log(obj1.subNav);
-				forEach(obj1.subNav, function(subNav){
+				HelperFunctions.forEach(obj1.subNav, function(subNav){
 					subNav.state='notselected';
 				});
 				
 				//////////Makes sure that if not all main nav items are selected, that no checkboxes light up
-				forEach($scope.items.years, function(year){
-					forEach(year.subNav, function(item){
+				HelperFunctions.forEach($scope.items.years, function(year){
+					HelperFunctions.forEach(year.subNav, function(item){
 
 						item.checked='notselected';
 						item.on_off='off';
@@ -86,18 +86,18 @@ angular.module('Timeline', [])
 				obj1.state='selected';
 				$scope.allchecked='notselected';
 				
-				forEach(obj1.subNav, function(subNav){
+				HelperFunctions.forEach(obj1.subNav, function(subNav){
 					subNav.state='selected';
 				});
 				
 				/////////////Loops through the items to see if all years buttons are lit up; if so this makes sure that the checkbox is also filled in
-				forEach($scope.items.years, function(year){
+				HelperFunctions.forEach($scope.items.years, function(year){
 					if(year.state=='selected'){
 						holder_arr.push(year);
 						
 						if(holder_arr.length==$scope.items.years.length)
 						{
-							forEach(year.subNav, function(item){
+							HelperFunctions.forEach(year.subNav, function(item){
 								console.log(item.state+':'+item.name);
 							if(item.state=='selected')
 								{
@@ -122,9 +122,9 @@ angular.module('Timeline', [])
 					obj2.checked='notselected';
 					obj2.checked='notselected';
 				
-					forEach($scope.items.years, function(year){							
+					HelperFunctions.forEach($scope.items.years, function(year){							
 						year.state="notselected";
-						forEach(year.subNav, function(item){
+						HelperFunctions.forEach(year.subNav, function(item){
 							if(year.state=='selected' && item.state=="selected"  && !nameStr.match(year.year))
 							{
 							 $scope.arr.push($scope.items.years[a]);	
@@ -145,16 +145,16 @@ angular.module('Timeline', [])
 								
 						});
 					});
-			}
-			else if(obj2.state=='notselected'){
+					}
+				else if(obj2.state=='notselected'){
 					var holder_arr=[];
 					
 					obj2.state='selected';
 					obj1.state='selected';
 					//console.log(obj2)
 					/////////////Loops through the items to see if all icon buttons are lit up; if so this makes sure that the checkbox is  filled in
-					forEach($scope.items.years, function(year){
-						forEach(year.subNav, function(item){
+					HelperFunctions.forEach($scope.items.years, function(year){
+						HelperFunctions.forEach(year.subNav, function(item){
 						var y=year.subNav.indexOf(item);	
 						//console.log(obj2.name+':'+item.name+':'+item.state)
 						if(obj2.name==item.name && item.state=='selected')
@@ -186,9 +186,9 @@ angular.module('Timeline', [])
 				{
 					
 					$scope.allchecked='selected';
-					forEach($scope.items.years, function(year){
+					HelperFunctions.forEach($scope.items.years, function(year){
 						year.state = 'selected';
-						forEach(year.subNav, function(item){
+						HelperFunctions.forEach(year.subNav, function(item){
 							item.checked='selected';
 							item.state ='selected';
 							});
@@ -197,9 +197,9 @@ angular.module('Timeline', [])
 				else {
 						
 					$scope.allchecked='notselected';
-					forEach($scope.items.years, function(year){
+					HelperFunctions.forEach($scope.items.years, function(year){
 						year.state = 'notselected';
-						forEach(year.subNav, function(item){
+						HelperFunctions.forEach(year.subNav, function(item){
 							item.checked='notselected';
 							item.state ='notselected';
 							item.on_off='off';
@@ -219,8 +219,8 @@ angular.module('Timeline', [])
 				//////////////Which is used in the else conditional to light up the proper icons when all checkboxes are unclicked.
 				if(on_off=='off')
 				{
-					forEach($scope.items.years, function(year){
-						forEach(year.subNav, function(item){							
+					HelperFunctions.forEach($scope.items.years, function(year){
+						HelperFunctions.forEach(year.subNav, function(item){							
 							if(year.state=='selected' && item.state=="selected"  && !nameStr.match(year.year))
 							{
 							 $scope.arr.push(year);	
@@ -259,11 +259,11 @@ angular.module('Timeline', [])
 				{
 					$scope.allchecked='notselected';
 					var count=0;
-					forEach($scope.items.years, function(year){
+					HelperFunctions.forEach($scope.items.years, function(year){
 								
 								year.state='notselected';	
 								/////////////Turns off all subnavigation icons for particular checkbox////////////////
-								forEach(year.subNav, function(item){
+								HelperFunctions.forEach(year.subNav, function(item){
 									count = count+1;
 									item.on_off='off';
 									if(item.state=='selected' && item.name==type)
@@ -300,20 +300,25 @@ angular.module('Timeline', [])
 	
 }]);
 angular.module('Story', ['infinite-scroll'])
-.controller('storyController', ['AlumniSpot','PhotosofWeek','Teacher','News','Lessons', 'Quotes','$scope',
-function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $scope)
+.controller('storyController', ['AlumniSpot','PhotosofWeek','Teacher','News','Lessons', 'Quotes','$scope','$sce','HelperFunctions',
+function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $scope, $sce, HelperFunctions)
 {
 	
 	var alldata={};
 	alldata.data=[];
+	$scope.alldata={data:[], years:[]}
+	$scope.alldata_all=[];
 	alldata.years=[];
 	$scope.iterator=50;
 	$scope.start_index=-50;
-	$scope.end_index = 0
+	$scope.end_index = 0;
+	$scope.index_start=0;
+	$scope.index_end = 50;
+	$scope.filtered=false;
+	$scope.loading =true;
+	$scope.filteredArr={arr:[], fullArr:[]};
 	$scope.runApp=function()
 	{
-		
-		
 		
 		Teacher.createTeacherList().then(function(data){
 		var teachers = data.data.reverse();
@@ -322,26 +327,50 @@ function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $scope)
 			
 			PhotosofWeek.getPOW().then(function(data){
 			var pow = data;
+			HelperFunctions.forEach(pow, function(pow){
+				if(pow.headline.length>220)
+				{
+					pow.powSlice = HelperFunctions.Slicer(pow.headline, 220)+'...';
+				}
+				else{
+					pow.powSlice =pow.headline;
+				}
+				});	
 				PhotosofWeek.getNonPOW().then(function(data){
 					var nonpow=data;
 					pow = pow.concat(nonpow); 
 					alldata.data=alldata.data.concat(pow);
 					AlumniSpot.getSpotData().then(function(data){
+						
 						var spot = data;
+						alldata.data=alldata.data.concat(spot);
 							News.getNewsData().then(function(data){
-							spot =spot.concat(data);
-							alldata.data=alldata.data.concat(spot);
-						Lessons.getLessonData().then(function(data){
+							var news = data;
+							alldata.data=alldata.data.concat(news);
+							Lessons.getLessonData().then(function(data){
 								var lessons = data;
+								HelperFunctions.forEach(lessons, function(lesson){
+									if(lesson.description.length>180)
+									{
+										lesson.lessonSlice = HelperFunctions.Slicer(lesson.description, 180)+'...';
+									}
+									else{
+										lesson.lessonSlice=lesson.description;
+									}
+								});
+								
 								alldata.data=alldata.data.concat(lessons);
 									Quotes.getQuotesData().then(function(data){
 									var quotes = data;
 									alldata.data=alldata.data.concat($scope.quotes);
-									alldata.data = SortObjDsc('randomnumber', alldata.data);
+									alldata.data = HelperFunctions.SortObjDsc('year', alldata.data, 'num');
 									$scope.alldata_all = alldata.data;
 									alldata.data=alldata.data.slice($scope.start_index,$scope.end_index);									
-									alldata.years=removeDuplicatesArr(alldata.years);
+									alldata.years=HelperFunctions.removeDuplicatesArr(alldata.years);
 									$scope.alldata = alldata;
+									$scope.loading=false;
+									
+									
 								});
 			
 							});
@@ -356,231 +385,73 @@ function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $scope)
 	
 	$scope.addMore=function()	
 	{
+		if($scope.alldata.data.length<=$scope.alldata_all.length){
 		$scope.start_index =$scope.start_index+$scope.iterator;
 		$scope.end_index = $scope.end_index+$scope.iterator;
 		$scope.alldata.data=$scope.alldata.data.concat($scope.alldata_all.slice($scope.start_index, $scope.end_index));
+		}
+		else{
+			$scope.alldata.data=$scope.alldata_all;
+		}
 		
 		
 	};
 	
+	$scope.addMoreFiltered=function()	
+	{
+		
+		if($scope.filteredArr.arr.length>=$scope.iterator)
+		{
+		$scope.index_start =$scope.index_start+$scope.iterator;
+		$scope.index_end = $scope.index_start+$scope.iterator;
+		
+		if($scope.end_index<$scope.filteredArr.arr.length){
+			$scope.end_index=$scope.index_end;
+		}else{
+			$scope.index_end=$scope.filteredArr.arr.length;
+		}
+		$scope.filteredArr.arr=$scope.filteredArr.arr.concat($scope.filteredArr.fullArr.slice($scope.index_start, ($scope.index_start+50)));
+				}
+		
+	};
+
+	
+	$scope.filterData =function(query){
+		$scope.filteredArr={arr:[], fullArr:[]};
+		$scope.alldata.data=[];
+		
+		if(query.length==0  )
+		{
+			$scope.filtered=false;
+			$scope.filteredArr=[];
+			$scope.loading=false;
+			$scope.alldata.data= $scope.alldata_all.slice(0, 50);
+			
+		}
+		else
+		{
+			$scope.filtered=true;
+			$scope.filteredArr=HelperFunctions.searchDataMatch($scope.alldata_all, query,['headline', 'year', 'type']);
+			console.log($scope.filteredArr);
+
+			$scope.loading=false;
+		}
+		
+		
+		
+		
+	};
+	
+
+	
+	$scope.openFeature=function(id)
+	{
+		
+	};
+	$scope.SkipValidation = function(value) {
+			return $sce.trustAsHtml(value);
+	};
 	$scope.runApp();
 	
 	
 }]);
-
-
-////////////Helper Functions///////////////////
-function toTitleCase(str)
-{
-    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-}
-
-function Slicer(str, number)
-{
-	var slicer = str.slice(0, number);
-	var slicer2 = str.slice(number, str.length);
-	var slicer2Index = slicer2.indexOf(' ');
-	slicer2 = str.slice(0, (number+slicer2Index));
-	//alert(slicer2);
-	return slicer2;
-}
-
-function removeHTML(str)
-{
-	
-	
-         var str =  jQuery('<div />', { html: str }).text();
-        str = 		jQuery('<p />', { html: str }).text();
-        str = jQuery('<i />', { html: str }).text();
-		return str;
-}
-
-function DigPatt(str, char)
-{
-	  var checkDigit = (str.lastIndexOf(char)+1);
-	  var digPatt = str.slice(checkDigit, str.length);
-			           //console.log(digPatt);
-			           if(digPatt.match(/\d/g))
-			           {
-			           	name = str.split('-')[0];
-			           }
-			           else
-			           {
-			           	name=str;
-			           }
-			           return name;
-}
-
-function goToByScrollTop(id) {
-	// Remove "link" from the ID
-	id = id.replace("link", "");
-	// Scroll
-	$(id).animate({
-		scrollTop : 50
-	}, 'slow');
-
-}
-
-function createTitleFromURL(str)
-{
-	var monthArr = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-	
-	var str = str.replace('https://teacheratsea.wordpress.com','');
-	str = str.replace('http://teacheratsea.wordpress.com','');
-	str = str.split('/')[4];
-	str = toTitleCase(str.replace(/-/g, ' '));
-	
-	
-	var strSplitter = str.split(' ');
-	var substr = strSplitter[1];
-	var str = str.replace(substr, substr+',');
-	
-	str = str.replace(' 20', ', 20');
-	
-	for(var z=0; z<monthArr.length; z++)
-	{
-		if(str.replace(/\W/g,'').match(monthArr[z].replace(/\W/g,'')))
-		{
-			str = str.replace(monthArr[z], ', '+monthArr[z]).replace(' , ', ', ');
-			
-			return str;
-
-		}
-		else
-		{
-			return str;
-		}
-	}	
-	
-}
-
-////////////////Checks for a specific property in an array of objects and makes sure that the value of that property is not duplicated	
-function removeDuplicatesArr(array){
-	var unique = [];
-    for ( i = 0; i < array.length; i++ ) {
-        var current = array[i];
-        if (unique.indexOf(current) < 0)
-        {
-        	 unique.push(current);
-        }
-    }
-
-    return unique;
-}
-////////////////Checks for a specific property in an array of objects and makes sure that the value of that property is not duplicated	
-function removeDuplicatesArrObj(array, property, checkmatch){
-	var unique={title:[], finalArr:[]};
-	if(checkmatch==true)
-	{
-		
-	forEach(array, function(item){
-		
-		if (!unique.title.toString().replace(/\W/g, '').match(item[property].replace(/\W/g,'')))
-        {
-        	 unique.title.push(item[property]);
-        	 unique.finalArr.push(item);
-        }
-	});
-	}
-	else{
-		forEach(array, function(item){
-		
-		if (unique.title.indexOf(item[property]) < 0)
-        {
-        	 unique.title.push(item[property]);
-        	 unique.finalArr.push(item);
-        }
-	});
-		
-	}
-	return unique.finalArr;
-}
- 
- function preventDuplicates(comparer, array, property, type)
- {
- 	var tmpArr=[];
- 	///////////Adds to  the Beginning
-	if(type = 'splice'){
-	 	forEach(comparer, function(compare)
-		{
-			tmpArr =removeDuplicatesArrObj(comparer, property, true);
-			array.splice(0, 0, compare)	
-		});
-	}
-	//////////Adds to end///////////
-	else{
-		forEach(comparer, function(compare)
-			{
-				tmpArr =removeDuplicatesArrObj(comparer, property, true);
-				array.push(compare)	
-			});
-	}	
- 	array = removeDuplicatesArrObj(array, property, true)
- 		
- 	return array;
-	
- };
- 
- function compareArraysObj(array1, array2, property)
- {
- 	forEach(array1, function(item){
- 		var x=array1.indexOf(item);
- 		forEach(array2, function(item2){
-
- 			if(item[property]==item2[property])
- 			{
- 				array1.splice(x, 1);
- 			}
- 		});
- 	});
-	return array1;
- }
-
-
-/////////For LoopArray of Strings and Numbers (not objects)///////////////
-function forEach(array, action) 
-{ 
-	
-	for (var i = 0; i < array.length; i++)
-	{
-	 action(array[i]); 
-	}
-}
-
-///////For Loop for  Array of Objects/////////////
-function forEachIn( object, action) { 
-	for (var property in object) 
-	{ 
-		if (Object.prototype.hasOwnProperty.call( object, property))
-			 action( property, object[ property]); 
-	 }
- }
- 
- function SortObjAsc(property, obj)
- {
- 
- 	var sortable =[];
- 	obj.sort(
- 		function(a, b){
- 				 var aprop=a[property]
-				 var bprop =b[property]
-				 return bprop-aprop
-				});
- 	
- 	return obj.reverse();
- }
-
-
- function SortObjDsc(property, obj)
- {
- 
- 	var sortable =[];
- 	obj.sort(
- 		function(a, b){
- 				 var aprop=a[property]
-				 var bprop =a[property]
-				 return aprop-bprop
-				});
- 	
- 	return obj;
- }

@@ -19,7 +19,7 @@ h2{
 }
 h3{
 	font-family: 'Marcellus SC';
-	font-size:20px;
+	font-size:18px;
 }
 h4{
 	font-family:'Roboto'
@@ -38,14 +38,41 @@ header{
 
 header div.logo{background-image: url('/images/TASLogo_tn_sm.png'); padding:0;height: 50px;float:left; background-repeat: no-repeat;width:50px;
 }
+header .dkblue{font-size:1.5em; color:#0057a5}
+.internal_search {
+	  color: #189E81;
+	  font-size: 17px;
+	 right:5px;
+	  top:10px;
+	 width:181px;
+	  padding-right:5px;
+	  position:fixed;
+	  z-index:1000000000;
+	}
+		.internal_search form {
+		  float: left;width: 150px;
+		  margin-top: -23px;
+		  font-size:12.75px;
+		}
+		.internal_search .search {
+		  float: left;
+		  background: #0057a5;
+		  color: #EBFAF7;
+		  padding: 3px;
+		  padding-bottom: 1.1px;
+		  cursor: pointer;
+		  font-size:20px;
+		  width:26px;
+		}
 .navigation_holder{
 	width:100%;
 	background-color:rgba(255,255,255, .95);
 	position:fixed;
-	bottom:0;
+	bottom:25px;
 	z-index:1000;
 	padding-top:5px;
 	border-top: 1px solid #0492CE;
+	border-bottom: 1px solid #EBBD1E;
 	
 }
 	.settings{
@@ -325,33 +352,53 @@ header div.logo{background-image: url('/images/TASLogo_tn_sm.png'); padding:0;he
 				 	font-weight:normal;
 				 	background:none;	
 				 }
+
+footer{background-color:white; width:100%;height:25px; font-size: .75em;position:absolute; bottom:0; color:#0057a5}
+	footer a{color:#0057a5; text-decoration:none;}
+	footer a:hover{text-decoration:underline}
 				 
-div .row{margin:0; }				 
-	ca-rd{min-height:275px; }	
-		.row .col-md-3, .row .col-md-2{border:5px solid #FFFFFF;margin:1%; height:275px; overflow:scroll;}		
+div .row{margin:0; }	
+	a{color:white; text-decoration:underline}			 
+	ca-rd{height:275px; }	
+		.row .col-md-3, .row .col-md-2{border:5px solid #FFFFFF;margin:1%; height:275px; padding:10px;}
+		
 		.row .col-md-3{width:23%}	 
-		.row .yellow{background-color:#EBBD1E;} 
-		.row .blue{background-color:#0492CE;}	
-		.row .green{background-color:#198E81}
-		.row .dkblue{background-color:#0057a5;}			 
-		.row .dkstblue{background-color:#003350;}	
-		.row .ltgreen{background-color:#8CC7C0;}
-		.row .foam {background-color:#1B6875}	
-			.card-text{height:225px; overflow:scroll}
+		.row .yellow, button .yellow{background-color:#EBBD1E;} 
+		.row .blue, button .blue{background-color:#0492CE;}	
+		.row .green, button .green{background-color:#198E81}
+		.row .dkblue, button .dkblue{background-color:#0057a5;}			 
+		.row .dkstblue, button .dkstblue{background-color:#003350;}	
+		.row .ltgreen, button .ltgreen{background-color:#8CC7C0;}
+		.row .foam, button .foam{background-color:#1B6875}	
+			.card-text{height:210px; overflow:hidden; width:90%}
+			.card-text h3{margin:0}
 			.card-button{
-				
-				font-size:12px;
-				
+			 font-size:12px;
+			 overflow:hidden;
 			  position:absolute;
-			  bottom:15px;
+			  bottom:10px;
+			  box-shadow:none;
 			 }
-			  .card-button button{border-radius: 5px;
+			  .card-button button{
+			  	border-radius: 5px;
 			  -moz-border-radius: 5px;
 			  -webkit-border-hover: 5px;
 			  -o-border-radius: 5px;
-			  background-color:#EBFAF7;}
-			  
-			}		
+			  border-radius: 5px;
+			  -moz-border-radius: 5px;
+			  -webkit-border-hover: 5px;
+			  -o-border-radius: 5px;
+				border:1px solid #EBFAF7;
+			  }
+			  	.card-button button a{
+			  		text-decoration:none;
+			  	}
+				
+		 .row .icon_right{
+		  position: absolute;
+		  right: 4%;
+		  font-size: 150%;
+		 }
 		 
 	div[feature-image]{
    /* width: 100wh;
@@ -380,7 +427,7 @@ div .row{margin:0; }
 		}
 	
 	div[feature-image] p{
-		font-size:175%;
+		
 		margin:0;
 		padding:0;
 		padding:1%;
@@ -454,15 +501,16 @@ div .stage_container_card div{
 	 
 section.stage{
 	width:100%;
-	overflow-y:hidden;
+	overflow-y:scroll;
 	overflow-x:hidden;
-	height:99%
+	height:95%
 	
 }		
+	
 	.container{
-	margin-top:65px;
+	margin-top:60px;
 	margin-bottom:40px;
-	overflow-y:scroll;
+	
 	width:100%;
 	height:90%;
 	margin-bottom:5%;
@@ -520,7 +568,7 @@ section.stage{
 				font-size:1.2em;
 				cursor:pointer;
 			}
-			article section {width:95%; overflow-y:scroll }
+			article section {width:97%; overflow-y:scroll; padding-right:3% }
 				article p{}
 			
 .score {
@@ -776,7 +824,8 @@ padding:0;
 div.arrows{display:none;}	
 .row .col-md-3, .row .col-md-2{margin:1%;}		
 	.row .col-md-3{width:48%; float:left;}	
-	article h2{padding-top:4.5%}	 
+	article h2{padding-top:4.5%}
+	.container{height:70%}	 
 }
 
 @media screen and  (max-width: 639px ) and (min-width: 480px)  {
@@ -785,6 +834,7 @@ div.arrows{display:none;}
 	.row .col-md-3, .row .col-md-2{margin:1%;}		
 	.row .col-md-3{width:48%; float:left;}	 
 	article h2{padding-top:5.9%}	
+	footer {font-size:.65em}
 
 }
 
@@ -794,11 +844,13 @@ div.arrows{display:none;}
 	.row .col-md-3, .row .col-md-2{margin:1%;}		
 	.row .col-md-3{width:98%;margin-bottom:15px;float:none;}	 
 	article h2{padding-top:8.8%}
+	footer {font-size:.55em}
 }	
 
 @media screen and (max-width: 320px) {
 div.arrows{display:none;}	
 article h2{padding-top:15%}
-.row .col-md-3{width:98%;margin-bottom:15px;float:none;}	
+.row .col-md-3{width:98%;margin-bottom:15px;float:none;}
+footer {font-size:.55em; margin-top:2px; margin-bottom:2px;}	
 }	
 

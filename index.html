@@ -1,4 +1,4 @@
-<html lang="en" ng-app="TAS_Anniversary">
+<html lang="en" ng-app="TAS_Site">
 	<head>
 		<meta charset="utf-8">
    		<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -19,16 +19,31 @@
 	</head>
 
 	<body >
+		
+		
 		<header>
 	<div class="logo"></div>
-	<ul style="float:right; width:200px; margin:10px;"><li style="display:inline">About TAS | </li> <li style="display:inline"> About NOAA </li </div>
+	<div style="float:right">
 	
+	
+	</div>
 </header>
 		<div ng-view view-animation style="overflow:hidden" >
-
+		
 		</div>
 
 	<navi-gation></navi-gation>
+	<footer><div class="privacy_terms" style="text-align:center; margin-top:5px; margin-bottom:5px">
+	 <a href="../#/about" target="_blank">About TAS</a> | 
+	 <a href="http://noaa.gov" target="_blank">About NOAA</a> | 
+	 <a href=".../#/privacy.html" target="_blank">Privacy Policy</a> | 
+	 <a href="http://www.rdc.noaa.gov/~foia/" target="_blank">FOIA</a> | 
+	 <a href="http://www.cio.noaa.gov/Policy_Programs/info_quality.html" target="_blank">Information Quality</a> |  
+	<a href="http://www.noaa.gov/disclaimer.html" target="_blank">Disclaimer</a> | 
+	 <a href="http://www.usa.gov" target="_blank">USA.gov</a>  |
+     <a href="http://www.ready.gov" target="_blank">Ready.gov</a> | 
+     <a href="mailto:teacheratsea@noaa.gov">Contact Webmaster</a><br>
+</div></footer>
 <!-- Bootstrap core JavaScript
 		================================================== -->
 		<!-- Placed at the end of the document so the pages load faster -->
@@ -57,6 +72,6 @@
 		<script src="js/directives.js"></script>
 		<script src="js/controllers.js"></script>
 		<script src="js/filters.js"></script>
-
+		<script src="/js/HelperServices.js"></script>
 	</body>
 </html>
