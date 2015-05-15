@@ -24,11 +24,13 @@ h3{
 h4{
 	font-family:'Roboto'
 }
+.clear{clear:both}
 header{
  	z-index: 998;
   
   width: 100%;
   padding: 5px;
+  padding-left:15px;
   
   /*\\background-color: #212122;*/
   
@@ -42,28 +44,38 @@ header .dkblue{font-size:1.5em; color:#0057a5}
 .internal_search {
 	  color: #189E81;
 	  font-size: 17px;
-	 right:5px;
+	 right:15px;
 	  top:10px;
-	 width:181px;
+	 width:250px;
 	  padding-right:5px;
 	  position:fixed;
-	  z-index:1000000000;
+	  z-index:999;
 	}
 		.internal_search form {
-		  float: left;width: 150px;
-		  margin-top: -23px;
-		  font-size:12.75px;
+		  float: right;
+		  width: 150px;
+		  margin-top: -26px;
+		  font-size: 14px;
 		}
 		.internal_search .search {
-		  float: left;
-		  background: #0057a5;
-		  color: #EBFAF7;
-		  padding: 3px;
-		  padding-bottom: 1.1px;
-		  cursor: pointer;
-		  font-size:20px;
-		  width:26px;
+		    float: right;
+			  background: #0057a5;
+			  color: #EBFAF7;
+			  padding: 8px;
+			  padding-bottom: 0;
+			  cursor: pointer;
+			  font-size: 15px;
+			  width: 27px;
+			  padding-top: 3px;
 		}
+		.view{margin-top:4px;  float:right;font-size:1.1em; cursor:pointer;  z-index:1000000000;}
+			.view.off{color:#999999; }
+			.view.on{display:none}
+		.label{color:#999999; font-size:.6em;z-index:1000000000; float:right; margin-top:10px}
+			.label a{color:#0057a5; padding:4px; text-decoration:none; cursor:pointer;} 
+			.label a:hover{color:#999999; textdecoration:underline;}
+			.label a.on{ background-color:#0057a5; color:#fff}
+
 .navigation_holder{
 	width:100%;
 	background-color:rgba(255,255,255, .95);
@@ -86,6 +98,9 @@ header .dkblue{font-size:1.5em; color:#0057a5}
 		color:#999999;
 		
 	}
+		.settings div{width:200px;}	
+			
+		
 	 ul.checker{margin-left:5%; margin-right:6%; margin-top:0px; padding:0; float:left; width:1%;height:27px;}
 			.checker li{list-style:none; cursor:pointer;}
 			.checker li div.checkbox{
@@ -202,6 +217,7 @@ header .dkblue{font-size:1.5em; color:#0057a5}
 					padding:0;
 					margin:auto;
 					margin-bottom:0px;
+					overflow-y:scroll;
 				}
 				.navigation li{
 					float:left;		
@@ -224,7 +240,6 @@ header .dkblue{font-size:1.5em; color:#0057a5}
 					
 						 nav.subnav{
 							width:99.96%;
-							height:285px;
 							position:relative;
 							bottom:0px;
 							border-right:1px dotted #ccc;
@@ -353,7 +368,7 @@ header .dkblue{font-size:1.5em; color:#0057a5}
 				 	background:none;	
 				 }
 
-footer{background-color:white; width:100%;height:25px; font-size: .75em;position:absolute; bottom:0; color:#0057a5}
+footer{background-color:white; width:100%;height:25px; font-size: .75em;position:fixed; bottom:0; color:#0057a5; z-index:1000}
 	footer a{color:#0057a5; text-decoration:none;}
 	footer a:hover{text-decoration:underline}
 				 
@@ -363,10 +378,10 @@ div .row{margin:0; }
 		.row .col-md-3, .row .col-md-2{border:5px solid #FFFFFF;margin:1%; height:275px; padding:10px;}
 		
 		.row .col-md-3{width:23%}	 
-		.row .yellow, button .yellow{background-color:#EBBD1E;} 
-		.row .blue, button .blue{background-color:#0492CE;}	
-		.row .green, button .green{background-color:#198E81}
-		.row .dkblue, button .dkblue{background-color:#0057a5;}			 
+		.row .yellow,  button .yellow{background-color:#EBBD1E;} 
+		.row .blue,  button .blue{background-color:#0492CE;}	
+		.row .green,  button .green{background-color:#198E81}
+		.row .dkblue,   button .dkblue{background-color:#0057a5;}			 
 		.row .dkstblue, button .dkstblue{background-color:#003350;}	
 		.row .ltgreen, button .ltgreen{background-color:#8CC7C0;}
 		.row .foam, button .foam{background-color:#1B6875}	
@@ -448,7 +463,6 @@ div .row{margin:0; }
 width:111px; margin-left:auto; margin-right:auto;;height:107px; position: relative; background-repeat:no-repeat; background-image:url(/images/NOAA-Logo.gif);  margin-top: 20%;
 }
 
-
 div .stage_container_feature{
 	width:100%;
 	position:fixed;
@@ -503,9 +517,20 @@ section.stage{
 	width:100%;
 	overflow-y:scroll;
 	overflow-x:hidden;
-	height:95%
+	height:100%;
+	margin-top:10px;
 	
 }		
+	.preloader{
+		width:111px; 
+		margin-left:auto; 
+		margin-right:auto;
+		height:107px; 
+		position: relative;
+	 	background-repeat:no-repeat; 
+	 	background-image:url(/images/NOAA-Logo.gif);  
+		 margin-top: 20%;
+		}
 	
 	.container{
 	margin-top:60px;
@@ -518,6 +543,70 @@ section.stage{
 	overflow-x:hidden;
 	
 	}
+		table { 
+		width: 100%; 
+		border-collapse: collapse; 
+		padding:1%;
+	}
+	/* Zebra striping */
+	tr:nth-of-type(odd) { 
+		background: #eee; 
+	}
+	th { 
+		background: #333; 
+		color: white; 
+		font-weight: bold; 
+	}
+	td, th { 
+		padding: 6px; 
+		border: 1px solid #ccc; 
+		text-align: left; 
+	}
+		
+		table a{
+			text-decoration:none;
+		}
+		table a:hover{
+			text-decoration:underline;
+		}
+		
+		/* Zebra striping */
+		tr:nth-of-type(even) { 
+			background: rgba(235, 250, 247 .8); 
+		}
+		tr:nth-of-type(odd) { 
+			background: rgba(255, 248, 223, .8); 
+		}
+		th { 
+			background: #0057a5; 
+			color: white; 
+			font-weight: bold;
+			color:#fff;  
+		}
+		td, th { 
+			padding: 6px; 
+			border: 1px solid #ccc; 
+			text-align: left;
+			
+		}
+		td{
+			color:#191919;
+		}
+			td.yellow{border-bottom:1px solid #EBBD1E;} 
+			td.blue{border-bottom: 1px solid #0492CE;}	
+			td.green{border-bottom: 1px solid #198E81}
+			td.dkblue{border-bottom:1px solid #0057a5;}			 
+			td.dkstblue{border-bottom: 1px solid #003350;}	
+			td.ltgreen{border-bottom: 1px solid #8CC7C0;}
+			td.foam{border-bottom:1px solid #1B6875}	
+	
+			td.yellow a{color: #EBBD1E;} 
+			td.blue a{color:#0492CE;}	
+			td.green a{color: #198E81}
+			td.dkblue a{color:#0057a5;}			 
+			td.dkstblue a{color: #003350;}	
+			td.ltgreen a{color: #8CC7C0;}
+			td.foam a{color: #1B6875}	
 		article{
 			border-top:5px solid #EBBD1E;
 			position:absolute;
@@ -544,7 +633,7 @@ section.stage{
 					}
 					article h2 .yellow{border-bottom: 3px solid #EBBD1E;}
 			
-				article .yellow{
+			article .yellow{
 					color: #EBBD1E;
   					
   					
@@ -819,13 +908,14 @@ padding:0;
 	.row .col-md-3, .row .col-md-2{margin:1%;}		
 	.row .col-md-3{width:31%; float:left;}
 	article h2{padding-top:4%}	 
+
 }
 @media screen and  (max-width: 767px) and (min-width:640px)   {
 div.arrows{display:none;}	
 .row .col-md-3, .row .col-md-2{margin:1%;}		
 	.row .col-md-3{width:48%; float:left;}	
 	article h2{padding-top:4.5%}
-	.container{height:70%}	 
+
 }
 
 @media screen and  (max-width: 639px ) and (min-width: 480px)  {
@@ -835,6 +925,7 @@ div.arrows{display:none;}
 	.row .col-md-3{width:48%; float:left;}	 
 	article h2{padding-top:5.9%}	
 	footer {font-size:.65em}
+	
 
 }
 
@@ -845,6 +936,8 @@ div.arrows{display:none;}
 	.row .col-md-3{width:98%;margin-bottom:15px;float:none;}	 
 	article h2{padding-top:8.8%}
 	footer {font-size:.55em}
+	.container{width:100%}
+	section.stage {width:100%;}
 }	
 
 @media screen and (max-width: 320px) {
@@ -853,4 +946,126 @@ article h2{padding-top:15%}
 .row .col-md-3{width:98%;margin-bottom:15px;float:none;}
 footer {font-size:.55em; margin-top:2px; margin-bottom:2px;}	
 }	
+
+/*Make text sizes bigger for min-heights up to 1000*/
+@media screen and (min-height: 1801px)   {
+	.container{height:97%}
+}
+@media screen and (min-height: 1601px)  and (max-height:1800px)  {
+	.container{height:95%}
+}
+@media screen and (min-height: 1401px)  and (max-height:1600px)  {
+	.container{height:93%}
+
+}
+
+@media screen and (min-height: 1200px)  and (max-height:1400px)  {
+	.container{height:93%}
+
+}
+@media screen and (min-height: 1001px) and (max-height:1199px)  {
+	.container{height:90%}
+	
+}
+
+
+@media screen and (min-height: 900px) and (max-height: 1000px) {
+	.container{height:88%}
+	
+		
+	
+}
+
+@media screen and (min-height: 800px) and (max-height: 899px) {
+.container{height:88%}
+}
+
+
+@media screen and (min-height: 700px) and (max-height: 799px) {
+	.container{height:85%}
+}
+@media screen and (min-height: 600px) and (max-height: 699px)
+{
+	
+	
+	
+	.container{height:81%}
+}
+
+@media screen and (min-height: 500px) and (max-height: 599px)
+{
+	.container{height:78%}
+}
+
+@media screen and (min-height: 400px) and (max-height: 499px)
+{
+	.container{height:70%}
+	.preloader{margin-top:10%}
+}
+
+@media screen and (min-height: 351px) and (max-height:399px)
+{
+	.container{height:63%}
+	.preloader{margin-top:10%}
+}
+
+@media screen and (min-height: 301px) and (max-height:350px)
+{
+	.container{height:58%}
+	.preloader{margin-top:0%}
+}
+
+@media screen and  (max-height:299px)
+{
+	.container{height:45%}
+	.preloader{margin-top:0%}
+}
+@media 
+	only screen and (max-width: 760px),
+	(min-device-width: 768px) and (max-device-width: 1024px)  {
+	
+		/* Force table to not be like tables anymore */
+		table, thead, tbody, th, td, tr { 
+			display: block; 
+		}
+		
+		/* Hide table headers (but not display: none;, for accessibility) */
+		thead tr { 
+			position: absolute;
+			top: -9999px;
+			left: -9999px;
+		}
+		
+		tr { border: 1px solid #ccc; }
+		
+		td { 
+			/* Behave  like a "row" */
+			border: none;
+			border-bottom: 1px solid #eee; 
+			position: relative;
+			padding-left: 50%; 
+		}
+		
+		td:before { 
+			/* Now like a table header */
+			position: absolute;
+			/* Top/left values mimic padding */
+			top: 6px;
+			left: 6px;
+			width: 45%; 
+			padding-right: 10px; 
+			white-space: nowrap;
+		}
+		
+		/*
+		Label the data
+		*/
+		td:nth-of-type(1):before { content: "Headline"; }
+		td:nth-of-type(2):before { content: "Year"; }
+		td:nth-of-type(3):before { content: "Thumbnail"; }
+		td:nth-of-type(4):before { content: "Description"; }
+	}
+	
+	/* Smartphones (portrait and landscape) ----------- */
+	
 

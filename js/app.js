@@ -2,13 +2,13 @@
 
 /* App Module */
 //var teachernamehash = window.location.hash.split('/')[2];
-var TAS_Site = angular.module('TAS_Site', ['ngRoute', 'ngSanitize', 'ngAnimate','ngTouch','angulartics', 'angulartics.google.analytics','Timeline', 'Story', 'infinite-scroll' ]);
+var TAS_Site = angular.module('TAS_Site', ['ngRoute', 'ngSanitize', 'ngAnimate','ngTouch','angulartics', 'angulartics.google.analytics', 'Story', 'infinite-scroll' ]);
 TAS_Site.config(['$routeProvider',
   function($routeProvider) {
    $routeProvider.
   	  when('/cards/', {
         templateUrl: 'partials/cards.html',
-       controller: 'storyController'
+       controller: 'CardController'
       }).
      when('/:feature',
     {
@@ -19,14 +19,14 @@ TAS_Site.config(['$routeProvider',
      when('/:home',
     {
     	templateUrl:'partials/cards.html',
-    		controller:'storyController',
+    		controller:'CardController',
     	
     }).
      
     otherwise({
       	templateUrl: 'partials/cards.html',
         redirectTo: '/home/',
-        controller:'storyController',
+        controller:'CardController',
      });
 
 		

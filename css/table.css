@@ -1,0 +1,119 @@
+/* 
+	Generic Styling, for Desktops/Laptops 
+	*/
+	table { 
+		width: 100%; 
+		border-collapse: collapse; 
+	}
+	
+	table a{
+		text-decoration:none;
+	}
+	table a:hover{
+		text-decoration:underline;
+	}
+	
+	/* Zebra striping */
+	tr:nth-of-type(even) { 
+		background: rgba(235, 250, 247 .8); 
+	}
+	tr:nth-of-type(odd) { 
+		background: rgba(255, 248, 223, .8); 
+	}
+	th { 
+		background: #0057a5; 
+		color: white; 
+		font-weight: bold;
+		color:#fff;  
+	}
+	td, th { 
+		padding: 6px; 
+		border: 1px solid #ccc; 
+		text-align: left;
+		
+	}
+	td{
+		color:#191919;
+	}
+		td.yellow{border-bottom:1px solid #EBBD1E;} 
+		td.blue{border-bottom: 1px solid #0492CE;}	
+		td.green{border-bottom: 1px solid #198E81}
+		td.dkblue{border-bottom:1px solid #0057a5;}			 
+		td.dkstblue{border-bottom: 1px solid #003350;}	
+		td.ltgreen{border-bottom: 1px solid #8CC7C0;}
+		td.foam{border-bottom:1px solid #1B6875}	
+
+		td.yellow a{color: #EBBD1E;} 
+		td.blue a{color:#0492CE;}	
+		td.green a{color: #198E81}
+		td.dkblue a{color:#0057a5;}			 
+		td.dkstblue a{color: #003350;}	
+		td.ltgreen a{color: #8CC7C0;}
+		td.foam a{color: #1B6875}	
+
+	/*
+	Max width before this PARTICULAR table gets nasty
+	This query will take effect for any screen smaller than 760px
+	and also iPads specifically.
+	*/
+	@media
+	screen and (max-width: 760px),
+	(min-device-width: 768px) and (max-device-width: 1024px)  {
+
+		/* Force table to not be like tables anymore */
+		table, thead, tbody, th, td, tr {
+				display: inline-table;
+			
+		}
+		tbody{border:1px solid #ccc;}
+		/* Hide table headers (but not display: none;, for accessibility) */
+		thead tr {
+			display:none;
+		}
+
+		tr { border: none }
+
+		td {
+			/* Behave  like a "row" */
+			border: none;
+			border-bottom: 1px solid #eee;
+			position: relative;
+			padding-left:115px;
+			padding-right:5%;
+			/*padding-left: 50%;*/
+			
+			
+		}
+		th{
+			display: inline-grid;
+		}
+		td.headline{border:none;}
+		td.year{border:none;}
+		td.thumb{border:none;}
+
+		td:before {
+			/* Now like a table header */
+			position: absolute;
+			/* Top/left values mimic padding */
+			top: 6px;
+			left: 6px;
+			width: 100%;
+			padding-right: 10px;
+			white-space: nowrap;
+		}
+
+		/*
+		Label the data
+		*/
+		td:nth-of-type(1):before { content: "Headline"; }
+		td:nth-of-type(2):before { content: "Year"; }
+		td:nth-of-type(3):before { content: "Thumbnail"; }
+		td:nth-of-type(4):before { content: "Description"; }
+		
+	}
+
+	/* Smartphones (portrait and landscape) ----------- */
+	
+
+	/* iPads (portrait and landscape) ----------- */
+	

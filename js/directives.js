@@ -66,10 +66,11 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
 	};
 	
 	//////////////<div feature-image="{{slide.src}}?w={{windowWidth}}" color="{{slide.background_color}}" ng-hide="slide.isLoading==true">
-}).directive('caRd', function($compile, $q) {
+})
+.directive('caRd', function($compile, $q) {
 	/////
-	var Profile = '<div id="image{{item.id}}" resize-card feature-image="{{item.image}}" color="{{item.colorCode}}" class="col-md-3 {{item.color}}" ng-show="item.isLoading==false" blend="soft-light" alpha="1"> <div class="icon_right"><span class="icon-profile"></span></div><div class="card-text"><h3>{{item.headline}}</h3></div><div class="card-button"><button class="{{item.color}}"><a href="/#/{{item.year}}/{{item.firstname}}*{{item.lastname}}" role="button">View Profile »</a></button></div><br></div>';
-	var News = '<div id="news{{item.id}}" resize-card feature-image="{{item.src}}" color="{{item.colorCode}}" class="col-md-3 {{item.color}}" ng-show="item.isLoading==false" blend="soft-light" alpha="1"><div class="icon_right"><span class="icon-news"></span></div><div class="card-text"><h3 ng-bind-html="SkipValidation(item.headline)"></h3></div><div class="card-button"><button class="{{item.color}}"><a  href="#" role="button">Read the Story »</a></button></div></div>';
+	var Profile = '<div id="image{{item.id}}" resize-card feature-image="{{item.src}}" color="{{item.colorCode}}" class="col-md-3 {{item.color}}" ng-show="item.isLoading==false" blend="soft-light" alpha="1"> <div class="icon_right"><span class="icon-profile"></span></div><div class="card-text"><h3 ng-bind-html="SkipValidation(item.headline)">{{item.headline}}</h3></div><div class="card-button"><button class="{{item.color}}"><a href="/#/{{item.year}}/{{item.firstname}}*{{item.lastname}}" role="button">View Profile »</a></button></div><br></div>';
+	var News = '<div id="news{{item.id}}" resize-card feature-image="{{item.src}}" color="{{item.colorCode}}" class="col-md-3 {{item.color}}" ng-show="item.isLoading==false" blend="soft-light" alpha="1"><div class="icon_right"><span class="icon-news"></span></div><div class="card-text"><h3 ng-bind-html="item.headline"></h3></div><div class="card-button"><button class="{{item.color}}"><a  href="#" role="button">Read the Story »</a></button></div></div>';
 	var Article = '<div class="col-md-3 {{item.color}}"><div class="icon_right"><span class="icon-news "></span></div> <div class="card-text"><h3 ng-bind-html="SkipValidation(item.headline)"></h3><p>Check out this article from <em> {{item.mediaoutlet}}</em>.<p></div><div class="card-button"><button class="{{item.color}}"><a  href="{{articleurl}}" role="button">Read Article »</a></button></div></div>';
 	var Pow = '<div id="pow{{item.id}}" resize-card feature-image="{{item.src}}" color="{{item.colorCode}}" class="col-md-3 {{item.color}}" ng-show="item.isLoading==false" blend="soft-light" alpha="1"> <div class="icon_right"><span class="icon-images "></span></div><div class="card-text"><h3 ng-bind-html="SkipValidation(item.powSlice)"></h3></div><div class="card-button"><button class="{{item.color}}"><a  href="#" role="button">Learn More »</a></button></div></div>';
 	var Lesson = '<div class="col-md-3 {{item.color}}"><div class="icon_right"><span class="icon-chalkboard2 "></span></div> <div class="card-text"><h3 ng-bind-html="SkipValidation(item.headline)">}</h3><p>{{item.lessonSlice}}</p></div><div class="card-button"><button class="{{item.color}}"><a href="{{item.url}}" target="_blank" role="button">View Lesson»</a></button></div></div>';
@@ -121,6 +122,134 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
 			    
 			});
 		}
+	};
+}).directive('cellWidth', function($window) {
+	return {
+		restrict : 'AE',
+
+		link : function(scope, element) {
+			
+			
+			var w = angular.element($window);
+				scope.getWindowDimensions = function() {
+					return {
+						'h' : w.height(),
+						'w' : w.width()
+					};
+				};
+				element.css({
+					'width':w.width()
+					});
+				scope.$watch(scope.getWindowDimensions, function(newValue, oldValue) {
+					scope.tableWidth=w.width()
+					
+					
+				}, true);
+	
+			w.bind('resize', function() {
+				
+				element.css({
+					'width':scope.tableWidth
+					});
+				scope.$apply();
+			});
+		
+				
+			
+			
+		}
+	};
+}).directive('navHeight', function($window) {
+	return {
+		restrict : 'AE',
+
+		link : function(scope, element){
+			var w = angular.element($window);
+				scope.navHeight = w.height()*.75;
+				if(w.height()<285)
+				{
+					
+					element.css({
+						'height':scope.navHeight+'px'
+						});
+				}
+				else{
+					element.css({
+						'height': '285px'
+					});
+				}
+			}
+	};
+}).directive('bodyHeight', function($window){
+	return function(scope, element){
+			var w = angular.element($window);
+				
+					
+				scope.getWindowDimensions = function() {
+					return {
+						'h' : w.height(),
+						'w' : w.width()
+					};
+				};
+				scope.$watch(scope.getWindowDimensions, function(newValue, oldValue) {
+				if (window.innerHeight > 1800) {
+				scope.wHeight = w.height()*.97
+				} else if (window.innerHeight < 1799 && window.innerHeight >= 1600) {
+					scope.wHeight = window.innerWidth*.95
+				} else if (window.innerHeight < 1400 && window.innerHeight >= 1200) {
+					scope.wHeight = window.innerWidth*.93
+				}else if (window.innerHeight >=1001 && window.innerHeight < 1199) {
+					scope.wHeight = window.innerHeight*.9
+				}else if (window.innerHeight >= 900 && window.innerHeight < 1000) {
+					scope.wHeight = window.innerHeight*.88
+				}else if (window.innerHeight >= 800 && window.innerHeight <899) {
+					scope.wHeight = window.innerHeight*.88
+				}else if (window.innerHeight >=700 && window.innerHeight < 799) {
+					scope.wHeight = window.innerHeight*.85
+				}else if (window.innerHeight >= 600 && window.innerHeight <699) {
+					scope.wHeight = window.innerHeight*.81
+				}else if (window.innerHeight > 500 && window.innerHeight <= 599) {
+					scope.wHeight = window.innerHeight*.78
+				}else if (window.innerHeight >= 400 && window.innerHeight <499) {
+					scope.wHeight = window.innerHeight*.75
+				} else if (window.innerHeight >= 351 && window.innerHeight < 399) {
+					scope.wHeight = window.innerHeight*.63
+				} else if (window.innerHeight >=300 && window.innerHeight < 350) {
+					scope.wHeight = window.innerHeight*.58
+				} else {
+					scope.wHeight = window.innerHeight*.45
+				}
+					element.css({
+						'height': scope.wHeight+'px'
+					});
+					
+				}, true);
+		
+				w.bind('resize', function() {
+					scope.$apply();
+				});
+			
+			
+	};
+	
+})
+.directive('resizeTable', function($window) {
+	return function(scope, element) {
+		var w = angular.element($window);
+		scope.getWindowDimensions = function() {
+			return {
+				'h' : w.height(),
+				'w' : w.width()
+			};
+		};
+		scope.$watch(scope.getWindowDimensions, function(newValue, oldValue) {
+			scope.tableWidth=w.width()
+			
+		}, true);
+
+		w.bind('resize', function() {
+			scope.$apply();
+		});
 	};
 })
 
@@ -198,7 +327,8 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
 		};
 		}
 	};
-}).directive('wpCarousel', function(HomepageData) {
+})
+.directive('wpCarousel', function(HomepageData) {
 
 	return {
 		restrict : 'AE',
@@ -777,58 +907,7 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
 		}
 	};
 })
-.directive("ngTouchmove", function() {
-	return {
-		controller : function($scope, $element, $attrs) {
-			$element.bind('touchstart', onTouchStart);
-
-			function onTouchStart(event) {
-				event.preventDefault();
-				$element.bind('touchmove', onTouchMove);
-				$element.bind('touchend', onTouchEnd);
-			};
-
-			function onTouchMove(event) {
-				var method = '$scope.' + $element.context.getAttribute('ng-touchmove');
-				$scope.$apply(function() {
-					eval(method);
-				});
-			};
-
-			function onTouchEnd(event) {
-				event.preventDefault();
-				$element.unbind('touchmove', onTouchMove);
-				$element.unbind('touchend', onTouchEnd);
-			};
-		}
-	};
-}).directive("ngTouchstart", function() {
-	return {
-		controller : function($scope, $element, $attrs) {
-			$element.bind('touchstart', onTouchStart);
-
-			function onTouchStart(event) {
-				var method = '$scope.' + $element.context.getAttribute('ng-touchstart');
-				$scope.$apply(function() {
-					eval(method);
-				});
-			};
-		}
-	};
-}).directive("ngTouchend", function() {
-	return {
-		controller : function($scope, $element, $attrs) {
-			$element.bind('touchend', onTouchEnd);
-
-			function onTouchEnd(event) {
-				var method = '$scope.' + $element.context.getAttribute('ng-touchend');
-				$scope.$apply(function() {
-					eval(method);
-				});
-			};
-		}
-	};
-}).directive('ngDelay', ['$timeout', function ($timeout) {
+.directive('ngDelay', ['$timeout', function ($timeout) {
     return {
         restrict: 'A',
         scope: true,

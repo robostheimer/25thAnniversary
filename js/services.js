@@ -31,7 +31,7 @@ function($http, $routeParams, $location, $rootScope, $sce, HelperFunctions) {
 							school : item[9],
 							city : item[10],
 							state : item[11],
-							image : item[12].split('?')[0],
+							src : item[12].split('?')[0],
 							grades : item[13],
 							schoolurl : item[14],
 							wordpressurl : item[15],
@@ -82,7 +82,7 @@ function($http, $routeParams, $location, $rootScope, $sce, HelperFunctions) {
 								school : item[9],
 								city : item[10],
 								state : item[11],
-								image : item[12].split('?')[0],
+								src : item[12].split('?')[0],
 								grades : item[13],
 								schoolurl : item[14],
 								wordpressurl : item[15],
@@ -138,7 +138,7 @@ function($http, $routeParams, $location, $rootScope, $sce, HelperFunctions) {
 								school : item[9],
 								city : item[10],
 								state : item[11],
-								image : item[12].split('?')[0],
+								src : item[12].split('?')[0],
 								grades : item[13],
 								schoolurl : item[14],
 								wordpressurl : item[15],
@@ -198,6 +198,7 @@ function($http, $routeParams, $location, $rootScope, $sce, HelperFunctions) {
 							colorCode: '0, 87, 165',
 							type:'article',
 							randomnumber: Math.floor(Math.random()*51),
+							src: 'images/newspaper.png',
 							id:'article'+o,
 							description:item[0]+':'+item[2]+':'+item[3],
 						});
@@ -224,8 +225,9 @@ function($http, $routeParams, $location, $rootScope, $sce, HelperFunctions) {
 								colorCode: '0, 87, 165',
 								type:'article',
 								randomnumber: Math.floor(Math.random()*51),
-								id:'article'+o
-								
+								src: 'images/newspaper.png',
+								id:'article'+o,
+								description:item[0]+':'+item[2]+':'+item[3],
 							});
 
 						});
@@ -259,7 +261,9 @@ function($http, $routeParams, $location, $rootScope, $sce, HelperFunctions) {
 								color:'dkblue',
 								type:'article',
 								randomnumber: Math.floor(Math.random()*51),
-								id:'article'+o
+								src: 'images/newspaper.png',
+								id:'article'+o,
+								description:item[0]+':'+item[2]+':'+item[3],
 							});
 
 						});
@@ -292,7 +296,7 @@ function($http, $routeParams, $location, $rootScope, $sce,HelperFunctions) {
 							spot.push({
 								id : i,
 								headline:item[0]+' '+ item[1],
-								description : item[2].replace(/"/g, ''),
+								description : item[2].replace(/"/g, ''). replace(/<p>/g, '').replace(/<\/p>/g, ''),
 								longbody : item[3].replace(/"/g, ''),
 								src : item[4].split('?')[0],
 								caption : item[5],
@@ -307,7 +311,7 @@ function($http, $routeParams, $location, $rootScope, $sce,HelperFunctions) {
 								template:'news',
 								colorCode: '0, 87, 165',
 								color:'dkblue',
-								type:'news',
+								type:'article',
 								randomnumber: Math.floor(Math.random()*51),
 								id:'spot'+i
 								
@@ -350,7 +354,7 @@ function($http, $routeParams, $location, $rootScope, $sce,HelperFunctions) {
 									template:'news',
 									colorCode: '0, 87, 165',
 									color:'dkblue',
-									type:'news',
+									type:'article',
 									randomnumber: Math.floor(Math.random()*51),
 									id:'spot'+i
 
@@ -398,7 +402,7 @@ function($http, $routeParams, $location, $rootScope, $sce,HelperFunctions) {
 									template:'news',
 									colorCode: '0, 87, 165',
 									color:'dkblue',
-									type:'news',
+									type:'article',
 									randomnumber: Math.floor(Math.random()*51),
 									id:'spot'+i
 
@@ -610,7 +614,7 @@ function($http, $routeParams, $location, $rootScope, $sce, HelperFunctions) {
 				}	
 					
 			}, function(error){
-				return $http.get('/JSONBAckups/POWFusionTable.json').then(function(result)
+				return $http.get('/JSONBackups/POWFusionTable.json').then(function(result)
 					{
 						HelperFunctions.forEach (result.data.rows,function(item){
         					var i = result.data.rows.indexOf(item);
@@ -727,7 +731,7 @@ return{
 			
 			
 
-			return $http.jsonp('https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+LastName%2CFirstName%2CState%2C+YearSailed%2C+GradeLevel%2C+Size%2C+Title%2C+Keywords%2C+Objective%2C+Description%2C+URL%2c+Topics+FROM+17OXuyYjiIvxjr1Yd3DZ-SI-dzp-soOuTDNOHoSOA+ORDER%20BY+LastName"&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK').then(function(result) {
+			return $http.jsonp('https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+LastName%2CFirstName%2CState%2C+YearSailed%2C+GradeLevel%2C+Size%2C+Title%2C+Keywords%2C+Objective%2C+Description%2C+URL%2c+Topics+FROM+17OXuyYjiIvxjr1Yd3DZ-SI-dzp-soOuTDNOHoSOA&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK').then(function(result) {
 				if (result.data.rows != undefined) {
 					var lesson = [];
 					
@@ -756,6 +760,7 @@ return{
 							colorCode:'0, 51, 80',
 							color:'dkstblue',
 							type:'lesson',
+							src: 'images/chalkboard.png',
 							randomnumber: Math.floor(Math.random()*51)
 						});
 						
@@ -766,8 +771,7 @@ return{
 				else{
 					var lesson = [];
 					return $http.get('/JSONBackups/LessonsTable.json').then(function(result) {
-					var name = $routeParams.teachername.replace('*', ' ')
-
+					
 					HelperFunctions.forEach(data.rows.length,function(item){
 						var o = result.data.rows.indexOf(item);
 						var name_comp = item[1] + ' ' + item[0]
@@ -796,6 +800,7 @@ return{
 								colorCode:'0, 51, 80',
 								color:'dkstblue',
 								type:'lesson',
+								src: 'images/chalkboard.png',
 								randomnumber: Math.floor(Math.random()*51)
 
 							});
@@ -842,6 +847,7 @@ return{
 								colorCode:'0, 51, 80',
 								color:'dkstblue',
 								type:'lesson',
+								src: 'images/chalkboard.png',
 								randomnumber: Math.floor(Math.random()*51)
 
 
@@ -856,124 +862,7 @@ return{
 	};
 }]);
 
-TAS_Site.factory('CombineData', ['AlumniSpot','PhotosofWeek','Teacher','News','Lessons', 'Quotes','$q','HelperFunctions',
-function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $q, HelperFunctions) {
-	return{
-		DataCombine: function()
-		{
-		var deferred = $q.defer();
-		var teachers=[];
-		var pow=[];
-		var news=[];
-		var spot=[];
-		var quotes =[];
-		var alldata ={data:[],years:[]};
-		
-				Teacher.createTeacherList().then(function(data){
-				teachers = data.reverse();
-				teachers.years=[];
-				HelperFunctions.forEach(teachers, function(obj){
-					obj.isLoading=true;
-					if(obj.year==undefined)
-						{
-						teachers.years.push(obj.date.split('/')[2]);
-						}
-						else{
-						teachers.years.push(obj.year);
-						}
-					});
-					teachers.years = removeDuplicatesArr(teachers.years);
-					teachers.years.sort();
-					
-					alldata.data=alldata.data.concat(teachers);
-					alldata.years = alldata.years.concat(teachers.years);
-					
-					PhotosofWeek.getPOW().then(function(data){
-					var pow = data;
-					PhotosofWeek.getNonPOW().then(function(data){
-						var nonpow=data;
-						pow = pow.concat(nonpow); 
-						pow.years = []
-						HelperFunctions.forEach(pow, function(obj){
-							
-							if(obj.year==undefined)
-							{
-							pow.years.push(obj.date.split('/')[2]);
-							}
-							else{
-								pow.years.push(obj.year);
-							}
-							obj.color='yellow'
-						});
-						pow.years = removeDuplicatesArr(pow.years);
-						pow = pow;
-						alldata.data=alldata.data.concat(pow);
-						alldata.years = alldata.years.concat(pow.years);
-					
-						AlumniSpot.getSpotData().then(function(data){
-							spot = data;
-							
-							spot.years=[];
-								News.getNewsData().then(function(data){
-								spot =spot.concat(data);
-								spot.years=[];
-								HelperFunctions.forEach(spot, function(obj){
-								if(obj.articleyear==undefined)
-								{
-								spot.years.push(obj.date.split('/')[2]);
-								}
-								else{
-									spot.years.push(obj.articleyear);
-								}	
-								obj.color='dkblue';
-								});
-								
-								spot.years = removeDuplicatesArr(spot.years);
-								alldata.data=alldata.data.concat(spot);
-								alldata.years = alldata.years.concat(spot.years);
-								
-								
-									Lessons.getLessonData().then(function(data){
-									lessons = data;
-									lessons.years=[];
-									HelperFunctions.forEach(lessons, function(obj){
-										lessons.years.push(obj.year);
-										obj.color='dkstblue';
-									});
-									lessons.years = removeDuplicatesArr(lessons.years);
-									alldata.data=alldata.data.concat(lessons);
-									alldata.years = alldata.years.concat(lessons.years);
-					
-										Quotes.getQuotesData().then(function(data){
-										quotes = data;
-										quotes.years=[];
-										HelperFunctions.forEach(quotes, function(obj){
-											quotes.years.push(obj.gsx$year.$t);
-											obj.color='green';
-										});
-										
-										quotes.years = removeDuplicatesArr(quotes.years);
-										alldata.data=alldata.data.concat(quotes);
-										alldata.years = alldata.years.concat(quotes.years);
-										alldata.years = removeDuplicatesArr(alldata.years);
-										alldata.data = SortObj('year', alldata.data);
-										
-										return alldata.data;
-										
-										//for(alldata.years, function(year))
-									});
-				
-								});
-							});
-						});
-					});
-					
-				});
-			});
-		
-		}
-	};
-}]);	
+
 
 TAS_Site.factory('Timeline', ['$http', '$routeParams', '$location', '$rootScope', '$sce','HelperFunctions',
 function($http, $routeParams, $location, $rootScope, $sce, HelperFunctions) {
@@ -1003,13 +892,13 @@ function($http, $routeParams, $location, $rootScope, $sce, HelperFunctions) {
 						items.years.push(
 							{'year':item.gsx$year.$t, 'state': 'notselected', color:item.gsx$color.$t, classy:'hider',noSubnav:true,
 								subNav :[
-								{name:"alumni", state:'notselected', checked:'notselected', color:'dkblue', 'year':item.gsx$year.$t, on_off:'off','classy':'icon-profile dkblue' }, 
-								{name:"images",state:'notselected', checked:'notselected', color:'yellow', 'year':item.gsx$year.$t, on_off:'off','classy':'icon-images yellow' },
-								{name:'dates', state:'notselected', checked:'notselected', color:'foam', 'year':item.gsx$year.$t, on_off:'off', 'classy':'icon-calendar foam' }, 
-								{name:'profile', state:'notselected', checked:'notselected', color:'blue', 'year':item.gsx$year.$t, on_off:'off', 'classy':'icon-profile blue' },
-								{name:"quotes", state:'notselected', checked:'notselected', color:'green', 'year':item.gsx$year.$t, on_off:'off', 'classy':'icon-bubble green' },  
-								{name:"lessons", state:'notselected', checked:'notselected', color:'dkstblue', 'year':item.gsx$year.$t, on_off:'off', 'classy':'icon-chalkboard2 dkstblue' }, 
-								{name:"stats", state:'notselected', checked:'notselected', color:'ltgreen', 'year':item.gsx$year.$t, on_off:'off', 'classy':'icon-stats ltgreen' }, 
+								{type:"article", state:'notselected', checked:'notselected', color:'dkblue', 'year':item.gsx$year.$t, on_off:'off','classy':'icon-profile dkblue' }, 
+								{type:"image",state:'notselected', checked:'notselected', color:'yellow', 'year':item.gsx$year.$t, on_off:'off','classy':'icon-images yellow' },
+								{type:'dates', state:'notselected', checked:'notselected', color:'foam', 'year':item.gsx$year.$t, on_off:'off', 'classy':'icon-calendar foam' }, 
+								{type:'profile', state:'notselected', checked:'notselected', color:'blue', 'year':item.gsx$year.$t, on_off:'off', 'classy':'icon-profile blue' },
+								{type:"quote", state:'notselected', checked:'notselected', color:'green', 'year':item.gsx$year.$t, on_off:'off', 'classy':'icon-bubble green' },  
+								{type:"lesson", state:'notselected', checked:'notselected', color:'dkstblue', 'year':item.gsx$year.$t, on_off:'off', 'classy':'icon-chalkboard2 dkstblue' }, 
+								{type:"stat", state:'notselected', checked:'notselected', color:'ltgreen', 'year':item.gsx$year.$t, on_off:'off', 'classy':'icon-stats ltgreen' }, 
 								]
 						});
 					}
@@ -1023,4 +912,25 @@ function($http, $routeParams, $location, $rootScope, $sce, HelperFunctions) {
 	};
 }]);	
 
-
+TAS_Site.factory('BrowseSearch', ['HelperFunctions','$q', function(HelperFunctions, $q){
+	return{
+		
+		SearchData :function(arr, query, properties, checkDupProperty)
+		{
+		var deferred = $q.defer();
+		var searchArr={arr:[], fullArr:[]};
+		var searchArr=HelperFunctions.searchDataMatch(arr,query, properties, checkDupProperty);
+		deferred.resolve(searchArr);
+		return deferred.promise;
+		},
+		
+		FilterData: function(arr, query, properties, checkDupProperty,type, checking_prop)
+		{
+		var deferred = $q.defer();
+		var filteredArr={arr:[], fullArr:[]};
+		filteredArr=HelperFunctions.searchObjProperties(arr,query, properties, checkDupProperty, type, checking_prop);
+		deferred.resolve(filteredArr);
+		return deferred.promise;	
+		}
+	};	
+}]);
