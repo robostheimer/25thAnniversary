@@ -10,22 +10,28 @@ TAS_Site.config(['$routeProvider',
         templateUrl: 'partials/cards.html',
        controller: 'CardController'
       }).
-     when('/:feature',
+     when('/profile/:name',
     {
-    	templateUrl:'partials/features.html',
-    	controller:'storyController',
+    	templateUrl:'partials/profile.html',
+    	controller:'CardController',
     	
     }).
-     when('/:home',
+     when('/photo/:name',
     {
-    	templateUrl:'partials/cards.html',
-    		controller:'CardController',
+    	templateUrl:'partials/photo.html',
+    	controller:'CardController',
     	
     }).
-     
+     when('/spotlight/:name',
+    {
+    	templateUrl:'partials/spotlight.html',
+    	controller:'CardController',
+    	
+    }).
+
     otherwise({
       	templateUrl: 'partials/cards.html',
-        redirectTo: '/home/',
+        redirectTo: '/cards/',
         controller:'CardController',
      });
 

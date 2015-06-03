@@ -65,15 +65,15 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
 		link : linkFunction,
 	};
 	
-	//////////////<div feature-image="{{slide.src}}?w={{windowWidth}}" color="{{slide.background_color}}" ng-hide="slide.isLoading==true">
+	//////////////<section feature-image="{{slide.src}}?w={{windowWidth}}" color="{{slide.background_color}}" ng-hide="slide.isLoading==true">
 })
 .directive('caRd', function($compile, $q) {
 	/////
-	var Profile = '<div id="image{{item.id}}" resize-card feature-image="{{item.src}}" color="{{item.colorCode}}" class="col-md-3 {{item.color}}" ng-show="item.isLoading==false" blend="soft-light" alpha="1"> <div class="icon_right"><span class="icon-profile"></span></div><div class="card-text"><h3 ng-bind-html="SkipValidation(item.headline)">{{item.headline}}</h3></div><div class="card-button"><button class="{{item.color}}"><a href="/#/{{item.year}}/{{item.firstname}}*{{item.lastname}}" role="button">View Profile »</a></button></div><br></div>';
-	var News = '<div id="news{{item.id}}" resize-card feature-image="{{item.src}}" color="{{item.colorCode}}" class="col-md-3 {{item.color}}" ng-show="item.isLoading==false" blend="soft-light" alpha="1"><div class="icon_right"><span class="icon-news"></span></div><div class="card-text"><h3 ng-bind-html="item.headline"></h3></div><div class="card-button"><button class="{{item.color}}"><a  href="#" role="button">Read the Story »</a></button></div></div>';
-	var Article = '<div class="col-md-3 {{item.color}}"><div class="icon_right"><span class="icon-news "></span></div> <div class="card-text"><h3 ng-bind-html="SkipValidation(item.headline)"></h3><p>Check out this article from <em> {{item.mediaoutlet}}</em>.<p></div><div class="card-button"><button class="{{item.color}}"><a  href="{{articleurl}}" role="button">Read Article »</a></button></div></div>';
-	var Pow = '<div id="pow{{item.id}}" resize-card feature-image="{{item.src}}" color="{{item.colorCode}}" class="col-md-3 {{item.color}}" ng-show="item.isLoading==false" blend="soft-light" alpha="1"> <div class="icon_right"><span class="icon-images "></span></div><div class="card-text"><h3 ng-bind-html="SkipValidation(item.powSlice)"></h3></div><div class="card-button"><button class="{{item.color}}"><a  href="#" role="button">Learn More »</a></button></div></div>';
-	var Lesson = '<div class="col-md-3 {{item.color}}"><div class="icon_right"><span class="icon-chalkboard2 "></span></div> <div class="card-text"><h3 ng-bind-html="SkipValidation(item.headline)">}</h3><p>{{item.lessonSlice}}</p></div><div class="card-button"><button class="{{item.color}}"><a href="{{item.url}}" target="_blank" role="button">View Lesson»</a></button></div></div>';
+	var Profile = '<section id="image{{item.id}}" resize-card feature-image="{{item.src}}" color="{{item.colorCode}}" class="col-md-3 {{item.color}}" ng-show="item.isLoading==false" blend="soft-light" alpha="1"> <section class="icon_right"><span class="icon-profile"></span></section><section class="card-text"><h3 ng-bind-html="SkipValidation(item.headline)">{{item.headline}}</h3></section><section class="card-button"><button class="{{item.color}}"><a href="#/profile/{{item.firstname}}*{{item.lastname}}" role="button">View Profile »</a></button></section><br></section>';
+	var News = '<section id="news{{item.id}}" resize-card feature-image="{{item.src}}" color="{{item.colorCode}}" class="col-md-3 {{item.color}}" ng-show="item.isLoading==false" blend="soft-light" alpha="1"><section class="icon_right"><span class="icon-news"></span></section><section class="card-text"><h3 ng-bind-html="item.headline"></h3></section><section class="card-button"><button class="{{item.color}}"><a href="#/spotlight/{{item.headline_url}}" role="button">Read the Story »</a></button></section></section>';
+	var Article = '<section class="col-md-3 {{item.color}}"><section class="icon_right"><span class="icon-news "></span></section> <section class="card-text"><h3 ng-bind-html="SkipValidation(item.headline)"></h3><p>Check out this article from <em> {{item.mediaoutlet}}</em>.<p></section><section class="card-button"><button class="{{item.color}}"><a  href="{{articleurl}}" role="button">Read Article »</a></button></section></section>';
+	var Pow = '<section id="pow{{item.id}}" resize-card feature-image="{{item.src}}" color="{{item.colorCode}}" class="col-md-3 {{item.color}}" ng-show="item.isLoading==false" blend="soft-light" alpha="1"> <section class="icon_right"><span class="icon-images "></span></section><section class="card-text"><h3 ng-bind-html="SkipValidation(item.powSlice)"></h3></section><section class="card-button"><button class="{{item.color}}"><a  href="#/photo/{{item.headline_url}}" role="button">Learn More »</a></button></section></section>';
+	var Lesson = '<section class="col-md-3 {{item.color}}"><section class="icon_right"><span class="icon-chalkboard2 "></span></section> <section class="card-text"><h3 ng-bind-html="SkipValidation(item.headline)">}</h3><p>{{item.lessonSlice}}</p></section><section class="card-button"><button class="{{item.color}}"><a href="{{item.url}}" target="_blank" role="button">View Lesson»</a></button></section></section>';
 	var Quotes = '';
 
 	var getTemplate = function(contentType) {
@@ -123,6 +123,22 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
 			});
 		}
 	};
+}).directive('clearStorage', function($window) {
+	return {
+		restrict : 'AE',
+
+		link : function() {
+			var w = angular.element($window);
+			$window.onbeforeunload= function() {
+				
+				sessionStorage.clear();
+				
+			};
+		
+			
+			
+		}
+	};
 }).directive('cellWidth', function($window) {
 	return {
 		restrict : 'AE',
@@ -138,10 +154,10 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
 					};
 				};
 				element.css({
-					'width':w.width()
+					'width':w.width()*.95
 					});
 				scope.$watch(scope.getWindowDimensions, function(newValue, oldValue) {
-					scope.tableWidth=w.width()
+					scope.tableWidth=w.width()*.95
 					
 					
 				}, true);
@@ -149,12 +165,11 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
 			w.bind('resize', function() {
 				
 				element.css({
-					'width':scope.tableWidth
+					'width':scope.tableWidth*.95
 					});
 				scope.$apply();
 			});
 		
-				
 			
 			
 		}
@@ -253,28 +268,58 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
 	};
 })
 
-.directive('bottomPostion', function() {
+.directive('bottomPostion', function($window) {
 	return {
 		restrict : 'AE',
 
 		link : function(scope, element) {
-
+		var w = angular.element($window);
 			$(element).css({
-				'top' : $(window).height() - ($('.navigation_holder').height() * 2) - 10,
-				'height' : $(window).height()
+				'top' : w.height() - ($('footer').height() * 2) - 10,
+				'height' : w.height()
+			});
+			
+			w.bind('resize', function(){
+				$(element).css({
+				'top' : w.height() - ($('footer').height() * 2) - 10,
+				'height' : w.height()
+					
+				});
+				scope.whereto=$(window).height() - ($('footer').height() * 2)- 10;
+				if(scope.chevron.state=='active')
+				{
+					
+					scope.chevron.state='active';
+					scope.chevron.classy='icon-chevron-down';
+					scope.chevron.height= scope.whereto;
+					$('article').animate({'top': '0'}, 'slow');
+				}
+				else{
+					scope.chevron.state='inactive';
+					scope.chevron.classy='icon-chevron-up';
+					scope.chevron.height= scope.whereto;
+					$('article').animate({'top': scope.whereto}, 'slow');
+				}			
 			});
 			//element.parent().append('<span class="spinner"></span>');
 
 		}
 	};
-}).directive('sectionHeight', function() {
+}).directive('sectionHeight', function($window) {
 	return {
 		restrict : 'AE',
 
 		link : function(scope, element) {
-
+			console.log($('article h2').css('padding-top'));
+			var w = angular.element($window);
 			$(element).css({
-				'height' : ($(window).height() - ($('article h2').height() + $('article h4').height() + $(window).height() * .235) - 20)
+				'height' : w.height() -($('article h2').height()+(parseInt($('article h2').css('padding-top'),10))+$('article h2').height()+(parseInt($('article h2').css('padding-bottom'),10))+$('footer').height()+10)
+			});
+			w.bind('resize', function(){
+				
+				$(element).css({
+					'height' : w.height() -($('article h2').height()+(parseInt($('article h2').css('padding-top'),10))+$('article h2').height()+(parseInt($('article h2').css('padding-bottom'),10))+$('footer').height()+10)
+				});
 			});
 
 		}
@@ -282,7 +327,7 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
 }).directive("scroll", function($window) {
 	return {
 		link: function(scope, element, attrs) {
-			scope.whereto=$(window).height() - ($('.navigation_holder').height() * 2) - 10;
+			scope.whereto=$(window).height() - ($('footer').height() * 2)- 10;
 			scope.chevron={name:'up', state:'inactive', top:scope.whereto};
 			scope.chevron.classy='icon-chevron-up';
 			
@@ -317,11 +362,13 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
 					
 					scope.chevron.state='active';
 					scope.chevron.classy='icon-chevron-down';
+					scope.chevron.height= scope.whereto;
 					$('article').animate({'top': '0'}, 'slow');
 				}
 				else{
 					scope.chevron.state='inactive';
 					scope.chevron.classy='icon-chevron-up';
+					scope.chevron.height= scope.whereto;
 					$('article').animate({'top': scope.whereto}, 'slow');
 				}
 		};
@@ -658,7 +705,7 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
 				if (value != "") {
 					element.html('<embed type="application/x-shockwave-flash" src="http://s0.videopress.com/player.swf?v=1.03" width="' + attr.width + '" height="' + attr.height + '" wmode="direct" seamlesstabbing="true" allowfullscreen="true" allowscriptaccess="always" overstretch="true" flashvars="guid=' + scope.src.src + '&amp;isDynamicSeeking=true">');
 				} else {
-					element.html("<div>NO Video</div>");
+					element.html("<section>NO Video</section>");
 					// We have to put something into the DOM
 				}
 			});
@@ -938,5 +985,79 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
             };
         }
     };
-}]);;
+}]).directive(
+            "eventDelegate",
+            function( $parse ) {
+            	console.log('clicked')
+            	
+                // I bind the DOM and event handlers to the scope.
+                function link( $scope, element, attributes ) {
+                    // Right now, the delegate can be defined as
+                    // either selector and an expression; or simply
+                    // as an expression.
+                    var config = attributes.eventDelegate.split( "|" );
+					var eventtype=attributes.type;
+                    // Only an expression has been defined - default
+                    // the selector to any anchor link.
+                    if ( config.length === 1 ) {
+
+                        var selector = "a";
+                        var expression = config[ 0 ];
+                    // Both selector and expression are defined.
+                    } else {
+
+                        var selector = config[ 0 ];
+                        var expression = config[ 1 ];
+
+                    }
+                    // Parse the expression into an invokable
+                    // function. This way, we don't have to re-parse
+                    // it every time the event handler is triggered.
+                    var expressionHandler = $parse( expression );
+                    // Bind to the click (currently only supported
+                    // event type) to the root element and listen for
+                    // clicks on the given selector.
+                    element.on(
+                        eventtype+".eventDelegate",
+                        selector,
+                        function( event ) {
+                        	console.log(event)
+                            // Prevent the default behavior - this is
+                            // not a "real" link.
+                            event.preventDefault();
+                            // Find the scope most local to the target
+                            // of the click event.
+                            var localScope = $( event.target ).scope();
+                            // Invoke the expression in the local scope
+                            // context to make sure we adhere to the
+                            // proper scope chain prototypal inheritance.
+                            localScope.$apply(
+                                function() {
+
+                                    expressionHandler( localScope );
+                                }
+                            );
+                        }
+                    );
+
+                    // When the scope is destroyed, clean up.
+                    $scope.$on(
+                        "$destroy",
+                        function( event ) {
+
+                            element.off( eventtype+".clickDelegate" );
+
+                        }
+                    );
+                }
+
+
+                // Return the directive configuration.
+                return({
+                    link: link,
+                    restrict: "A"
+                });
+
+            });
+
 
