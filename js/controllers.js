@@ -3,100 +3,14 @@
 /* Controllers */
 
 angular.module('Story', ['infinite-scroll'])
-.controller('CardController', ['AlumniSpot','PhotosofWeek','Teacher','News','Lessons', 'Quotes','$scope','$sce','BrowseSearch','$rootScope','Timeline','$location', '$routeParams',
-function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $scope, $sce, BrowseSearch, $rootScope, Timeline, $location, $routeParams)
+.controller('CardController', ['AlumniSpot','PhotosofWeek','Teacher','News','Lessons', 'Quotes','$scope','$sce','BrowseSearch','$rootScope','Timeline','$location', '$routeParams','$window',
+function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $scope, $sce, BrowseSearch, $rootScope, Timeline, $location, $routeParams, $window)
 {
-	/*
-	for(var x=1; x<100; x++)
-	{
-		console.log(x)
-		if(x%3==0  && x%15!=0)
-		{
-			console.log(x+':Fizz')
-		}
-		if(x%5==0&&x%15!=0)
-		{
-			console.log(x+':Buzz')
-		}
-		if(x%15==0 &&x!=0)
-		{
-			console.log('FizzBuzz')
-		};
-		
-	}
 	
-	var str='<i>I love it</i>';
-	str =str.removeHTML();
-	console.log(str);
-	console.log(str.reverse())
-	
-	var str2 = 'Sue Zupko-2014';
-	str2 = str2.diggPatt('-');
-	console.log(str2);
-	
-	var url = 'https://teacheratsea.wordpress.com/2015/05/26/dj-kast-and-the-interview-with-emily-peacock/';
-	var title = url.createTitleFromURL();
-	console.log(title);
-	
-	
-	var searchterm = '"blue whales"';
-	var searchtermArr = searchterm.strSplitter('"');
-	console.log(searchtermArr)
-	
-	var animals = ['cat', 'dog', 'moose', 'cat'];
-	var animales = animals.savArrayDups();
-	console.log(animales);
-	
-	var arr = [{type:'cat'}, {type:'dog'}, {type:'moose'}, {type:'cat'}];
-	var dups =arr.savArrayDupsObj('type');
-	var arr2=[{type:'dog'}, {'type':'cat'}];
-	console.log(dups)
-	
-	arr= arr.preventDuplicatesValues(arr2, 'type','push');
-	console.log(arr);
-	
-	animals = animals.preventDuplicates(animales, 'push');
-	console.log(animals);
-	
-	////////////Closure//////////////
 
-		
-	function adder(x){
-		var iterator = 1;
-		x=x+1
-		function subtractor(y)
-		{
-			console.log(x-y);
-		}
-		subtractor(3);
-	}	
-	adder(8);
-	adder('8');
-	console.log(adder(parseInt('8', 10)))
-	///////////==Performs type conversion///////////
-	console.log(8=='8');
-	//////////=== does not perform type conversion///////////
-	console.log(8==='8')
 	
 	
-	var test =['bear', 'dog', 'suz'];
-	console.log(test.removeItem('ind', 0));
-	console.log(test.removeItem('str', 'bear'))
-	var test2 =[{type:'bear'}, {type:'dog'}, {type:'suz'}];
 	
-	//console.log(test2.removeItem('ind', 0));
-	console.log(test2.removeItem('str', 'suz'))
-		function setUp(x) {
-		  var tmp = 3;  
-		     function Add(y) {   
-		          console.log(x + y + (++tmp)); // will alert 16 
-		          }  
-		Add(10);
-		}
-		setUp(2);
-		
-		/////////logs 16///////////
-	///////////////////////*/
 	$scope.noSubNav=true;
 	var alldata={};
 	alldata.fullArr=[];
@@ -117,7 +31,7 @@ function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $scope, $sce,
 	var arr=[];
 	$scope.allchecked='notselected';
 	$scope.viewButtons = [{name:'boxes', state:'on'}, {name:'list', state:'off'}];
-	$scope.orderButtons = [{name:'Year (Dsc)', state:'off', order: 'dsc', type:'number', prop:'year'}, {name:'Year (Asc)', state:'off', order:'asc', type: 'number', prop:'year'}, {name: 'Type', state:'off', order:'dsc', type:'str', prop: 'type'}];
+	$scope.orderButtons = [{name:'Year (Dsc)', state:'off', order: 'dsc', type:'number', prop:'year', classy:'icon-sort-alpha-desc'}, {name:'Year (Asc)', state:'off', order:'asc', type: 'number', prop:'year',classy:'icon-sort-alpha-asc'}];
 	
 	$scope.template = 'boxes';
 	
@@ -131,10 +45,20 @@ function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $scope, $sce,
 		
 		if(sessionStorage.arr==null)
 		{
-			console.log('null')
+				
+													
 				if($rootScope.alldata_root==null)
 				{
-					console.log($scope.alldata.fullArr.length);
+						Timeline.getTimelineData().then(function(data){
+						$scope.items = data;
+						$scope.items.years.reverse();
+						$scope.yearsWidth = $scope.items.years.length*75;
+						$scope.navWidth = $('.navigation').width();
+						$scope.windowHeight=$(window).height();
+						sessionStorage.timeline = $scope.items;
+												
+
+											
 					Teacher.createTeacherList().then(function(data){
 					var teachers = data.data.reverse();
 						alldata.years = data.years
@@ -179,40 +103,65 @@ function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $scope, $sce,
 											alldata.fullArr=alldata.fullArr.concat(lessons);
 												Quotes.getQuotesData().then(function(data){
 												var quotes = data;
-												alldata.fullArr=alldata.fullArr.concat($scope.quotes);
-												alldata.fullArr.pop();
-											 	alldata.fullArr.SortObjDsc('year', 'num', 'headline');
+												quotes.forEach(function(quote){
+												
+													if(quote.quote.length>180)
+													{
+														quote.quoteSlice = quote.quote.Slicer( 180)+'...';
+													}
+													else{
+														quote.quoteSlice=quote.quote;
+													}
+												});
+												alldata.fullArr=alldata.fullArr.concat(quotes);
+												
+											
+											 	
 												$scope.alldata_all = alldata.fullArr;
-												alldata.fullArr = alldata.fullArr;
-												alldata.arr=alldata.fullArr.slice($scope.start_index,$scope.end_index);									
-												alldata.years=alldata.years.removeDuplicatesArr();
-												$scope.alldata = alldata;
-												$rootScope.alldata_root = $scope.alldata;
+												
+												
+												alldata.arr=alldata.fullArr.slice($scope.start_index,$scope.end_index);	
+																			
+												//alldata.years=alldata.years.removeDuplicatesArr();
+												$scope.alldata.fullArr = alldata.fullArr;
+												/*$scope.alldata.fullArr.forEach(function(item){
+													if(item.type=='quote')
+													{
+													console.log(item);
+													}
+												});*/
+												$scope.alldata.arr=alldata.arr;
+												
+												
+													//$scope.alldata.fullArr.SortObjDsc('year', 'num', 'headline');
+													$scope.orderData('year', 'dsc', 'num', 'headline')
+												/*$scope.alldata.fullArr.forEach(function(item){
+												var i=$scope.alldata.fullArr.indexOf(item);
+														item.id=i;
+												});*/
+												$rootScope.alldata_root = angular.copy($scope.alldata);
 												$scope.loading=false;
-												Timeline.getTimelineData().then(function(data){
-													$scope.items = data;
-													$scope.items.years.reverse();
-													$scope.yearsWidth = $scope.items.years.length*75;
-													$scope.navWidth = $('.navigation').width();
-													$scope.windowHeight=$(window).height();
-													$scope.alldata.fullArr.forEach(function(item){
-														$scope.items.years.forEach(function(year){
-															if(item.year==year.year){
+												
+												
+												
+												$scope.alldata.fullArr.forEach(function(item){
+													$scope.items.years.forEach(function(year){
+														if(item.year==year.year){
+														
+															year.state='selected';
+															year.subNav.forEach(function(subNav){
+																if(item.type==subNav.type)
+																{
+																	subNav.state='selected';
+																}
+															});
 															
-																year.state='selected';
-																year.subNav.forEach(function(subNav){
-																	if(item.type==subNav.type)
-																	{
-																		subNav.state='selected';
-																	}
-																});
-																
-															}
-														});
+														}
 													});
+												});
 
+											
 											});
-						
 										});
 									});
 								});
@@ -221,6 +170,7 @@ function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $scope, $sce,
 						});
 					});
 				});
+					
 				}
 				else{
 					$scope.alldata=$rootScope.alldata_root;
@@ -233,19 +183,13 @@ function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $scope, $sce,
 			
 		}
 		else{
-			console.log('not null')
 			$scope.alldata.arr = jQuery.parseJSON(sessionStorage.arr);
 			$scope.alldata.fullArr=jQuery.parseJSON(sessionStorage.fullArr);
-			console.log(sessionStorage)
-			Timeline.getTimelineData().then(function(data){
-				$scope.items = data;
-				$scope.items.years.reverse();
-				$scope.yearsWidth = $scope.items.years.length*75;
-				$scope.navWidth = $('.navigation').width();
-				$scope.windowHeight=$(window).height();
-				
-		
-			
+			$scope.items=jQuery.parseJSON(sessionStorage.timeline);
+			$scope.items.years=jQuery.parseJSON(sessionStorage.years)
+			$scope.yearsWidth = $scope.items.years.length*75;
+			$scope.navWidth = $('.navigation').width();
+			$scope.windowHeight=$(window).height();
 			
 				
 				//$scope.buttonsOn = jQuery.parseJSON(sessionStorage.buttonsOn);
@@ -254,8 +198,7 @@ function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $scope, $sce,
 				$scope.alldata.fullArr.forEach(function(item){
 					$scope.items.years.forEach(function(year){
 						if(item.year==year.year){
-							console.log(year)
-						
+							
 							year.state='selected';
 							year.subNav.forEach(function(subNav){
 								if(item.type==subNav.type)
@@ -285,7 +228,7 @@ function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $scope, $sce,
 				});
 				
 	
-			});	
+			
 		}
 		
 		
@@ -293,10 +236,15 @@ function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $scope, $sce,
 	
 	$scope.savState = function()
 	{
-		console.log('saving')
+		
 		sessionStorage.arr = JSON.stringify($scope.alldata.arr);
 		sessionStorage.fullArr = JSON.stringify($scope.alldata.fullArr);
 		sessionStorage.template = $scope.template;
+		sessionStorage.timeline = JSON.stringify($scope.items);
+		if($scope.items!=null)
+		{
+		sessionStorage.years =JSON.stringify($scope.items.years)
+		}
 	};
 	
 	$scope.filterData =function(query){
@@ -332,6 +280,7 @@ function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $scope, $sce,
 		else{
 			/////////////Create Filter Data function and change from SearchData to FilterData
 			BrowseSearch.FilterData($scope.alldata_all, query, properties, 'headline', type, checking_prop).then(function(data){
+			
 			$scope.alldata.arr=[];	
 			
 			$scope.filteredBtnArr.fullArr = $scope.filteredBtnArr.fullArr.concat(data);
@@ -488,7 +437,7 @@ function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $scope, $sce,
 	$scope.changeNavClass=function(obj1, obj2 )
 	{
 		
-		$scope.orderButtons = [{name:'Year (Dsc)', state:'off', order: 'dsc', type:'number', prop:'year'}, {name:'Year (Asc)', state:'off', order:'asc', type: 'number', prop:'year'}, {name: 'Type', state:'off', order:'dsc', type:'str', prop: 'type'}];
+		$scope.orderButtons = [{name:'Year (Dsc)', state:'off', order: 'dsc', type:'number', prop:'year', classy: 'icon-sort-alpha-desc' }, {name:'Year (Asc)', state:'off', order:'asc', type: 'number', prop:'year', classy:'icon-sort-alpha-asc'}];
 	
 		$scope.query="";
 		$scope.loading=true;
@@ -624,8 +573,8 @@ function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $scope, $sce,
 	
 	$scope.changeNavCheck = function(type, allselected,on_off)
 	{
-		$scope.orderButtons = [{name:'Year (Dsc)', state:'off', order: 'dsc', type:'number', prop:'year'}, {name:'Year (Asc)', state:'off', order:'asc', type: 'number', prop:'year'}, {name: 'Type', state:'off', order:'dsc', type:'str', prop: 'type'}];
-	
+		$scope.orderButtons = [{name:'Year (Dsc)', state:'off', order: 'dsc', type:'number', prop:'year', classy: 'icon-sort-alpha-desc'}, {name:'Year (Asc)', state:'off', order:'asc', type: 'number', prop:'year', classy: 'icon-sort-alpha-asc'}];
+		
 		$scope.loading=true;
 		/////////////If gray top check box is activated, all boxes and check boxes are given a fill///////////////
 		if(type == "all")
@@ -671,7 +620,6 @@ function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $scope, $sce,
 				$scope.loading=true;
 				if(on_off=='off')
 				{
-					
 					$scope.items.years.forEach(function(year){
 						year.subNav.forEach(function(item){							
 							
@@ -681,7 +629,7 @@ function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $scope, $sce,
 							 nameStr+=year.year;
 							}
 							
-							if(item.type==type){	
+							if(item.type==type || item.checked=="selected"){	
 								
 								year.state="selected";
 								
@@ -695,16 +643,16 @@ function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $scope, $sce,
 									$scope.filterDataBtn('"'+item.type+'"', ['year', 'type'] ,'button', year.year);	
 										
 								}
-								else
-								{
-									//$scope.allchecked='notselected';	
-									item.state='notselected';
-									item.checked='notselected';
-									item.on_off='on';
-									
-								}
+								
 								
 							}
+							else{
+								item.state="notselected";
+							item.checked='notselected';
+							item.on_off='off'
+							}
+						
+								
 							
 						});	
 						
@@ -713,6 +661,7 @@ function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $scope, $sce,
 					
 				}else				
 				{
+					
 					$scope.removeCheckedUI(type);
 					$scope.allchecked='notselected';
 					var count=0;
@@ -790,11 +739,7 @@ function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $scope, $sce,
 		$scope.orderButtons =$scope.orderButtons.Toggle(name,'name' ,'on', 'off');	
 		};
 	
-	$scope.openFeature=function(id)
-	{
-		
-		
-	};
+	
 
 	$scope.SkipValidation = function(value) {
 			return $sce.trustAsHtml(value);
@@ -805,7 +750,129 @@ function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $scope, $sce,
 	
 }]).controller('FeatureController', ['AlumniSpot','PhotosofWeek','Teacher','News','Lessons', 'Quotes','$scope','$sce','BrowseSearch','$rootScope','Timeline','$location', '$routeParams',
 function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $scope, $sce,  BrowseSearch, $rootScope, Timeline, $location, $routeParams){
+		var id=$routeParams.id;
+		
+		$scope.openFeature=function(index)
+		{
+		
+		
+		$scope.alldata.fullArr.forEach(function(item){
+			if(id==item.id)
+			{
+				$scope.storyContent =item;
+			}
+		});
+		
+		$scope.loading=false;
+
+			
+			
+		};
+		
+		$scope.alldata={arr:[], fullArr:[]}
+		var alldata={};
+		alldata.fullArr=[];
+		if($rootScope.alldata_root==null)
+		{
+			$scope.loading=true;
+			
+			Teacher.createTeacherList().then(function(data){
+					var teachers = data.data.reverse();
+						alldata.years = data.years
+						alldata.fullArr=alldata.fullArr.concat(teachers);
+						
+						PhotosofWeek.getPOW().then(function(data){
+						var pow = data;
+						
+							PhotosofWeek.getNonPOW().then(function(data){
+								var nonpow=data;
+								
+								pow = pow.concat(nonpow); 
+								alldata.fullArr=alldata.fullArr.concat(pow);
+								pow.forEach(function(pow){
+								if(pow.headline.length>220)
+								{
+									pow.powSlice = pow.headline.Slicer(220)+'...';
+								}
+								else{
+									pow.powSlice =pow.headline;
+								}
+								});	
+								AlumniSpot.getSpotData().then(function(data){
+									
+									var spot = data;
+									alldata.fullArr=alldata.fullArr.concat(spot);
+										News.getNewsData().then(function(data){
+										var news = data;
+										alldata.fullArr=alldata.fullArr.concat(news);
+										Lessons.getLessonData().then(function(data){
+											var lessons = data;
+											lessons.forEach(function(lesson){
+												if(lesson.description.length>180)
+												{
+													lesson.lessonSlice = lesson.description.Slicer( 180)+'...';
+												}
+												else{
+													lesson.lessonSlice=lesson.description;
+												}
+											});
+											
+											alldata.fullArr=alldata.fullArr.concat(lessons);
+												Quotes.getQuotesData().then(function(data){
+												var quotes = data;
+												quotes.forEach(function(quote){
+													if(quote.quote.length>180)
+													{
+														quote.quoteSlice = quote.quote.Slicer( 180)+'...';
+													}
+													else{
+														quote.quoteSlice=quote.quote;
+													}
+												});
+												alldata.fullArr=alldata.fullArr.concat(quotes);
+												
+												//alldata.fullArr.pop();
 	
+											 	
+												$scope.alldata_all = alldata.fullArr;
+												
+												
+												alldata.arr=alldata.fullArr.slice($scope.start_index,$scope.end_index);	
+																			
+												//alldata.years=alldata.years.removeDuplicatesArr();
+												$scope.alldata.fullArr = alldata.fullArr;
+												$scope.alldata.arr=alldata.arr;
+												
+												$scope.alldata.fullArr = alldata.fullArr.SortObjDsc('year', 'num', 'headline');;
+												/*$scope.alldata.fullArr.forEach(function(item){
+														var i=$scope.alldata.fullArr.indexOf(item);
+														item.id=i;
+												});*/
+												
+												$scope.openFeature(id);										
+												
+						
+										});
+									});
+								});
+							});
+							
+						});
+					});
+				});
+			
+		}
+		else
+		{
+		
+		$scope.loading=true;
+		$scope.alldata.fullArr=$rootScope.alldata_root.fullArr.SortObjDsc('year', 'num', 'headline');
+		$scope.openFeature($routeParams.id);
+		}
+		
+		
+		
+		
 }]);
 
 

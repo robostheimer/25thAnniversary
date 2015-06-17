@@ -21,8 +21,8 @@
 			<span class="icon-{{item.name}}"></span>
 		</section>
 	
-		<section  class="label {{item.state}}">
-			 <a ng-repeat ="item in orderButtons" ng-click="orderData(item.prop, item.name, item.order, item.type)" class="{{item.state}}">{{item.name}}</a>
+		<section  class="view {{item.state}}" ng-click="orderData(item.prop, item.name, item.order, item.type)" ng-repeat ="item in orderButtons">
+			<span class="{{item.classy}}"></span>
 	</section>
 	
 	</section>
@@ -41,9 +41,9 @@
 	<!--------Cards View-------------->
 	<section id="nofilter"  class="stage" body-height  infinite-scroll = "addMore()" infinite-scroll-distance="5" elmwin = 'elem' child='unfiltered'>
 		
-		<section class="row" id="unfiltered" ng-hide="loading==true" >
+		<section class="row" id="unfiltered" ng-hide="loading==true"  type="click">
 			
-			<section  ng-repeat ="item in alldata.arr">
+			<section  ng-repeat ="item in alldata.arr" class="card">
 
 				<ca-rd type="{{item.template}}" ></ca-rd>
 			</section>

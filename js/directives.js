@@ -69,12 +69,15 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
 })
 .directive('caRd', function($compile, $q) {
 	/////
-	var Profile = '<section id="image{{item.id}}" resize-card feature-image="{{item.src}}" color="{{item.colorCode}}" class="col-md-3 {{item.color}}" ng-show="item.isLoading==false" blend="soft-light" alpha="1"> <section class="icon_right"><span class="icon-profile"></span></section><section class="card-text"><h3 ng-bind-html="SkipValidation(item.headline)">{{item.headline}}</h3></section><section class="card-button"><button class="{{item.color}}"><a href="#/profile/{{item.firstname}}*{{item.lastname}}" role="button">View Profile »</a></button></section><br></section>';
-	var News = '<section id="news{{item.id}}" resize-card feature-image="{{item.src}}" color="{{item.colorCode}}" class="col-md-3 {{item.color}}" ng-show="item.isLoading==false" blend="soft-light" alpha="1"><section class="icon_right"><span class="icon-news"></span></section><section class="card-text"><h3 ng-bind-html="item.headline"></h3></section><section class="card-button"><button class="{{item.color}}"><a href="#/spotlight/{{item.headline_url}}" role="button">Read the Story »</a></button></section></section>';
-	var Article = '<section class="col-md-3 {{item.color}}"><section class="icon_right"><span class="icon-news "></span></section> <section class="card-text"><h3 ng-bind-html="SkipValidation(item.headline)"></h3><p>Check out this article from <em> {{item.mediaoutlet}}</em>.<p></section><section class="card-button"><button class="{{item.color}}"><a  href="{{articleurl}}" role="button">Read Article »</a></button></section></section>';
-	var Pow = '<section id="pow{{item.id}}" resize-card feature-image="{{item.src}}" color="{{item.colorCode}}" class="col-md-3 {{item.color}}" ng-show="item.isLoading==false" blend="soft-light" alpha="1"> <section class="icon_right"><span class="icon-images "></span></section><section class="card-text"><h3 ng-bind-html="SkipValidation(item.powSlice)"></h3></section><section class="card-button"><button class="{{item.color}}"><a  href="#/photo/{{item.headline_url}}" role="button">Learn More »</a></button></section></section>';
+	var Profile = '<section id="image{{item.id}}" resize-card feature-image="{{item.src}}" color="{{item.colorCode}}" class="col-md-3 {{item.color}}" ng-show="item.isLoading==false" blend="soft-light" alpha="1"> <section class="icon_right"><span class="{{item.classy}}"></span></section><section class="card-text"><h3 ng-bind-html="SkipValidation(item.headline)">{{item.headline}}</h3></section><section class="card-button"><button class="{{item.color}}"><a href="#/profile/{{item.id}}" ng-click= role="button">View Profile »</a></button></section></section>';
+		var Pow = '<section id="pow{{item.id}}" resize-card feature-image="{{item.src}}" color="{{item.colorCode}}" class="col-md-3 {{item.color}}" ng-show="item.isLoading==false" blend="soft-light" alpha="1"> <section class="icon_right"><span class="{{item.classy}} "></span></section><section class="card-text"><h3 ng-bind-html="SkipValidation(item.powSlice)"></h3></section><section class="card-button"><button class="{{item.color}}"><a href="#/photo/{{item.id}}" role="button">Learn More »</a></button></section></section>';
+	var News = '<section id="news{{item.id}}" resize-card feature-image="{{item.src}}" color="{{item.colorCode}}" class="col-md-3 {{item.color}}" ng-show="item.isLoading==false" blend="soft-light" alpha="1"><section class="icon_right"><span class="{{item.classy}}"></span></section><section class="card-text"><h3 ng-bind-html="item.headline"></h3></section><section class="card-button"><button class="{{item.color}}"><a href="#/spotlight/{{item.id}}" role="button">Read the Story »</a></button></section></section>';
+	
+	
+	var Article = '<section class="col-md-3 {{item.color}}"><section class="icon_right"><span class="{{item.classy}}"></span></section> <section class="card-text"><h3 ng-bind-html="SkipValidation(item.headline)"></h3><p>Check out this article from <em> {{item.mediaoutlet}}</em>.<p></section><section class="card-button"><button class="{{item.color}}"><a  href="{{articleurl}}" role="button">Read Article »</a></button></section></section>';
+
 	var Lesson = '<section class="col-md-3 {{item.color}}"><section class="icon_right"><span class="icon-chalkboard2 "></span></section> <section class="card-text"><h3 ng-bind-html="SkipValidation(item.headline)">}</h3><p>{{item.lessonSlice}}</p></section><section class="card-button"><button class="{{item.color}}"><a href="{{item.url}}" target="_blank" role="button">View Lesson»</a></button></section></section>';
-	var Quotes = '';
+	var Quotes = '<section id="quotes{{item.id}}" resize-card feature-image="{{item.src}}" color="{{item.colorCode}}" class="col-md-3 {{item.color}}" ng-show="item.isLoading==false" blend="soft-light" alpha="1"><section class="icon_right"><span class="{{item.classy}}"></span></section><section class="card-text"><h3 ng-bind-html="item.quoteSlice"></h3></section><section class="card-button"><button class="{{item.color}}"><a href="#/quotes/{{item.id}}" role="button">Read the Story »</a></button></section></section>';
 
 	var getTemplate = function(contentType) {
 		var template = '';
@@ -268,39 +271,101 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
 	};
 })
 
-.directive('bottomPostion', function($window) {
+.directive('bottomPostion', function($window, $timeout) {
 	return {
 		restrict : 'AE',
 
-		link : function(scope, element) {
+		link : function(scope, element, attrs) {
+		var articleHeight=$('article').height();
+		
+		
 		var w = angular.element($window);
-			$(element).css({
-				'top' : w.height() - ($('footer').height() * 2) - 10,
-				'height' : w.height()
-			});
-			
-			w.bind('resize', function(){
-				$(element).css({
-				'top' : w.height() - ($('footer').height() * 2) - 10,
-				'height' : w.height()
-					
-				});
-				scope.whereto=$(window).height() - ($('footer').height() * 2)- 10;
-				if(scope.chevron.state=='active')
+		if(w.width()>w.height())
 				{
+				var w_ratio = w.width()/w.height();		
+				console.log(w_ratio);
+				$(element).css({
+				'top':  (w.height()*w_ratio),
+				'margin-top': w.height()-articleHeight,
+				//'height' :$('.main').height() + articleHeight+30
 					
-					scope.chevron.state='active';
-					scope.chevron.classy='icon-chevron-down';
-					scope.chevron.height= scope.whereto;
-					$('article').animate({'top': '0'}, 'slow');
+					});
 				}
 				else{
-					scope.chevron.state='inactive';
-					scope.chevron.classy='icon-chevron-up';
-					scope.chevron.height= scope.whereto;
-					$('article').animate({'top': scope.whereto}, 'slow');
-				}			
+					var w_ratio = w.height()/w.width();	
+					
+					console.log(w_ratio);
+					$(element).css({
+					'top':  (w.height()*w_ratio),
+					'margin-top': w.height()-articleHeight,
+				//'height' :$('.main').height() + articleHeight+30
+					
+					});
+				}	
+			
+			w.bind('resize', function(){
+				var articleHeight=$('.main').height() + $('article h2').height()+parseInt($('article h2').css('padding-top'), 10)+parseInt($('article h2').css('padding-bottom'), 10)+parseInt($('article').css('padding-top'),10)+parseInt($('article').css('padding-bottom'), 10)+$('header').height()+parseInt($('.container').css('margin-top'),10);		
+				if(w.width()>w.height())
+				{
+				var w_ratio = w.width()/w.height();		
+				console.log(w_ratio);
+				$(element).css({
+				'top':  (w.height()*w_ratio),
+				'margin-top': w.height()-articleHeight,
+				//'height' :$('.main').height() + articleHeight+30
+					
+					});
+				}
+				else{
+					var w_ratio = w.height()/w.width();	
+					
+					console.log(w_ratio);
+					$(element).css({
+					'top':  (w.height()*w_ratio),
+					'margin-top': w.height()-articleHeight,
+				//'height' :$('.main').height() + articleHeight+30
+					
+					});
+				}	
+				
+			
 			});
+			
+			attrs.$observe('loading', function(){
+				
+		console.log(w.width()+':'+w.height())
+			
+				
+				$timeout(function(){
+				var articleHeight=$('.main').height() + $('article h2').height()+parseInt($('article h2').css('padding-top'), 10)+parseInt($('article h2').css('padding-bottom'), 10)+parseInt($('article').css('padding-top'),10)+parseInt($('article').css('padding-bottom'), 10)+$('header').height()+parseInt($('.container').css('margin-top'),10);		
+				if(w.width()>w.height())
+				{
+				var w_ratio = w.width()/w.height();		
+				console.log(w_ratio);
+				$(element).css({
+				'top':  (w.height()*w_ratio),
+				'margin-top': w.height()-articleHeight,
+				//'height' :$('.main').height() + articleHeight+30
+					
+					});
+				}
+				else{
+					var w_ratio = w.height()/w.width();	
+					
+					console.log(w_ratio);
+					$(element).css({
+					'top':  (w.height()*w_ratio),
+					'margin-top': w.height()-articleHeight,
+				//'height' :$('.main').height() + articleHeight+30
+					
+					});
+				}	
+					
+				var w_ratio = w.width()/w.height();
+				
+					}, 300);
+				});
+			
 			//element.parent().append('<span class="spinner"></span>');
 
 		}
@@ -313,7 +378,7 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
 			console.log($('article h2').css('padding-top'));
 			var w = angular.element($window);
 			$(element).css({
-				'height' : w.height() -($('article h2').height()+(parseInt($('article h2').css('padding-top'),10))+$('article h2').height()+(parseInt($('article h2').css('padding-bottom'),10))+$('footer').height()+10)
+				'height' :($('article h2').height())
 			});
 			w.bind('resize', function(){
 				
@@ -901,8 +966,12 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
 }).directive('featureImageBig', function($window) {
 	return {
 		link: function(scope, element, attrs) {
+			scope.isLoading=true;
+			
+		
 		var w = angular.element($window);
-		var url = attrs.featureImageBig;
+		
+		
 		var color = attrs.color;
 		var blend =attrs.blend;
 		var alpha = attrs.alpha;
@@ -923,7 +992,7 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
 				};
 			};
 			element.css({
-			'background-image' : 'url(' + url + '?w='+scope.windowWidth+')',
+			'background-image' : 'url(' + attrs.featureImageBig + '?w='+scope.windowWidth+')',
 			'background-color': 'rgba('+color+', '+alpha+')',
 			'background-size' : 'cover',
 			'background-blend-mode':blend
@@ -932,7 +1001,7 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
 		//console.log(url)
 			var image= new Image() ;
 		   // console.log(url);
-			image.src=url;
+			image.src=attrs.featureImageBig;
 		  	scope.isLoading=true;
 		  	///console.log(scope.image);
 		  	$(image).bind('load', function(){
@@ -945,7 +1014,30 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
 		}, true);
 
 		w.bind('resize', function() {
+			
+			element.css({
+			'background-image' : 'url(' + attrs.featureImageBig + '?w='+scope.windowWidth+')',
+			});
 			scope.$apply();
+			
+		});
+		
+		attrs.$observe('featureImageBig', function(){
+			var url = attrs.featureImageBig;
+			console.log(attrs.featureImageBig)
+			var color = attrs.color;
+			var blend =attrs.blend;
+			var alpha = attrs.alpha;
+			console.log(url);
+			element.css({
+			'background-image' : 'url(' + attrs.featureImageBig + '?w='+scope.windowWidth+')',
+			'background-color': 'rgba('+color+', '+alpha+')',
+			'background-size' : 'cover',
+			'background-blend-mode':blend
+			});
+			scope.isLoading=false
+		//console.log(url)
+			
 		});
 		
 

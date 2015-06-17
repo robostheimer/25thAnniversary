@@ -10,7 +10,7 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 
 			var year = $location.path().split('/')[1].split('/')[0];
 
-			return $http.jsonp('https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+TeacherLastName%2CTeacherFirstName%2CShipType%2C+Ship%2C+ShipUrl%2C+CruiseURL%2C+Mission%2C+CruiseDates%2C+SubjectsTaught%2C+School%2C+City%2C+State%2C+Image%2C+Grades%2C+SchoolURL%2C+WordPressURL%2C+Year+FROM+1Xh5kWI_ZHd-PZRuPcgrV_oS13HHN6JGtRK4s75Mn+ORDER%20BY+Year%22&&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK').then(function(result) {
+			return $http.jsonp('https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+TeacherLastName%2CTeacherFirstName%2CShipType%2C+Ship%2C+ShipUrl%2C+CruiseURL%2C+Mission%2C+CruiseDates%2C+SubjectsTaught%2C+School%2C+City%2C+State%2C+Image%2C+Grades%2C+SchoolURL%2C+WordPressURL%2C+Year+FROM+1Xh5kWI_ZHd-PZRuPcgrV_oS13HHN6JGtRK4s75Mn+ORDER%20BY+TeacherLastName%22&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK').then(function(result) {
 				if (result.data.rows != undefined) {
 
 					result.data.rows.forEach(function(item){
@@ -21,6 +21,7 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 							firstname : item[1],
 							name : item[1]+' '+item[0].replace(' ', '').diggPatt('-'),
 							headline: item[1]+' '+item[0].replace(' ', '').diggPatt('-')+', ' +item[16]+' Teacher at Sea',
+							headline_url:  item[1].replace(/ /g, '_')+'*'+item[0].replace(/ /g, '_'),
 							shiptype : item[2],
 							ship : item[3],
 							shipurl : item[4],
@@ -46,10 +47,10 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 							checkContents : true,
 							classy: 'icon-profile',
 							template:'profile',
-							color: 'blue',
-							colorCode: '4, 146, 206',
+							color: 'dkblue',
+							colorCode: '0, 87, 165',
 							type :'profile',
-							id:'teacher'+o,
+							id:'teacher_'+o,
 							randomnumber: Math.floor(Math.random()*51),
 							description:item[1]+' '+item[0]+'  of '+ item[10]+', ' +item[11]+ ' teaches '+item[8]+' at ' + item[9]+ 'and  will be aboard' + item[2]+' '+item[3]+ ' '+item[5]+ 'while scientist conduct a'+item[6] +' survey'
 							
@@ -98,10 +99,10 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 								checkContents : true,
 								classy: 'icon-profile',
 								template:'profile',
-								color: 'blue',
-								colorCode: '4, 146, 206',
+								color: 'dkblue',
+								colorCode: '0, 87, 165',
 								type :'profile',
-								id:'teacher'+o,
+								id:'teacher_'+o,
 								randomnumber: Math.floor(Math.random()*51),
 								description:item[6] +':'+item[11] +':'+item[3]+':'+item[13]+':'+item[8]+':'+item[9]+':'+item.year+':'+item.city+':'+item.state
 
@@ -155,10 +156,10 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 								tabIndex : 150 + o,
 								checkContents : true,
 								template:'profile',
-								color: 'blue',
-								colorCode: '4, 146, 206',
+								color: 'dkblue',
+								colorCode: '0, 87, 165',
 								type :'profile',
-								id:'teacher'+o,
+								id:'teacher_'+o,
 								randomnumber: Math.floor(Math.random()*51),
 								description:item[6] +':'+item[11] +':'+item[3]+':'+item[13]+':'+item[8]+':'+item[9]+':'+item.year+':'+item.city+':'+item.state
 
@@ -193,16 +194,16 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 							mediaoutlet : item[2],
 							headline : item[3],
 							medioutleturl : item[4],
-							articleurl : item[5],
+							url : item[5],
 							checkContents : true,
 							classy: 'icon-profile',
 							template:'article',
-							color: 'dkblue',
-							colorCode: '0, 87, 165',
+							color:'green',
+							colorCode: '25, 142, 129',
 							type:'article',
 							randomnumber: Math.floor(Math.random()*51),
 							src: 'images/newspaper.png',
-							id:'article'+o,
+							id:'article_'+o,
 							description:item[0]+':'+item[2]+':'+item[3],
 						});
 
@@ -220,16 +221,16 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 								mediaoutlet : item[2],
 								headline : item[3],
 								medioutleturl : item[4],
-								articleurl : item[5],
+								url : item[5],
 								checkContents : true,
 								classy: 'icon-profile',
 								template:'article',
-								color: 'dkblue',
-								colorCode: '0, 87, 165',
+								color:'green',
+								colorCode: '25, 142, 129',
 								type:'article',
 								randomnumber: Math.floor(Math.random()*51),
 								src: 'images/newspaper.png',
-								id:'article'+o,
+								id:'article_'+o,
 								description:item[0]+':'+item[2]+':'+item[3],
 							});
 
@@ -256,16 +257,16 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 								mediaoutlet : item[2],
 								headline : item[3],
 								medioutleturl : item[4],
-								articleurl : item[5],
+								url : item[5],
 								checkContents : true,
 								classy: 'icon-profile',
 								template:'article',
-								colorCode: '0, 87, 165',
-								color:'dkblue',
+								colorCode: '25, 142, 129',
+								color:'green',
 								type:'article',
 								randomnumber: Math.floor(Math.random()*51),
 								src: 'images/newspaper.png',
-								id:'article'+o,
+								id:'article_'+o,
 								description:item[0]+':'+item[2]+':'+item[3],
 							});
 
@@ -297,7 +298,7 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 
 						if (item[6] != '#' && td >= tpd) {
 							spot.push({
-								id : i,
+								id : 'spot_'+i,
 								headline:item[0]+' '+ item[1],
 								headline_url: item[0].replace(/ /g, '_')+'_'+item[1].replace(/ /g, '_'),
 								description : item[2].replace(/"/g, ''). replace(/<p>/g, '').replace(/<\/p>/g, ''),
@@ -313,11 +314,11 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 								tabIndex : 150 + i,
 								classy: 'icon-profile',
 								template:'news',
-								colorCode: '0, 87, 165',
-								color:'dkblue',
+								colorCode: '25, 142, 129',
+								color:'green',
 								type:'article',
 								randomnumber: Math.floor(Math.random()*51),
-								id:'spot'+i
+								
 								
 
 
@@ -341,7 +342,7 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 
 							if (item[6] != '#' && td >= tpd) {
 								spot.push({
-									id : i,
+									id : 'spot_'+i,
 									headline:item[0]+' '+ item[1],
 									headline_url: item[0].replace(/ /g, '_')+'_'+item[1].replace(/ /g, '_'),
 									description : item[2].replace(/"/g, ''),
@@ -357,12 +358,11 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 									tabIndex : 150 + i,
 									classy: 'icon-profile',
 									template:'news',
-									colorCode: '0, 87, 165',
-									color:'dkblue',
+									colorCode: '25, 142, 129',
+									color:'green',
 									type:'article',
 									randomnumber: Math.floor(Math.random()*51),
-									id:'spot'+i
-
+									
 
 								});
 							}
@@ -390,7 +390,7 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 
 							if (item[6] != '#' && td >= tpd) {
 								spot.push({
-									id : i,
+									id : 'spot_'+i,
 									headline:item[0]+' '+ item[1],
 									headline_url: item[0].replace(/ /g, '_')+'_'+item[1].replace(/ /g, '_'),
 									description : item[2].replace(/"/g, ''),
@@ -406,12 +406,11 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 									tabIndex : 150 + i,
 									classy: 'icon-profile',
 									template:'news',
-									colorCode: '0, 87, 165',
-									color:'dkblue',
+									colorCode: '25, 142, 129',
+									color:'green',
 									type:'article',
 									randomnumber: Math.floor(Math.random()*51),
-									id:'spot'+i
-
+									
 								});
 							}
 
@@ -445,7 +444,7 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 						
 						if (item[7] != '#' && td >= tpd) {
 							pow.push({
-								id : i,
+								
 								src : item[0],
 								headline : item[1].replace(/<p>/g, '').replace(/<\/p>/g, '').replace(/"/g, ''),
 								headline_url: item[1].replace(/ /g, '_'),
@@ -465,7 +464,7 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 								color:'yellow',
 								type:'image',
 								randomnumber: Math.floor(Math.random()*51),
-								id:'image'+i
+								id:'image_'+i
 							});
 						}
 
@@ -485,7 +484,7 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 
 							if (item[7] != '#' && td >= tpd) {
 								pow.push({
-									id : i,
+									
 									src : item[0],
 									headline : item[1].replace(/<p>/g, '').replace(/<\/p>/g, '').replace(/"/g, ''),
 									headline_url: item[1].replace(/ /g, '_'),
@@ -505,7 +504,7 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 									color:'yellow',
 									type:'image',
 									randomnumber: Math.floor(Math.random()*51),
-									id:'image'+i
+									id:'image_'+i
 
 								});
 							}
@@ -528,7 +527,7 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 
 							if (item[7] != '#' && td >= tpd) {
 								pow.push({
-									id : i,
+									
 									src : item[0],
 									headline : item[1].replace(/<p>/g, '').replace(/<\/p>/g, '').replace(/"/g, ''),
 									headline_url: item[1].replace(/ /g, '_'),
@@ -548,7 +547,7 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 									color:'yellow',
 									type:'image',
 									randomnumber: Math.floor(Math.random()*51),
-									id:'image'+i
+									id:'image_'+i
 
 								});
 							}
@@ -585,7 +584,7 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 								color:'yellow',
 								type:'image',
 								randomnumber: Math.floor(Math.random()*51),
-								id:'nonpow'+i
+								id:'nonpow_'+i
 
 							});
 					});
@@ -616,7 +615,7 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 								color:'yellow',
 								type:'image',
 								randomnumber: Math.floor(Math.random()*51),
-								id:'nonpow'+i
+								id:'nonpow_'+i
 
 							});
 						});
@@ -647,7 +646,7 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 								color:'yellow',
 								type:'image',
 								randomnumber: Math.floor(Math.random()*51),
-								id:'nonpow'+i
+								id:'nonpow_'+i
 
 							});
 						});
@@ -663,77 +662,79 @@ function($http, $routeParams, $location, $rootScope, $sce){
 return{
 	getQuotesData :function(item){
 			var quotes = [];
-			return $http.jsonp('https://spreadsheets.google.com/feeds/list/0Ak_vKEBczgcYdHczblprYk9WalhQTzhnY0h5Sm10Z3c/1/public/values?alt=json&callback=JSON_CALLBACK').then(function(result) {
-				if(result!=undefined)
-				{
-				quotes = result.data.feed.entry;
-				quotes.forEach(function(quote) {
-					var i=quotes.indexOf(quote);
-					quote.id = 'quote'+i;
-					quote.gsx$tn.$t = quotes[i].gsx$tn.$t;
-					quote.tabIndex = i + 200;
-					//quote.headline=quote[0]+' '+ quote.item[1];
-					quote.classy= 'icon-bubble';
-					quote.template= 'quotes';
-					quote.colorCode= '25, 142, 129';
-					quote.year = quote.gsx$year.$t;
-					quote.color='green';
-					quote.type='quote';
-					quote.description = quote.gsx$quote.$t;
-					randomnumber= Math.floor(Math.random()*51)
-				});
-
+			return $http.jsonp('https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Teacher,Quote, Year,PhotoUrl+FROM+1dLPLwT20qdY3hYfgwO1nUTfRhzsX1aSXcPfCZKZ8&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK').then(function(result) {
+				if (result.data.rows != null) {
+					result.data.rows.forEach (function(item){
+						var i = result.data.rows.indexOf(item);
+						
+						quotes.push({
+						id : 'quote_'+i,
+						tabIndex: i + 200,
+						//quote.headline=quote[0]+' '+ quote.item[1];
+						classy:'icon-bubble',
+						template: 'quotes',
+						colorCode: '25, 142, 129',
+						year : item[2],
+						color:'green',
+						type:'quote',
+						quote : item[1],
+						teacher:item[0],
+						src:item[3],
+						headline:item[1]
+						});
+					});
 				return quotes;
 				}
 				else{
-					return $http.get('/JSONBackups/Quotes.json').then(function(result) {
-					quotes = result.data.feed.entry;
-					quotes.forEach(function(quote) {
-						var i=quotes.indexOf(quote);
-						quote.id = 'quote'+i;
-						quote.gsx$tn.$t = quotes[i].gsx$tn.$t;
-						quote.tabIndex = i + 200;
-						//quote.headline=item[0]+' '+ item[1];
-						quote.classy= 'icon-bubble';
-						quote.template= 'quotes';
-						quote.colorCode= '25, 142, 129';
-						quote.year = quote.gsx$year.$t;
-						quote.color='green';
-						quote.type='quote';
-						quote.description = quote.gsx$quote.$t;
-						randomnumber= Math.floor(Math.random()*51)
+					return $http.get('/JSONBackups/25thQuotes.json').then(function(result) {
+					var i=quotes.indexOf(quote);
+					result.data.rows.forEach (function(item){
+						quotes.push( {
+						id : 'quote_'+i,
+						tabIndex: i + 200,
+						//quote.headline=quote[0]+' '+ quote.item[1];
+						classy:'icon-bubble',
+						template: 'quotes',
+						colorCode: '25, 142, 129',
+						year : item[2],
+						color:'green',
+						type:'quote',
+						quote : item[1],
+						teacher:item[0],
+						src:item[3],
+						headline:item[1]
+						});
+						return quotes;
 					});
-
-					return quotes;
-
 				});
 				}
 			}, function(error) {
 				
-				return $http.get('JSONBackups/Quotes.json').then(function(result) {
+				return $http.get('JSONBackups/25thQuotes.json').then(function(result) {
 					quotes = result.data.feed.entry;
-					quotes.forEach(function(quote) {
 					var i=quotes.indexOf(quote);
-						quote.id = 'quote'+i;
-						quote.gsx$tn.$t = quotes[i].gsx$tn.$t;
-						quote.tabIndex = i + 200;
-						//quote.headline=item[0]+' '+ item[1];
-						quote.classy= 'icon-bubble';
-						quote.template= 'quotes';
-						quote.colorCode= '25, 142, 129';
-						quote.year = quote.gsx$year.$t;
-						quote.color='green';
-						quote.type='quote';
-						quote.description = quote.gsx$quote.$t;
-						randomnumber= Math.floor(Math.random()*51)
+					result.data.rows.forEach (function(item){
+						quotes.push({				
+						id : 'quote_'+i,
+						tabIndex: i + 200,
+						//quote.headline=quote[0]+' '+ quote.item[1];
+						classy:'icon-bubble',
+						template: 'quotes',
+						colorCode: '25, 142, 129',
+						year : item[2],
+						color:'green',
+						type:'quote',
+						quote : item[1],
+						teacher:item[0],
+						src:item[3],
+						headline:item[1]
+						});
+						return quotes;
 					});
-
-					return quotes;
-
 				});
 			});
 		}
-	};		
+	};			
 }]);	
 
 TAS_Site.factory('Lessons', ['$http', '$routeParams', '$location', '$rootScope', '$sce',
@@ -765,7 +766,7 @@ return{
 							url : item[10],
 							topics : item[11],
 							checkContents : true,
-							id : 'lesson'+o,
+							id : 'lesson_'+o,
 							favorite : 'off',
 							classy: 'icon-chalkboard2' ,
 							template: 'lesson',
@@ -811,7 +812,7 @@ return{
 								template: 'lesson',
 								colorCode:'0, 51, 80',
 								color:'dkstblue',
-								type:'lesson',
+								type:'lesson_',
 								src: 'images/chalkboard.png',
 								randomnumber: Math.floor(Math.random()*51)
 
@@ -852,7 +853,7 @@ return{
 								url : item[10],
 								topics : item[11],
 								checkContents : true,
-								id :'lesson'+ o,
+								id :'lesson_'+ o,
 								favorite : 'off', 
 								classy: 'icon-chalkboard2',
 								template: 'lesson',
@@ -881,7 +882,7 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 	return{
 		getTimelineData:function()
 		{
-		return $http.get('JSON/timeline.json').then(function(data){
+		return $http.get('json/timeline.json').then(function(data){
 				var items= (data.data.feed.entry);
 				/*var td = new Date();
 				var bd = {};
@@ -904,11 +905,10 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 						items.years.push(
 							{'year':item.gsx$year.$t, 'state': 'notselected', color:item.gsx$color.$t, classy:'hider',noSubnav:true,
 								subNav :[
-								{type:"article", state:'notselected', checked:'notselected', color:'dkblue', 'year':item.gsx$year.$t, on_off:'off','classy':'icon-newspaper dkblue' }, 
+								{type:"article", state:'notselected', checked:'notselected', color:'green', 'year':item.gsx$year.$t, on_off:'off','classy':'icon-newspaper green' }, 
 								{type:"image",state:'notselected', checked:'notselected', color:'yellow', 'year':item.gsx$year.$t, on_off:'off','classy':'icon-images yellow' },
-								{type:'dates', state:'notselected', checked:'notselected', color:'foam', 'year':item.gsx$year.$t, on_off:'off', 'classy':'icon-calendar foam' }, 
-								{type:'profile', state:'notselected', checked:'notselected', color:'blue', 'year':item.gsx$year.$t, on_off:'off', 'classy':'icon-profile blue' },
-								{type:"quote", state:'notselected', checked:'notselected', color:'green', 'year':item.gsx$year.$t, on_off:'off', 'classy':'icon-bubble green' },  
+								{type:'profile', state:'notselected', checked:'notselected', color:'dkblue', 'year':item.gsx$year.$t, on_off:'off', 'classy':'icon-profile dkblue' },
+								{type:"quote", state:'notselected', checked:'notselected', color:'blue', 'year':item.gsx$year.$t, on_off:'off', 'classy':'icon-bubble blue' },  
 								{type:"lesson", state:'notselected', checked:'notselected', color:'dkstblue', 'year':item.gsx$year.$t, on_off:'off', 'classy':'icon-chalkboard2 dkstblue' }, 
 								{type:"stat", state:'notselected', checked:'notselected', color:'ltgreen', 'year':item.gsx$year.$t, on_off:'off', 'classy':'icon-stats ltgreen' }, 
 								]

@@ -1,22 +1,24 @@
 <div ng-show="isLoading==true" loading={{isLoading}} class="feature-image-loader"></div>
 <div><a class="close" href="#/cards/"><span class="icon-cancel-circle"></span></a></div>
 
-<section class="stage_container_feature green" feature-image-big="{{storyContent.src}}" ng-hide="isLoading==true" >	
+<section class="stage_container_feature blue" feature-image-big="{{storyContent.src}}" ng-hide="isLoading==true" >	
 	<section >
 	</section>
 </section>
 <section class="stage">
 	<section class="container">
 		
-		<article bottom-postion class="green" loading="{{loading}}">
+		<!--<input tabindex="150" type="search" name="search" value="" placeholder="Search Timeline" id="search" ng-model="query" ng-change="filterData(query);" ng-delay="300" class="blue">-->
+		<article bottom-postion class="blue" loading="{{loading}}">
 			<section  class="article-loader" ng-show="loading==true"></section>
-			<h2 class="dkstblue">{{storyContent.headline}}</h2>
+			<h2 class="foam">{{storyContent.teacher}}, {{storyContent.year}} Teacher at Sea</h2>
 			
 			
 				<!--Need to watch the Window Height and adjust as window Height is changed - see TAS Main site (Carousels, BigImages, etc)-->
 				<section class="main"  >
 					
-				<p ng-bind-html="storyContent.description">
+				<p >
+					{{storyContent.quote}}
 					
 				</p>
 				
