@@ -10,30 +10,31 @@ TAS_Site.config(['$routeProvider',
         templateUrl: 'partials/cards.html',
        controller: 'CardController'
       }).
-     when('/profile/:id',
+     when('/profile/:year/:id',
     {
     	templateUrl:'partials/profile.html',
     	controller:'FeatureController',
     	
     }).
-     when('/photo/:id',
+     when('/photo/:year/:id',
     {
     	templateUrl:'partials/photo.html',
     	controller:'FeatureController',
     	
     }).
-     when('/spotlight/:id',
+     when('/spotlight/:year/:id',
     {
     	templateUrl:'partials/spotlight.html',
     	controller:'FeatureController',
     	
     }).
-     when('/quotes/:id',
+     when('/quotes/:year/:id',
     {
     	templateUrl:'partials/quotes.html',
     	controller:'FeatureController',
     	
     }).
+   
 
     otherwise({
       	templateUrl: 'partials/cards.html',

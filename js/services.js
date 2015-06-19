@@ -12,7 +12,6 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 
 			return $http.jsonp('https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+TeacherLastName%2CTeacherFirstName%2CShipType%2C+Ship%2C+ShipUrl%2C+CruiseURL%2C+Mission%2C+CruiseDates%2C+SubjectsTaught%2C+School%2C+City%2C+State%2C+Image%2C+Grades%2C+SchoolURL%2C+WordPressURL%2C+Year+FROM+1Xh5kWI_ZHd-PZRuPcgrV_oS13HHN6JGtRK4s75Mn+ORDER%20BY+TeacherLastName%22&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK').then(function(result) {
 				if (result.data.rows != undefined) {
-
 					result.data.rows.forEach(function(item){
         			var o = result.data.rows.indexOf(item);	
         				teachers.data.push({
@@ -53,13 +52,10 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 							id:'teacher_'+o,
 							randomnumber: Math.floor(Math.random()*51),
 							description:item[1]+' '+item[0]+'  of '+ item[10]+', ' +item[11]+ ' teaches '+item[8]+' at ' + item[9]+ 'and  will be aboard' + item[2]+' '+item[3]+ ' '+item[5]+ 'while scientist conduct a'+item[6] +' survey'
+							});
 							
-
-						});
-						teachers.years.push(item[16])
-
+							
 					});
-					
 				return teachers;	
 				}
 				else{
@@ -67,7 +63,8 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 					var year = $location.path().split('/')[1].split('/')[0]
 					return $http.get('/JSONBackups/TeacherFusionTable.json').then(function(result) {
 					forEach (result.data.rows,function(item){
-        			var o = result.data.rows.indexOf(item);	if (item[16] == year) {
+        			var o = result.data.rows.indexOf(item);	
+        			if (item[16] == year) {
 							teachers.push({
 								lastname : item[0],
 								lastname_forDOM : item[0].replace(' ', '').diggPatt('-'),
@@ -104,12 +101,10 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 								type :'profile',
 								id:'teacher_'+o,
 								randomnumber: Math.floor(Math.random()*51),
-								description:item[6] +':'+item[11] +':'+item[3]+':'+item[13]+':'+item[8]+':'+item[9]+':'+item.year+':'+item.city+':'+item.state
-
-
+								
+								
 							});
-							teachers.years.push(item[16])
-
+							
 						}
 					});
 					
@@ -162,9 +157,11 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 								id:'teacher_'+o,
 								randomnumber: Math.floor(Math.random()*51),
 								description:item[6] +':'+item[11] +':'+item[3]+':'+item[13]+':'+item[8]+':'+item[9]+':'+item.year+':'+item.city+':'+item.state
-
+							
 							});
-							teachers.years.push(item[16])
+							teachers.count=result.data.rows.length;
+							
+							
 
 						}
 					});
@@ -679,7 +676,7 @@ return{
 						type:'quote',
 						quote : item[1],
 						teacher:item[0],
-						src:item[3],
+						src:item[3].split('?')[0],
 						headline:item[1]
 						});
 					});
@@ -701,7 +698,7 @@ return{
 						type:'quote',
 						quote : item[1],
 						teacher:item[0],
-						src:item[3],
+						src:item[3].split('?')[0],
 						headline:item[1]
 						});
 						return quotes;
@@ -726,7 +723,7 @@ return{
 						type:'quote',
 						quote : item[1],
 						teacher:item[0],
-						src:item[3],
+						src:item[3].split('?')[0],
 						headline:item[1]
 						});
 						return quotes;
@@ -875,7 +872,93 @@ return{
 	};
 }]);
 
-
+TAS_Site.factory('Stats', ['$http', '$routeParams', '$q',
+function($http, $routeParams, $q) {
+		return{
+			
+			correlateStats:function(teachers, years, stats)
+			{
+				var arr=[];
+				
+				var deferred=$q.defer();
+				
+					
+					
+					for(var i=0; i<years.length; i++)
+					{
+					
+					var obj2=teachers.collectSameValues('year',years[i].year);
+					console.log(obj2)
+					for(var x=0; x<stats.length; x++){
+							if(stats[x]!=undefined &&stats[x].year==years[i].year){
+							stats[x].teachers=obj2	;
+							console.log(stats[x].teachers)
+							stats[x].hours=Number();
+							stats[x].hours=	obj2.length*12*12;
+							stats[x].days=Number();
+							stats[x].days= obj2.length*12;
+							stats[x].students=Number();
+							stats[x].students= obj2.length*100*5;
+							stats[x].id='stat'+(x).toString();
+							stats[x].states=[];
+							obj2.forEach(function(teacher){
+								stats[x].states.push(teacher.state);
+								
+							});
+							stats[x].states=stats[x].states.removeDuplicatesArr();
+							stats[x].stateStr=stats[x].states.join(', ');
+							}
+							
+					};
+					
+					};
+					if(i==years.length)
+					{
+					console.log(stats);
+					deferred.resolve(stats);
+					return deferred.promise;	
+					}
+				
+			},
+			wpStats: function(year)
+			{
+				var obj={}
+				return $http.get('/php/xml_json_home.php?q='+year.year).then(function(result){
+				if(typeof(result.data)=='object')
+				{
+					obj.posts = result.data.items.length;
+					obj.images=result.data.gallery_images.length;
+					obj.type='stat';
+					obj.colorCode='140, 199, 192';
+					obj.color='ltgreen';
+					obj.year=year.year;
+					obj.template='stat';
+					obj.classy= 'icon-stats';
+					obj.headline=year.year;
+					
+					return obj;
+				}
+				else{
+					obj.posts = 0;
+					obj.images=0;
+					obj.year=year.year;
+					obj.type='stat';
+					obj.colorCode='140, 199, 192';
+					obj.color='ltgreen';
+					obj.year=year.year;
+					obj.template='stat';
+					obj.classy= 'icon-stats';
+					obj.headline=year.year;
+					return obj;
+				}
+				
+				
+				//deferred.resolve(obj);
+				//return deferred.promise;	
+				});
+			}
+		};
+}]);
 
 TAS_Site.factory('Timeline', ['$http', '$routeParams', '$location', '$rootScope', '$sce',
 function($http, $routeParams, $location, $rootScope, $sce) {
@@ -915,8 +998,9 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 						});
 					}
 					tmpTxt+=item.gsx$year.$t+',';
+					
 				});
-				
+				//console.log(items)
 				return items;
 		});	
 		
@@ -938,7 +1022,7 @@ TAS_Site.factory('BrowseSearch', ['$q', function( $q){
 		
 		FilterData: function(arr, query, properties, checkDupProperty,type, checking_prop)
 		{
-		console.log(query)	
+		
 		var deferred = $q.defer();
 		var filteredArr={arr:[], fullArr:[]};
 		filteredArr=arr.searchObjProperties(query, properties, checkDupProperty, type, checking_prop);
