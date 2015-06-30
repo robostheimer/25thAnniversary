@@ -19,10 +19,16 @@
 	<section class="clear"></section>
 	<section  ng-repeat ="item in viewButtons" class="view {{item.state}}" ng-click="controlViews(item.name)">
 			<span class="icon-{{item.name}}"></span>
+			
 		</section>
 	
-		<section  class="view {{item.state}}" ng-click="orderData(item.prop, item.name, item.order, item.type)" ng-repeat ="item in orderButtons">
+		<section  class="view {{item.state}}"  ng-click="toggleButtons(item, item.state)" ng-repeat ="item in orderButtons">
 			<span class="{{item.classy}}"></span>
+			<section class="sortby"> 
+					<ul class="{{item.order}}" event-delegate="li | reOrder(active, item.order, item);" type="click">
+					<li ng-repeat="active in active_types" class="active.state">{{active.name}}</li>
+				</ul>
+			</section>
 	</section>
 	
 	</section>
@@ -45,7 +51,7 @@
 			
 			<section  ng-repeat ="item in alldata.arr" class="card">
 
-				<ca-rd type="{{item.template}}" ></ca-rd>
+				<ca-rd type="{{item.template}}" number="{{number}}" ></ca-rd>
 			</section>
 
 		</section>

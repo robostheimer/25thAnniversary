@@ -168,7 +168,437 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 					return teachers;
 				});
 			});
-		}
+		},
+		wpProfile: function(year, name)
+			{
+				return $http.get('/php/xml_json.php?q=' + year + '&n='+name).then(function(result) {
+				///sorts the blogposts by descending date///
+				result.data.items.sort(function(a, b){
+					 var adate=new Date(a.date[0]).getTime();
+					 var bdate =new Date(b.date[0]).getTime();
+					 return bdate-adate
+				});
+				///sorts images by descending dates////
+				if(year>2009)
+				{
+				result.data.gallery_images.sort(function(a,b){
+					 var adate=new Date(a.date[0]).getTime();
+					 var bdate =new Date(b.date[0]).getTime();
+					 return bdate-adate
+				});
+				}
+				WPdata = result.data;
+				WPdata.dataLoaded = false;
+				WPdata.Images = [];
+				WPdata.Videos = [];
+				WPdata.checkVideos = false;
+				WPdata.checkBlogs = false;
+				WPdata.checkPhotos = false;
+				WPdata.YT = [];
+				WPdata.WPVid = [];
+				WPdata.VMVid = [];
+				//WPdata.bigImage=false;
+				var ImagesCap = {};
+				ImagesCap.src = '';
+				ImagesCap.caption = '';
+				var ImagesArr = [];
+				var VideosArr = [];
+				var images_url = '';
+				if (WPdata.items.length == 0) {
+					WPdata.checkForItems = false;
+				} else {
+					WPdata.checkForItems = true;
+				}
+			
+				for (var k = 0; k < WPdata.gallery_images.length; k++) {
+					WPdata.gallery_images[k].matcher=WPdata.gallery_images[k].src[0].split('/')[5];
+					
+					if(!WPdata.gallery_images[k].post_url[0].match(/\?attachment/g))
+					{
+						var hyph_index = WPdata.gallery_images[k].post_url[0].lastIndexOf('-');
+						if ((WPdata.gallery_images[k].post_url[0].length - hyph_index) < 4) {
+							var posturl = WPdata.gallery_images[k].post_url[0].slice(0, hyph_index);
+						} else {
+							var posturl = WPdata.gallery_images[k].post_url[0];
+						}
+						
+						if (WPdata.gallery_images.length > 0 && WPdata.gallery_images[k].src[0] != undefined && WPdata.gallery_images[k].src[0] != "") {
+							WPdata.gallery_images[k].src[0] = WPdata.gallery_images[k].src[0].split('width')[0];
+							
+							if ((WPdata.gallery_images[k].src[0].match('.mov') || WPdata.gallery_images[k].src[0].match('.m4v') || WPdata.gallery_images[k].src[0].match('.ogg') || WPdata.gallery_images[k].src[0].match('.wmv') || WPdata.gallery_images[k].src[0].match('.m4a') || WPdata.gallery_images[k].src[0].match('.mp4') || WPdata.gallery_images[k].src[0].match('.avi') || WPdata.gallery_images[k].src[0].match('.doc') || WPdata.gallery_images[k].src[0].match('.docx') || WPdata.gallery_images[k].src[0].match('.pdf') || WPdata.gallery_images[k].src[0].match('.xlsx') || WPdata.gallery_images[k].src[0].match('.xls') || WPdata.gallery_images[k].src[0].match('.ppt') || WPdata.gallery_images[k].src[0].match('.pptx'))) {
+								//var video_src = $sce.trustAsResourceUrl(WPdata.gallery_images[k].src[0]);
+								var img_video = $sce.trustAsResourceUrl(WPdata.gallery_images[k].src[0].replace('.mp4', '_hd.original.jpg'));
+								//VideosArr.push(video_src);
+								//VideosArr.push(jQuery.parseJSON('{"vid":"'+video_src+'","img":"'+img_video+'"}'));
+							} else if (!WPdata.gallery_images[k].src[0].match('.mov') || !WPdata.gallery_images[k].src[0].match('.mp4') || (WPdata.gallery_images[k].caption == "" && WPdata.gallery_images[k].excerpt == "")) {
+								if(!images_url.match(posturl.replace(/\W/g,'')))
+								{
+									var gallery_src = WPdata.gallery_images[k].src[0];
+	
+									if (WPdata.gallery_images[k].caption != "" && !WPdata.gallery_images[k].caption.match('a:1')) {
+										var gallery_caption = WPdata.gallery_images[k].caption;
+									} else if (WPdata.gallery_images[k].excerpt != "") {
+										var gallery_caption = WPdata.gallery_images[k].excerpt;
+	
+									} else {
+										gallery_caption = 'Photo by ' + name;
+									}
+									gallery_caption = gallery_caption.replace(/"/g, '&quos;');
+									gallery_caption = gallery_caption.replace(/'/g, '&#39;;');
+									gallery_caption = gallery_caption.replace(/\n/g, '');
+									gallery_caption = gallery_caption.replace(/\t/g, '');
+									
+									var post_url = WPdata.gallery_images[k].post_url[0];
+									var post_title='View Post';
+									
+									//console.log(gallery_src+':'+gallery_caption+':'+WPdata.gallery_images[k].parent[0]+':'+post_url+':'+post_title);
+										
+									ImagesArr.push(jQuery.parseJSON('{"src":"' + gallery_src + '","id":"' + ImagesArr.length + '","tabIndex":"' + ImagesArr.length + 250 + '","caption":"' + gallery_caption.replace(/&#39;;/g, '\'').replace(/&quos;/g, '\'') + '", "favorite":"off","parent":"' + WPdata.gallery_images[k].parent[0] + '","post_url":"' + post_url + '","matcher":"'+WPdata.gallery_images[k].matcher+'", "post_title":"' + post_title + '"}'));
+									images_url += posturl.replace(/\W/g, '') + ',';
+								}
+	
+							}
+	
+						}
+					}	
+				}
+
+				for (var x = 0; x < (WPdata.items.length); x++) {
+
+					WPdata.items[x].id = x;
+					WPdata.items[x].favorite = 'off'
+					var html = WPdata.items[x].MainContent.removeHTML();
+					var index1 = html.indexOf('[caption');
+					var index2 = html.indexOf('[/caption]') + 10;
+					html = html.slice(0, index1) + ' ' + html.slice(index2, html.length);
+					WPdata.items[x].contentSnipp =html.Slicer(380);
+
+					//WPdata.items[x].src = ImagesArr[0];
+					var tmpstr = '';
+					var imagesObj = {};
+					WPdata.items[x].imagesArr = [];
+					WPdata.items[x].CategoriesArr = [];
+					imagesObj.src = '';
+					imagesObj.caption = '';
+
+					if (WPdata.items[x].YouTubeVideos.split(',') != "") {
+						WPdata.YT.push($sce.trustAsResourceUrl('http://www.youtube.com/embed/' + WPdata.items[x].YouTubeVideos.split(',')[0] + '??&rel=0&showinfo=0&autohide=1'));
+					}
+					if (WPdata.items[x].WPVideos.split(',') != "") {
+						var wpvideo = WPdata.items[x].WPVideos.split(',')[0].split(' w')[0].replace(' ', '');
+						WPdata.WPVid.push(jQuery.parseJSON('{"title":"' + WPdata.items[x].BlogTitle + '","lnk":"' + WPdata.items[x].BlogUrl[0] + '", "src":"' + wpvideo + '"}'));
+
+					}
+					if (WPdata.items[x].VimeoVideos.split(',') != "") {
+						WPdata.VMVid.push($sce.trustAsResourceUrl('http://player.vimeo.com/video/' + WPdata.items[x].VimeoVideos.split(',')[0].split(' w')[0].replace(' ', '')));
+						//$sce.trustAsResourceUrl('http://player.vimeo.com/video/'+WPdata.items[x].VimeoVideos.split(',')[0].split(' w')[0]));
+					}
+
+					for (var f = 0; f < WPdata.items[x].Tags.split(',').length; f++) {
+
+						if (!tmpstr.replace(/\W/g, '').match(WPdata.items[x].Tags.split(',')[f].replace(/\W/g, ''))) {
+							WPdata.items[x].CategoriesArr.push(WPdata.items[x].Tags.split(',')[f]);
+							tmpstr = tmpstr + WPdata.items[x].Tags.split(',')[f];
+						}
+
+					}
+				}
+
+				WPdata.Videos = VideosArr;
+
+				WPdata.Images = ImagesArr.removeDuplicatesArrObj('matcher', true)
+
+				return WPdata;
+			});
+
+			},
+		createStateObj : function() {
+			var usStates = [{
+				name : 'ALABAMA',
+				abbreviation : 'AL',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'ALASKA',
+				abbreviation : 'AK',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'ARKANSAS',
+				abbreviation : 'AR',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'AMERICAN SAMOA',
+				abbreviation : 'AS',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'ARIZONA',
+				abbreviation : 'AZ',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'CALIFORNIA',
+				abbreviation : 'CA',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'COLORADO',
+				abbreviation : 'CO',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'CONNECTICUT',
+				abbreviation : 'CT',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'DISTRICT OF COLUMBIA',
+				abbreviation : 'DC',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'DELAWARE',
+				abbreviation : 'DE',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'FLORIDA',
+				abbreviation : 'FL',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'GEORGIA',
+				abbreviation : 'GA',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'GUAM',
+				abbreviation : 'GU',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'HAWAII',
+				abbreviation : 'HI',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'IOWA',
+				abbreviation : 'IA',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'IDAHO',
+				abbreviation : 'ID',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'ILLINOIS',
+				abbreviation : 'IL',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'INDIANA',
+				abbreviation : 'IN',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'KANSAS',
+				abbreviation : 'KS',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'KENTUCKY',
+				abbreviation : 'KY',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'LOUISIANA',
+				abbreviation : 'LA',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'MASSACHUSETTS',
+				abbreviation : 'MA',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'MARYLAND',
+				abbreviation : 'MD',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'MAINE',
+				abbreviation : 'ME',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'MICHIGAN',
+				abbreviation : 'MI',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'MINNESOTA',
+				abbreviation : 'MN',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'MISSOURI',
+				abbreviation : 'MO',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'MISSISSIPPI',
+				abbreviation : 'MS',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'MONTANA',
+				abbreviation : 'MT',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'NORTH CAROLINA',
+				abbreviation : 'NC',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'NORTH DAKOTA',
+				abbreviation : 'ND',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'NEBRASKA',
+				abbreviation : 'NE',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'NEW HAMPSHIRE',
+				abbreviation : 'NH',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'NEW JERSEY',
+				abbreviation : 'NJ',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'NEW MEXICO',
+				abbreviation : 'NM',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'NEVADA',
+				abbreviation : 'NV',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'NEW YORK',
+				abbreviation : 'NY',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'OHIO',
+				abbreviation : 'OH',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'OKLAHOMA',
+				abbreviation : 'OK',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'OREGON',
+				abbreviation : 'OR',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'PENNSYLVANIA',
+				abbreviation : 'PA',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'PUERTO RICO',
+				abbreviation : 'PR',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'RHODE ISLAND',
+				abbreviation : 'RI',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'SOUTH CAROLINA',
+				abbreviation : 'SC',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'SOUTH DAKOTA',
+				abbreviation : 'SD',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'TENNESSEE',
+				abbreviation : 'TN',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'TEXAS',
+				abbreviation : 'TX',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'UTAH',
+				abbreviation : 'UT',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'VIRGINIA',
+				abbreviation : 'VA',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'VIRGIN ISLANDS',
+				abbreviation : 'VI',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'VERMONT',
+				abbreviation : 'VT',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'WASHINGTON',
+				abbreviation : 'WA',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'WISCONSIN',
+				abbreviation : 'WI',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'WEST VIRGINIA',
+				abbreviation : 'WV',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'WYOMING',
+				abbreviation : 'WY',
+				num : 0,
+				isThere : false
+			}, {
+				name : 'BREMUDA',
+				abbreviation : 'BM',
+				num : 0,
+				isThere : false
+			}];
+
+			return usStates;
+
+		},
+
 	};
 }]);
 TAS_Site.factory('News', ['$http', '$routeParams', '$location', '$rootScope', '$sce',
@@ -670,9 +1100,9 @@ return{
 						//quote.headline=quote[0]+' '+ quote.item[1];
 						classy:'icon-bubble',
 						template: 'quotes',
-						colorCode: '25, 142, 129',
+						colorCode: '4, 146, 206',
 						year : item[2],
-						color:'green',
+						color:'blue',
 						type:'quote',
 						quote : item[1],
 						teacher:item[0],
@@ -692,9 +1122,9 @@ return{
 						//quote.headline=quote[0]+' '+ quote.item[1];
 						classy:'icon-bubble',
 						template: 'quotes',
-						colorCode: '25, 142, 129',
+						colorCode: '4, 146, 206',
 						year : item[2],
-						color:'green',
+						color:'blue',
 						type:'quote',
 						quote : item[1],
 						teacher:item[0],
@@ -717,9 +1147,9 @@ return{
 						//quote.headline=quote[0]+' '+ quote.item[1];
 						classy:'icon-bubble',
 						template: 'quotes',
-						colorCode: '25, 142, 129',
+						colorCode: '4, 146, 206',
 						year : item[2],
-						color:'green',
+						color:'blue',
 						type:'quote',
 						quote : item[1],
 						teacher:item[0],
@@ -872,59 +1302,148 @@ return{
 	};
 }]);
 
-TAS_Site.factory('Stats', ['$http', '$routeParams', '$q',
-function($http, $routeParams, $q) {
+TAS_Site.factory('Stats', ['$http', '$routeParams', '$q','Teacher',
+function($http, $routeParams, $q, Teacher) {
 		return{
 			
 			correlateStats:function(teachers, years, stats)
 			{
-				var arr=[];
-				
+				var obj={}
+				var arr =[];
 				var deferred=$q.defer();
-				
-					
-					
-					for(var i=0; i<years.length; i++)
+				for(var i=0; i<years.length; i++)
 					{
-					
+					arr.push(i)
 					var obj2=teachers.collectSameValues('year',years[i].year);
-					console.log(obj2)
 					for(var x=0; x<stats.length; x++){
+							
 							if(stats[x]!=undefined &&stats[x].year==years[i].year){
+						
+							stats[x].map={}	;
+							stats[x].map.statesArr=Teacher.createStateObj();
 							stats[x].teachers=obj2	;
-							console.log(stats[x].teachers)
-							stats[x].hours=Number();
+							stats[x].numofteachers=obj2.length;
 							stats[x].hours=	obj2.length*12*12;
-							stats[x].days=Number();
 							stats[x].days= obj2.length*12;
-							stats[x].students=Number();
 							stats[x].students= obj2.length*100*5;
 							stats[x].id='stat'+(x).toString();
-							stats[x].states=[];
+							stats[x].map.states=[];
 							obj2.forEach(function(teacher){
-								stats[x].states.push(teacher.state);
+								
+								stats[x].map.type='stat';
+								stats[x].map.id=i;
+								stats[x].map.colorCode='140, 199, 192';
+								stats[x].map.color='ltgreen';
+								stats[x].map.year=years[i].year;
+								stats[x].map.template='map';
+								stats[x].map.classy= 'icon-stats';
+								stats[x].map.headline="Map for "+years[i].year
+								stats[x].map.states.push(teacher.state);
+								stats[x].number = x;
+									stats[x].map.statesArr.forEach(function(state){
+										if(state.abbreviation==teacher.state)
+										{
+										state.num = parseInt(state.num)+1;
+										state.isThere=true;
+										}
+										
+									});
 								
 							});
-							stats[x].states=stats[x].states.removeDuplicatesArr();
-							stats[x].stateStr=stats[x].states.join(', ');
+							stats[x].statesFinal=stats[x].map.states.removeDuplicatesArr();
+							stats[x].stateStr=stats[x].statesFinal.join(', ');
 							}
 							
-					};
+							
+						};
+					
 					
 					};
-					if(i==years.length)
+					
+					if(arr.length==years.length)
 					{
-					console.log(stats);
-					deferred.resolve(stats);
+					obj.stats=stats;
+					obj.maps=[];
+					obj.stats.forEach(function(item){
+						obj.maps.push(item.map)
+					});
+					deferred.resolve(obj);
 					return deferred.promise;	
 					}
 				
 			},
-			wpStats: function(year)
+			wpStats: function(years)
 			{
-				var obj={}
-				return $http.get('/php/xml_json_home.php?q='+year.year).then(function(result){
-				if(typeof(result.data)=='object')
+				var yearStr='';
+				years.forEach(function(year){
+					yearStr+=year.year+'$$$';
+				});
+				
+				var obj={posts:[], images:[], stats:[]}
+
+				return $http.get('/php/xml_json_25th.php?q='+yearStr).then(function(result){
+			
+				years.forEach(function(year){
+					var arr=[];
+					arr.year=Number();
+					arr.posts=[];
+					var images=[];
+					images.year=Number();
+					images.images=[];
+					result.data.items.forEach(function(item){
+					
+						
+					item.year=new Date(item.date["0"]).getFullYear();					
+						
+						
+						if(item.year==year.year)
+						{
+							
+							arr.push(item);
+							arr.year=year.year;	
+							arr.type='stat';
+							arr.colorCode='140, 199, 192';
+							arr.color='ltgreen';
+							arr.year=year.year;
+							arr.template='stat';
+							arr.classy= 'icon-stats';
+							arr.headline=year.year;
+						}
+						
+
+					});
+					//console.log(result.data.images)
+					result.data.images.forEach(function(image){
+					
+					image.year=new Date(image.date["0"]).getFullYear();					
+						
+						if(image.year==year.year)
+						{
+							images.push(image)
+							images.year=year.year;	
+							
+						}
+					});
+					obj.images.push(images);
+					obj.posts.push(arr);
+					obj.stats.push({
+							//images:images, 
+							//arr:arr ,
+							posts:arr.length,
+							num_images:images.length,
+							type:'stat',
+							colorCode:'140, 199, 192',
+							color:'ltgreen',
+							year:year.year,
+							template:'stat',
+							classy:'icon-stats',
+							headline:'Stats for ' +year.year.toString()
+							});
+					
+				});
+				return obj;	
+				
+				/*if(typeof(result.data)=='object')
 				{
 					obj.posts = result.data.items.length;
 					obj.images=result.data.gallery_images.length;
@@ -939,25 +1458,27 @@ function($http, $routeParams, $q) {
 					return obj;
 				}
 				else{
-					obj.posts = 0;
-					obj.images=0;
+					
 					obj.year=year.year;
+					obj.posts =Number();
+					obj.images=Number();
 					obj.type='stat';
 					obj.colorCode='140, 199, 192';
 					obj.color='ltgreen';
-					obj.year=year.year;
 					obj.template='stat';
 					obj.classy= 'icon-stats';
 					obj.headline=year.year;
 					return obj;
-				}
+				}*/
 				
 				
 				//deferred.resolve(obj);
 				//return deferred.promise;	
 				});
 			}
+			
 		};
+		
 }]);
 
 TAS_Site.factory('Timeline', ['$http', '$routeParams', '$location', '$rootScope', '$sce',

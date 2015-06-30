@@ -70,7 +70,7 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
 .directive('caRd', function($compile, $q) {
 	/////
 	var Profile = '<section id="image{{item.id}}" resize-card feature-image="{{item.src}}" color="{{item.colorCode}}" class="col-md-3 {{item.color}}" ng-show="item.isLoading==false" blend="soft-light" alpha="1"> <section class="icon_right"><span class="{{item.classy}}"></span></section><section class="card-text"><h3 ng-bind-html="SkipValidation(item.headline)">{{item.headline}}</h3></section><section class="card-button"><button class="{{item.color}}"><a href="#/profile/{{item.year}}/{{item.id}}" ng-click= role="button">View Profile »</a></button></section></section>';
-		var Pow = '<section id="pow{{item.id}}" resize-card feature-image="{{item.src}}" color="{{item.colorCode}}" class="col-md-3 {{item.color}}" ng-show="item.isLoading==false" blend="soft-light" alpha="1"> <section class="icon_right"><span class="{{item.classy}} "></span></section><section class="card-text"><h3 ng-bind-html="SkipValidation(item.powSlice)"></h3></section><section class="card-button"><button class="{{item.color}}"><a href="#/photo/i{{item.year}}/{{item.id}}" role="button">Learn More »</a></button></section></section>';
+		var Pow = '<section id="pow{{item.id}}" resize-card feature-image="{{item.src}}" color="{{item.colorCode}}" class="col-md-3 {{item.color}}" ng-show="item.isLoading==false" blend="soft-light" alpha="1"> <section class="icon_right"><span class="{{item.classy}} "></span></section><section class="card-text"><h3 ng-bind-html="SkipValidation(item.powSlice)"></h3></section><section class="card-button"><button class="{{item.color}}"><a href="#/photo/{{item.year}}/{{item.id}}" role="button">Learn More »</a></button></section></section>';
 	var News = '<section id="news{{item.id}}" resize-card feature-image="{{item.src}}" color="{{item.colorCode}}" class="col-md-3 {{item.color}}" ng-show="item.isLoading==false" blend="soft-light" alpha="1"><section class="icon_right"><span class="{{item.classy}}"></span></section><section class="card-text"><h3 ng-bind-html="item.headline"></h3></section><section class="card-button"><button class="{{item.color}}"><a href="#/spotlight/{{item.year}}/{{item.id}}" role="button">Read the Story »</a></button></section></section>';
 	
 	
@@ -78,7 +78,8 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
 
 	var Lesson = '<section class="col-md-3 {{item.color}}"><section class="icon_right"><span class="icon-chalkboard2 "></span></section> <section class="card-text"><h3 ng-bind-html="SkipValidation(item.headline)">}</h3><p>{{item.lessonSlice}}</p></section><section class="card-button"><button class="{{item.color}}"><a href="{{item.url}}" target="_blank" role="button">View Lesson»</a></button></section></section>';
 	var Quotes = '<section id="quotes{{item.id}}" resize-card feature-image="{{item.src}}" color="{{item.colorCode}}" class="col-md-3 {{item.color}}" ng-show="item.isLoading==false" blend="soft-light" alpha="1"><section class="icon_right"><span class="{{item.classy}}"></span></section><section class="card-text"><h3 ng-bind-html="item.quoteSlice"></h3></section><section class="card-button"><button class="{{item.color}}"><a href="#/quotes/{{item.year}}/{{item.id}}" role="button">Read the Story »</a></button></section></section>';
-	var Stat='<section id="stats{{item.id}}" resize-card  color="{{item.colorCode}}" class="col-md-3 {{item.color}}"  blend="soft-light" alpha="1"><section class="icon_right"><span class="{{item.classy}}"></span></section><section class="card-text"><h3>Year: {{item.year}}<br>Days at Sea: {{item.days}}<br>Hours at Sea: {{item.hours}}<br> Students Reached: {{item.students}}<br>Blogs Written: {{item.posts}}<br>Photos: {{item.images}}<br>States: <span class="states">{{item.stateStr}}</span></h3></section></section>'
+	var Stat='<section id="stats{{item.id}}" resize-card  color="{{item.colorCode}}" class="col-md-3 {{item.color}}"  blend="soft-light" alpha="1"><section class="icon_right"><span class="{{item.classy}}"></span></section><section class="card-text"><h3>Year: {{item.year}}<br>No. of Teachers: {{item.numofteachers}}<br>Days at Sea: {{item.days}}<br>Hours at Sea: {{item.hours}}<br> Students Reached: {{item.students}}<br>Blogs Written: {{item.posts}}<br>Photos: {{item.num_images}}<br>States: <span class="states">{{item.stateStr}}</span></h3></section></section>'
+	var Map='<section id="map{{item.id}}" resize-card  color="{{item.colorCode}}" class="col-md-3 {{item.color}}"  blend="soft-light" alpha="1"><section class="icon_right"><span class="{{item.classy}}"></span></section><section class="card-text"><h3>{{item.headline}}</h3><br><div class="svg_us" ng-include="\'svg/US_Map.svg\'" imgaeonload"></section></section>'
 
 	var getTemplate = function(contentType) {
 		var template = '';
@@ -105,7 +106,10 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
 			break;	
 		case 'stat':
 			template = Stat;
-			break;		
+			break;	
+		case 'map':
+			template = Map;
+			break;			
 
 		}
 

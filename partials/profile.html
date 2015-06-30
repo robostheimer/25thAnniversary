@@ -6,6 +6,7 @@
 	</section>
 </section>
 <section class="stage">
+	<section class="icon_right large-font light-alpha"><span class="{{storyContent.classy}}"></span></section>
 	<section class="container">
 		
 		<article bottom-postion class="dkblue" loading={{loading}}  >
@@ -17,11 +18,19 @@
 				<section class="main" >
 					<h4>{{storyContent.headline}} teaches at {{storyContent.school}} in {{storyContent.city}}, {{storyContent.state}}.</h4>
 				<p>Check out {{storyContent.firstname}}'s blogs and photos:</p>
-				<p> Create an Element that has links to blog posts and photos - bring in using php scripts</p>
 				<div class="columns">
-					<div>Blogs</div>
-					<div>Photos</div>
-					<div>Videos</div>
+					<ul>
+					<li class="{{item.state}}" ng-repeat="item in profileButtons" ng-click="buttonController(item.name)">{{item.name.toTitleCase()}}</li>
+					</ul>
+					
+					<ul class="blogs {{profileButtons[0].state}}">
+					<li ng-repeat="blog in blogs"><a href="{{blog.BlogUrl}}" target="blank">{{blog.BlogTitle}}</a></li>
+					</ul>
+					
+					<ul class="images {{profileButtons[1].state}}">
+					<li ng-repeat="image in images"><img src="{{image.src}}?w=75"</li>
+					</ul>
+					
 				</div>
 
 	</section>

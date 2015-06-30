@@ -6,19 +6,15 @@ angular.module('Story', ['infinite-scroll'])
 .controller('CardController', ['AlumniSpot','PhotosofWeek','Teacher','News','Lessons', 'Quotes','$scope','$sce','BrowseSearch','$rootScope','Timeline','$location', '$routeParams','$window','Stats',
 function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $scope, $sce, BrowseSearch, $rootScope, Timeline, $location, $routeParams, $window, Stats)
 {
-	
-
-	
-	
-	
 	$scope.noSubNav=true;
 	var alldata={};
+	
 	alldata.fullArr=[];
 	$scope.alldata={arr:[],fullArr:[], years:[]};
 	$scope.alldata_all=[];
 	alldata.years=[];
 	$scope.stats =[];
-					
+	$scope.states =[]				
 	$scope.iterator=50;
 	$scope.start_index=-100;
 	$scope.end_index = -50;
@@ -33,16 +29,18 @@ function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $scope, $sce,
 	var arr=[];
 	$scope.allchecked='notselected';
 	$scope.viewButtons = [{name:'boxes', state:'on'}, {name:'list', state:'off'}];
-	$scope.orderButtons = [{name:'Year (Dsc)', state:'off', order: 'dsc', type:'number', prop:'year', classy:'icon-sort-alpha-desc'}, {name:'Year (Asc)', state:'off', order:'asc', type: 'number', prop:'year',classy:'icon-sort-alpha-asc'}];
+	$scope.orderButtons = [{name:'Year (Asc)', state:'off', order: 'asc', type:'number', prop:'year', classy:'icon-sort-alpha-desc'}, {name:'Year (Dsc)', state:'off', order:'dsc', type: 'number', prop:'year',classy:'icon-sort-alpha-asc'}];
 	
 	$scope.template = 'boxes';
 	
 	var tmpArr=[];
-	
+	$scope.active_types =[];
+	$scope.active_types=[{type:'headline', state:'off', name:'Headline'},{type:'description', state:'off', name:'Description'}, {type:'year', state:'on', name:'Year'}];
 	
 	
 	$scope.runApp=function()
 	{
+		
 		$scope.page = $location.path().split('/')[1].split('/')[0];
 		
 		if(sessionStorage.arr==null)
@@ -54,45 +52,57 @@ function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $scope, $sce,
 						Timeline.getTimelineData().then(function(data){
 						$scope.items = data;
 						$scope.items.years.reverse();
+						$rootScope.items_root=$scope.items;
 						$scope.yearsWidth = $scope.items.years.length*75;
 						$scope.navWidth = $('.navigation').width();
 						$scope.windowHeight=$(window).height();
-						sessionStorage.timeline = $scope.items;
+						//sessionStorage.timeline = $scope.items;
 												
 
 											
 					Teacher.createTeacherList().then(function(data){
-						
+					
 					$scope.teachers = data.data.reverse();
+					
+					
 					
 						alldata.years = data.years
 						alldata.years=alldata.years.removeDuplicatesArr();
 						alldata.fullArr=alldata.fullArr.concat($scope.teachers);
-						$scope.items.years.forEach(function(year){
+						//$scope.items.years.forEach(function(year){
 							
-							Stats.wpStats(year).then(function(data){
-								tmpArr.push('counter')
-								$scope.stats.push(data);
+							Stats.wpStats($scope.items.years).then(function(data){
+								console.log(data)
+								$scope.stats=data.stats;
 								
+								alldata.fullArr=alldata.fullArr.concat($scope.stats);
 								
 						
 						
 						
-						if(tmpArr.length==$scope.items.years.length)
-						{
+						
 						
 						
 						Stats.correlateStats($scope.teachers, $scope.items.years, $scope.stats).then(function(data){
+								$scope.stats=data.stats;
 								
-								$scope.stats=data;
+								$scope.maps=data.maps
+								console.log($scope.maps)
 								
-								alldata.fullArr=alldata.fullArr.concat($scope.stats);
-								console.log($scope.stats)
-								//var total_num_of_students=Number();
-								data.forEach(function(obj){
-									//total_num_of_students = total_num_of_students+obj.students;
+								
+								
+								$scope.maps.forEach(function(item){
+										item.statesArr.forEach(function(state){
+										if(state.num==0){
+											state.num=state.abbreviation;
+										}
+									
+									});
+									
+									
 								});
 								
+								alldata.fullArr=alldata.fullArr.concat($scope.maps);	
 							PhotosofWeek.getPOW().then(function(data){
 							var pow = data;
 							
@@ -168,11 +178,14 @@ function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $scope, $sce,
 													var i=$scope.alldata.fullArr.indexOf(item);
 															item.id=i;
 													});*/
+													$scope.alldata.fullArr.pop();
 													$rootScope.alldata_root = angular.copy($scope.alldata);
 													$scope.loading=false;
 													
 													
-													
+					
+													$scope.allchecked='selected';
+									
 													$scope.alldata.fullArr.forEach(function(item){
 														$scope.items.years.forEach(function(year){
 															
@@ -180,10 +193,14 @@ function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $scope, $sce,
 																
 																year.state='selected';
 																year.subNav.forEach(function(subNav){
+																	subNav.checked='selected';
+																	subNav.on_off='on'
 																	if(item.type==subNav.type)
 																	{
 																		subNav.state='selected';
+																		
 																	}
+																	
 																});
 																
 															}
@@ -198,16 +215,35 @@ function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $scope, $sce,
 									});
 								});
 							});
-							}
-								});
+							
+								//});
 						});
 					});
 				});
 					
 				}
 				else{
+					console.log('nope')
 					$scope.alldata=$rootScope.alldata_root;
 					$scope.alldata_all = $scope.alldata.fullArr;
+					$scope.alldata.arr=$scope.alldata.fullArr.slice(0,50);
+					$scope.items=$rootScope.items_root ;
+					$scope.yearsWidth = $scope.items.years.length*75;
+					$scope.alldata.fullArr.forEach(function(item){
+					$scope.items.years.forEach(function(year){
+						if(item.year==year.year){
+							
+							year.state='selected';
+							year.subNav.forEach(function(subNav){
+								if(item.type==subNav.type)
+								{
+									subNav.state='selected';
+								}
+							});
+							
+						}
+					});
+				});
 					$scope.loading=false;
 			
 					}	
@@ -219,7 +255,7 @@ function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $scope, $sce,
 			$scope.alldata.arr = jQuery.parseJSON(sessionStorage.arr);
 			$scope.alldata.fullArr=jQuery.parseJSON(sessionStorage.fullArr);
 			$scope.items=jQuery.parseJSON(sessionStorage.timeline);
-			$scope.items.years=jQuery.parseJSON(sessionStorage.years)
+			$scope.items.years=jQuery.parseJSON(sessionStorage.timeline);
 			$scope.yearsWidth = $scope.items.years.length*75;
 			$scope.navWidth = $('.navigation').width();
 			$scope.windowHeight=$(window).height();
@@ -227,7 +263,8 @@ function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $scope, $sce,
 				
 				//$scope.buttonsOn = jQuery.parseJSON(sessionStorage.buttonsOn);
 				//console.log($scope.buttonsOn);
-				
+				$scope.alldata.fullArr.pop();
+				$scope.alldata_all=$scope.alldata.fullArr;
 				$scope.alldata.fullArr.forEach(function(item){
 					$scope.items.years.forEach(function(year){
 						if(item.year==year.year){
@@ -273,7 +310,7 @@ function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $scope, $sce,
 		sessionStorage.arr = JSON.stringify($scope.alldata.arr);
 		sessionStorage.fullArr = JSON.stringify($scope.alldata.fullArr);
 		sessionStorage.template = $scope.template;
-		sessionStorage.timeline = JSON.stringify($scope.items);
+		sessionStorage.timeline = JSON.stringify($scope.items.years);
 		if($scope.items!=null)
 		{
 		sessionStorage.years =JSON.stringify($scope.items.years)
@@ -300,7 +337,7 @@ function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $scope, $sce,
 		
 	};
 	$scope.filterDataBtn =function(query, properties, type, checking_prop){
-		console.log(query)
+	
 		
 		if(query.length==0  )
 		{
@@ -313,9 +350,9 @@ function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $scope, $sce,
 		else{
 			/////////////Create Filter Data function and change from SearchData to FilterData
 			BrowseSearch.FilterData($scope.alldata_all, query, properties, 'headline', type, checking_prop).then(function(data){
-			$scope.alldata.arr=[];	
+			//$scope.alldata.arr=[];	
 			$scope.filteredBtnArr.fullArr = $scope.filteredBtnArr.fullArr.concat(data);
-			$scope.filteredBtnArr.fullArr=$scope.filteredBtnArr.fullArr.removeDuplicatesArrObj('headline', false)
+			//$scope.filteredBtnArr.fullArr=$scope.filteredBtnArr.fullArr.removeDuplicatesArrObj('headline', false)
 			$scope.alldata.fullArr = $scope.filteredBtnArr.fullArr;
 			$scope.alldata.arr = $scope.filteredBtnArr.fullArr.slice(0, 50);
 			$scope.loading=false;
@@ -344,7 +381,6 @@ function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $scope, $sce,
 			$scope.filteredBtnArr.arr=[]
 			$scope.alldata.arr= $scope.alldata_all.slice(0, 50);
 			$scope.alldata.fullArr=$scope.alldata_all;
-			console.log($scope.alldata.fullArr);
 			$scope.loading=false;
 			$scope.savState();
 		}
@@ -576,7 +612,6 @@ function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $scope, $sce,
 					
 					obj2.state='selected';
 					obj1.state='selected';
-					//console.log(obj2)
 					/////////////Loops through the items to see if all icon buttons are lit up; if so this makes sure that the checkbox is  filled in
 					$scope.items.years.forEach(function(year){
 						year.subNav.forEach(function(item){
@@ -677,12 +712,12 @@ function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $scope, $sce,
 								
 								
 							}
-							else{
+							/*else{
 								item.state="notselected";
 							item.checked='notselected';
 							item.on_off='off'
 							}
-						
+						*/
 								
 							
 						});	
@@ -776,13 +811,75 @@ function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $scope, $sce,
 			return $sce.trustAsHtml(value);
 	};
 
+	$scope.reOrder = function(id, type, button){
+		console.log(id)
+		
+		$scope.active_types.forEach(function(item){
+			
+			if(id.type==item.type)
+			{
+				item.state='on';
+			}
+			else{
+				item.state='off';
+			}
+		});
+		
+		if(type=='dsc')
+		{
+		$scope.alldata.fullArr=$scope.alldata.fullArr.SortObjDsc(id.type.toLowerCase(), 'str', id);
+		$scope.alldata.arr = $scope.alldata.fullArr.slice(0,50);
+		}
+		else{
+		$scope.alldata.fullArr=$scope.alldata.fullArr.SortObjAsc(id.type.toLowerCase(), 'str', id);
+		$scope.alldata.arr = $scope.alldata.fullArr.slice(0,50);
+		}
+		
+	};
+
+	
+$scope.toggleButtons = function(obj, id){
+	console.log(id)
+		
+		$scope.orderButtons.forEach(function(item){
+			
+			if(item.name==obj.name && item.state=='off')
+			{
+				item.state='on';
+			}
+			else{
+				item.state='off';
+			}
+		});
+};
+
+
 	$scope.runApp();
 	
 	
-}]).controller('FeatureController', ['AlumniSpot','PhotosofWeek','Teacher','News','Lessons', 'Quotes','$scope','$sce','BrowseSearch','$rootScope','Timeline','$location', '$routeParams',
-function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $scope, $sce,  BrowseSearch, $rootScope, Timeline, $location, $routeParams){
+}]).controller('FeatureController', ['AlumniSpot','PhotosofWeek','Teacher','News','Lessons', 'Quotes','$scope','$sce','BrowseSearch','$rootScope','Timeline','$location', '$routeParams','Stats',
+function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $scope, $sce,  BrowseSearch, $rootScope, Timeline, $location, $routeParams, Stats){
 		var id=$routeParams.id;
+		var tmpArr=[];
+		$scope.stats=[];
 		
+		$scope.profileButtons = [{name:'blogs', state:'on'}, {name:'photos', state:'off'}];
+		$scope.buttonController=function(name)
+		{
+			
+			$scope.profileButtons.forEach(function(btn){
+				btn.state='off';
+				if(btn.name==name){
+					btn.state='on'
+				}
+				else{
+					btn.state='off'
+				}
+			});
+			
+		};
+			
+	
 		$scope.openFeature=function(index)
 		{
 		
@@ -791,12 +888,23 @@ function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $scope, $sce,
 			if(id==item.id)
 			{
 				$scope.storyContent =item;
+				if($scope.storyContent.type=="profile")
+				{
+					Teacher.wpProfile($scope.storyContent.year,$scope.storyContent.name).then(function(data){
+						$scope.blogs = data.items;
+						$scope.images=data.Images;
+						console.log($scope.images)
+						$scope.loading=false;
+					});
+				}
+				else{
+					$scope.loading=false;
+				}
 			}
 		});
 		
-		$scope.loading=false;
-
-			
+		
+		
 			
 		};
 		
@@ -806,11 +914,58 @@ function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $scope, $sce,
 		if($rootScope.alldata_root==null)
 		{
 			$scope.loading=true;
-			
-			Teacher.createTeacherList().then(function(data){
-					var teachers = data.data.reverse();
+			Timeline.getTimelineData().then(function(data){
+						$scope.items = data;
+						$scope.items.years.reverse();
+						$rootScope.items_root = $scope.items;
+						console.log($rootScope.items_root)
+						$scope.yearsWidth = $scope.items.years.length*75;
+						$scope.navWidth = $('.navigation').width();
+						$scope.windowHeight=$(window).height();
+						//sessionStorage.timeline = $scope.items;
+									
+					Teacher.createTeacherList().then(function(data){
+					
+					$scope.teachers = data.data.reverse();
+					
+					
+					
 						alldata.years = data.years
-						alldata.fullArr=alldata.fullArr.concat(teachers);
+						alldata.years=alldata.years.removeDuplicatesArr();
+						alldata.fullArr=alldata.fullArr.concat($scope.teachers);
+						Stats.wpStats($scope.items.years).then(function(data){
+								console.log(data)
+								$scope.stats=data.stats;
+								
+								alldata.fullArr=alldata.fullArr.concat($scope.stats);
+								
+						
+						
+						
+						
+						
+						
+						Stats.correlateStats($scope.teachers, $scope.items.years, $scope.stats).then(function(data){
+								$scope.stats=data.stats;
+								
+								$scope.maps=data.maps
+								console.log($scope.maps)
+								
+								
+								
+								$scope.maps.forEach(function(item){
+										item.statesArr.forEach(function(state){
+										if(state.num==0){
+											state.num=state.abbreviation;
+										}
+									
+									});
+									
+									
+								});
+								
+								alldata.fullArr=alldata.fullArr.concat($scope.maps);	
+					
 						
 						PhotosofWeek.getPOW().then(function(data){
 						var pow = data;
@@ -875,6 +1030,7 @@ function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $scope, $sce,
 												$scope.alldata.arr=alldata.arr;
 												
 												$scope.alldata.fullArr = alldata.fullArr.SortObjDsc('year', 'num', 'headline');;
+												$rootScope.alldata_root=$scope.alldata;
 												/*$scope.alldata.fullArr.forEach(function(item){
 														var i=$scope.alldata.fullArr.indexOf(item);
 														item.id=i;
@@ -892,6 +1048,9 @@ function(AlumniSpot, PhotosofWeek, Teacher, News, Lessons, Quotes, $scope, $sce,
 					});
 				});
 			
+			});
+			});
+		});
 		}
 		else
 		{
