@@ -1,18 +1,53 @@
 <div ng-show="isLoading==true" loading={{isLoading}} class="feature-image-loader"></div>
 <div class="close"><a href="#/cards/"><span class="icon-cancel-circle"></span></a></div>
 
-<section class="stage_container_feature yellow" feature-image-big="{{storyContent.src}}" ng-hide="isLoading==true" >	
+<section class="stage_container_feature yellow" feature-image-big="{{image}}" ng-hide="isLoading==true" >	
 	<section >
 	</section>
 	
 </section>
 <section class="stage">
-	<section class="icon_right large-font light-alpha"><span class="{{storyContent.classy}}"></span></section>
+	<div class="icon_right large-font light-alpha"><span class="{{storyContent.classy}}"></span></div>
+	<div class="icon_left large-font light-alpha" ng-click="getStory()" ng-class="{blue: shareBox == true}"><span class="icon-share"></span></div>
+	<div class="share_box animate-show" ng-hide="shareBox==false" >
+					<div class="closey" style="margin-top:-20px;" aria-hidden="true" data-icon="x" ng-click="sharer=false; shareBox=false"></div>
+					<div class="social_media">
+
+						<div ng-repeat="item in sm_btns" class="icon-{{item.name}} state_{{item.state}}" ng-click="runSocialBtns(item)"></div>
+						
+					</div>
+					<form class="{{sm_btns[0].classy}}">
+						<textarea rows="9" class="ng-binding" ng-model="message"></textarea>
+						<a class="share_button" href="https://www.facebook.com/sharer/sharer.php?+s=100+&amp;p[url]={{social}}&amp;p[images][0]=http://cityblinking.com/MusicWhereYouAre/logo4_sm.png&amp;p[title]=TAS 25th Anniversary&amp;p[summary]={{message}}" target="_blank">
+						<div class="button_txt">
+							Share on Facebook »
+						</div> </a>
+					</form>
+					<form class="{{sm_btns[1].classy}}">
+						<textarea maxlength="160" rows="9" ng-model="message" class="ng-pristine ng-valid"> </textarea>																									
+					
+ <a class="share_button" href="https://twitter.com/intent/tweet?original_referer=http://www.tas.noaa.gov/25thAnniversary/&amp;text={{message}}" target="_blank">
+						<div class="button_txt">
+							Share on Twitter »
+						</div> </a><span style="font-family:'Arvo',Tahoma,Arial, sans-serif; font-size:13px; font-style:italic; margin-top:15px; margin-left:5px;"><sub ng-hide="message.length>140" class="ng-binding">{{message.length}}</sub><sub><span style="color:#C53526; font-style:bold; font-size:15px" ng-show="message.length>140" class="ng-binding ng-hide">{{message.length}}</span></sub></span>
+					</form>
+					<form class="{{sm_btns[2].classy}}">
+						<textarea rows="9" ng-model="message" class="ng-binding"></textarea>
+						<a class="share_button" href="https://plus.google.com/share?url={{social}}" target="_blank">
+						<div class="button_txt">
+							Share on Google Plus »
+						</div> </a>
+					</form>
+					<div class="clear"></div>
+				</div>
 	
 	<section class="container">
 		
 		<article bottom-postion class="yellow" loading="{{loading}}" >
 			<section  class="article-loader" ng-show="loading==true"></section>
+			<div ng-hide="storyContent.favorite=='on'" class="icon_right favorite"  ng-click="favoriteClick(storyContent)"><span class="icon-uni-off"></span></div>
+			<div class="icon_right favorite" ng-hide="storyContent.favorite=='off'" ng-click="favoriteClick(storyContent)"><span class="icon-uni-on"></span></div>
+			
 			<h2 class="dkblue">{{storyContent.headline}}</h2>
 			<detail> 
 			<a href="{{storyContent.parent}}" target="_blank">Learn more</a>

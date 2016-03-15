@@ -1,4 +1,4 @@
-<section ng-show="isLoadding==true" class="feature-big-loader"></section>
+<section ng-show="isLoading==true" class="feature-big-loader"></section>
 <section ng-hide = "isLoading==true" id = 'image0' class="stage_container_card" feature-image-big="https://teacheratsea.files.wordpress.com/2015/03/nsta-chicago.jpg" color='4, 146, 206' blend='overlay' alpha='1'>
 	<section>
 
@@ -6,50 +6,125 @@
 </section>
 
 <section class="internal_search">
-	<section  tabindex="150" class="search" aria-hidden="false" data-icon="Z" tabindex="153">
+	<!--<section  tabindex="150" class="search" aria-hidden="false" data-icon="Z" tabindex="153">
 		<span class="icon-search"></span>
 		
-	</section>
+	</section>-->
 	<form id="search" name="search" class="ng-pristine ng-valid">
 		<label style="visibility:hidden">Search Timeline</label>
 		<input tabindex="150" type="search" name="search" value="" placeholder="Search Timeline" id="search" ng-model="query" tabindex="152" ng-change="filterData(query); l" ng-delay="300">
 	</form>
 
-	
-	<section class="clear"></section>
-	<section  ng-repeat ="item in viewButtons" class="view {{item.state}}" ng-click="controlViews(item.name)">
+	<div class="viewIcons">
+		<div  ng-repeat ="item in viewButtons" class="view {{item.state}}" ng-click="controlViews(item.name);">
 			<span class="icon-{{item.name}}"></span>
 			
-		</section>
-	
-		<section  class="view {{item.state}}"  ng-click="toggleButtons(item, item.state)" ng-repeat ="item in orderButtons">
+		</div>
+		<div  class="view {{item.state}}"  ng-click="toggleButtons(item, item.state)" ng-repeat ="item in orderButtons">
 			<span class="{{item.classy}}"></span>
-			<section class="sortby"> 
+			<div class="sortby"> 
 					<ul class="{{item.order}}" event-delegate="li | reOrder(active, item.order, item);" type="click">
 					<li ng-repeat="active in active_types" class="active.state">{{active.name}}</li>
 				</ul>
+			</div>
+	</div>
+	<div  class="view {{favState}} fav"  ng-click="favToggle()">
+			<span class="icon-uni-on"></span><sup ng-hide="favoritesArr.length==0">{{favoritesArr.length}}</sup>
+			
+		</div>
+	
+	
+		
+</div>
+	</section>
+	
+
+<div ng-show="hideMap==false"  class="bigImg">
+	<div class="bigImgClose" ng-click="hideMap=true"><img style="cursor:pointer" alt="collapse button_bigger_white" class="icon" src="/images/collapse_btn_bigger_white.png" height="30" width="30">
+	</div>	<div style="max-width:650px; margin:auto">
+
+		
+		<div class="svg_us" ng-include="'svg/Big_US_Map.svg'" imgaeonload></div>
+	</div>
+	<div class="caption" id="bigCaption" style="font-size:15px">
+		<em>States represented by {{map.year}} teachers</em>
+		
+		
+	</div>
+
+	
+</div>
+
+<div  ng-show="hideFav==false" class="bigImg">
+	<div class="bigImgClose" ng-click="hideFav=true; favState='off'"><img style="cursor:pointer" alt="collapse button_bigger_white" class="icon" src="/images/collapse_btn_bigger_white.png" height="30" width="30">
+	</div>	
+	<div class="contain">
+		<div class="caption" id="bigCaption" style="font-size:15px">
+		<em>Your Favorite Teacher at Sea Stories</em>
+		
+		
+	</div>
+			
+		<section class="row" ng-hide="loading==true"  type="click">
+			
+			<section  ng-repeat ="item in favoritesArr" class="card" event-delegate="ca-rd section div.icon_right.favorite |favoriteClick(item)" type="click">
+
+				<ca-rd type="{{item.template}}" number="{{number}}" ></ca-rd>
 			</section>
-	</section>
+
+		</section>
+		
+	</div>
 	
-	</section>
+	<ul id="actions">
+		<li  id="mail" class="{{mail_state}} view" ><a><span ng-click="toggleEmail()" ng-enter="toggleEmail()" class="icon-mail" ></span></a>
+		<div id="mailform" ng-hide="showEmailForm==false;" class="ng-hide"><form target="_blank" name="emailform" id="emailform" class="ng-pristine ng-invalid ng-invalid-required"> 
+		<div style="padding:15px; padding-bottom:5px; padding-top:0px;"> Email:<br><br> <input ng-model="address" name="email" id="email" type="email" autocomplete="off" style="width:85%" required="" placeholder="Enter a valid email address" class="ng-pristine ng-invalid ng-invalid-required ng-valid-email"></div>
+			<div style="padding:15px;"></div>
+			</form><div style="padding:15px; padding-top:0px;">
+				<button ng-click="setUpEmail()" id="html">HTML Email</button>&nbsp;&nbsp;<button style="padding-right:15px" ng-click="setUpPlainEmail()" id="plain">Plain Text Email</button>
+			</div>
+			
+			<div id="success" style="padding:15px; color:#189E81" ng-show="success==true;" class="ng-binding ng-hide">An email has been sent to: . <a href="php/send_html.php?email=tas@noaa.gov{{email}}" target="_blank">View that email in your browser</a></div></div></li>
+			
+	<li   class="{{info_state}} view"><a><span ng-click="toggleInfo()" ng-enter="toggleInfo()" class="icon-info"></span></a>
+		<div id="LSinfo" ng-hide="LSinfo==false;" >
+			To allow website users to add resources to favorites and email them, this site uses a feature of HTML5 called “Local Storage.” This feature creates a storage file on the user’s local hard drive that holds links to the resources from this website that the individual user identifies as a favorite. No information from this file is transferred to NOAA or any other website. This file can be cleared at any time by pressing the the <img src="/images/dyk/trash.png" class="no-border" width="12" height="12" alt="delete favorites"> button on your Favorite Resources page.</p><p>Your data will only be accessible in the browser you are using currently.  To make your data accessible on other devices, we reccomend you email them to yourself or use the links below to add them to a "cloud-based" application.
+		</div>
+	</li>
+	<li ng-hide="showOption==false" ng-show="showOption==true" id="trash" ng-click="clearFav()" class="view off"><span class="icon-bin" ></span>
+	</li>
+	<li ng-hide="showOption==false" ng-show="showOption==true" id="evernote" class="view off"><a href="https://www.evernote.com/clip.action?url={{social}}&title=TAS%20Favorites&body=%3Ca%20href=%22{{social}}%22%3E{{social}}" target="_blank"><span class="icon-evernote"</a></li>
+	<li ng-hide="showOption==false" ng-show="showOption==true" id="google_plus" class="view off"><a href="https://plus.google.com/share?url={{social}}" target="_blank"><span class="icon-google-plus"></span></a></li>
+	<li ng-hide="showOption==false" ng-show="showOption==true" id="li_ls" class="view off"><a target="_blank" href="https://www.linkedin.com/shareArticle?summary=&amp;ro=false&amp;title=Check%20out%20my%20NOAA%20Teacher%20at%20Sea%20Favorite%2025th%20Anniversary%20stories&amp;mini=true&amp;url={{social}}amp;source=http://teacheratsea.noaa.gov"><span class="icon-linkedin"></span></a></li>
+	
+	
+<li ng-hide="showOption==false" ng-show="showOption==true" id="facebook_ls" class="view off"><a href="https://www.facebook.com/sharer/sharer.php?+s=100+&p[url]={{social}}&p[images][0]=http://teacheratsea.files.wordpress.com/2012/05/logo3.jpg?w=100&p[title]=NOAA+Teacher+at+Sea+25th+Anniversary+Favorite+Stories&p[summary]=My+Favorite+NOAA+Teacher+at+Sea+Stories" target="_blank"><span class="icon-facebook"></span></a></li>
+	
+	<li ng-hide="showOption==false" ng-show="showOption==true" id="twitter_ls" class="view off"><a target="_blank" ng-href="https://twitter.com/intent/tweet?original_referer=http://www.tas.noaa.gov&amp;text=Check%20out%20my%20favorite%stories%20from%20NOAA%20Teacher%20at%20Sea&amp;url={{social}}" href="https://twitter.com/intent/tweet?original_referer=http://www.tas.noaa.gov&amp;text=Check%20out%20my%20favorite%20resources%20from%20NOAA%20Teacher%20at%20Sea&amp;url={{social}}"><span class="icon-twitter"></span></a></li>
 	
 	
 	
 	
+	</ul>
 	
+</div>
 	
 
 
 
 
 <section class="container" ng-model="viewButtons" ng-hide="viewButtons[0].state=='off' " >
+		
+
+
 	<section ng-show="loading==true" class="preloader" />
 	<!--------Cards View-------------->
-	<section id="nofilter"  class="stage" body-height  infinite-scroll = "addMore()" infinite-scroll-distance="5" elmwin = 'elem' child='unfiltered'>
+	<section id="nofilter"  class="stage" body-height  infinite-scroll = "addMore()" infinite-scroll-distance="5" elmwin = 'elem' child='unfiltered' scroll-down-hider>
 		
 		<section class="row" id="unfiltered" ng-hide="loading==true"  type="click">
 			
-			<section  ng-repeat ="item in alldata.arr" class="card">
+			<section  ng-repeat ="item in alldata.arr" class="card" event-delegate="ca-rd section div.icon_right.favorite |favoriteClick(item)" type="click">
 
 				<ca-rd type="{{item.template}}" number="{{number}}" ></ca-rd>
 			</section>
@@ -60,8 +135,24 @@
 
 </section>
 <section class="container" ng-model="viewButtons"  ng-hide="viewButtons[1].state=='off'" >
+	<div ng-show="hideMap==false"  class="bigImg">
+	<div class="bigImgClose" ng-click="hideMap=true"><img style="cursor:pointer" alt="collapse button_bigger_white" class="icon" src="/images/collapse_btn_bigger_white.png" height="30" width="30">
+	</div>	<div style="max-width:650px; margin:auto">
+
+		
+		<div class="svg_us" ng-include="'svg/Big_US_Map.svg'" imgaeonload></div>
+	</div>
+	<div class="caption" id="bigCaption" style="font-size:15px">
+		<em>States represented by {{map.year}} teachers</em>
+		
+		
+	</div>
+
+	
+</div>
+
 <!--------List View-------------->
-	<section id="nofilter-list" body-height style="height: {{wHeight}}" class="stage" infinite-scroll = "addMore()" infinite-scroll-distance="5" elmwin = 'elem' child='unfiltered-table'>		
+	<section id="nofilter-list" body-height style="height: {{wHeight}}" class="stage" infinite-scroll = "addMore()" infinite-scroll-distance="5" elmwin = 'elem' child='unfiltered-table' scroll-down-hider>		
 		<section id= "unfiltered-table" ng-hide="loading==true" >
             <table  >
               <thead>
@@ -70,15 +161,17 @@
                   <th>Year</th>
                   <th>Thumbnail</th>
                   <th>Description</th>
+                  <th>Favorite</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody event-delegate="tr td.fav |favoriteClick(item)" type="click">
                 <tr  ng-repeat = "item in alldata.arr">
                   
-                  <td  class="{{item.color}} headline"><a href="#/profile/{{item.firstname+'*'+item.lastname}}">{{item.headline}}</a></td>
-                  <td  class="{{item.color}} year">{{item.year}}</td>
-                  <td  class="{{item.color}} thumb"><span class="loading"> <img src="/images/NOAA-Logo.gif" class="no-border"/></span><img imageonload src="{{item.src}}?w=75"/ alt= "{{item.headline}}"></td>
-                  <td  class="{{item.color}} elipsis" ng-bind-html="item.description"></td>
+                  <td  class="headline"><a href="#/{{item.type}}/{{item.year}}/{{item.id}}">{{item.headline}}</a></td>
+                  <td  class="year">{{item.year}}</td>
+                  <td  class="thumb"><span class="loading"> <img src="/images/NOAA-Logo.gif" class="no-border"/></span><img imageonload src="{{item.src}}?w=75"/ alt= "{{item.headline}}"></td>
+                  <td  class="elipsis" ng-bind-html="item.description"></td>
+                 <td class="fav"> <div ng-hide="item.favorite=='on'" ><span class="icon-uni-off"></span></div><div ng-hide="item.favorite=='off'"><span class="icon-uni-on"></span></div></td>
                   
                 </tr>
                

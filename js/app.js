@@ -2,9 +2,11 @@
 
 /* App Module */
 //var teachernamehash = window.location.hash.split('/')[2];
+///injects modules into app
 var TAS_Site = angular.module('TAS_Site', ['ngRoute', 'ngSanitize', 'ngAnimate','ngTouch','angulartics', 'angulartics.google.analytics', 'Story', 'infinite-scroll' ]);
 TAS_Site.config(['$routeProvider',
   function($routeProvider) {
+  	////////creates routes for deeplinking
    $routeProvider.
   	  when('/cards/', {
         templateUrl: 'partials/cards.html',
@@ -16,47 +18,53 @@ TAS_Site.config(['$routeProvider',
     	controller:'FeatureController',
     	
     }).
-     when('/photo/:year/:id',
+     when('/image/:year/:id',
     {
     	templateUrl:'partials/photo.html',
     	controller:'FeatureController',
     	
     }).
-     when('/spotlight/:year/:id',
+     when('/article/:year/:id',
     {
     	templateUrl:'partials/spotlight.html',
     	controller:'FeatureController',
     	
     }).
-     when('/quotes/:year/:id',
+     when('/quote/:year/:id',
     {
     	templateUrl:'partials/quotes.html',
     	controller:'FeatureController',
     	
     }).
    
+	 when('/home',
+    {
+    	templateUrl:'partials/home.html',
+    	//controller:'FeatureController',
+    	
+    }).
+      when('/facebook/',
+    {
+    	
+    	templateUrl:'partials/facebook.html',
+    	controller:'qsParser',
+    	
+    }).
+    when('/facebook/:qs',
+    {
+    	
+    	templateUrl:'partials/facebook.html',
+    	controller:'qsParser',
+    	
+    }).
 
     otherwise({
-      	templateUrl: 'partials/cards.html',
-        redirectTo: '/cards/',
+      	templateUrl: 'partials/home.html',
+        redirectTo: '/home/',
         controller:'FeatureController',
      });
 
 		
 
-  }])
+  }]);
   
-.config(['$httpProvider', function($httpProvider) {
-        $httpProvider.defaults.useXDomain = true;
-         $httpProvider.defaults.headers.post['Accept'] = 'application/json, text/javascript';
-    	$httpProvider.defaults.headers.post['Content-Type'] = 'application/json; charset=utf-8'
-        delete $httpProvider.defaults.headers.common['X-Requested-With'];
-    }
-]); 
-  
-  /*app.run(function($rootScope, $location, $anchorScroll, $routeParams) {
-  $rootScope.$on('$routeChangeSuccess', function(newRoute, oldRoute) {
-    $location.hash($routeParams.scrollTo);
-    $anchorScroll();  
-  });
-}) */

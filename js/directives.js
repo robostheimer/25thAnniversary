@@ -3,7 +3,7 @@
 /* Directives */
 
 TAS_Site.directive('naviGation', function($injector, $compile, $q) {
-
+	////creates navigation tag
 	var linkFunction = function(scope, elm, attr) {
 		scope.navWidth = $('.navigation').width();
 
@@ -68,19 +68,19 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
 	//////////////<section feature-image="{{slide.src}}?w={{windowWidth}}" color="{{slide.background_color}}" ng-hide="slide.isLoading==true">
 })
 .directive('caRd', function($compile, $q) {
-	/////
-	var Profile = '<section id="image{{item.id}}" resize-card feature-image="{{item.src}}" color="{{item.colorCode}}" class="col-md-3 {{item.color}}" ng-show="item.isLoading==false" blend="soft-light" alpha="1"> <section class="icon_right"><span class="{{item.classy}}"></span></section><section class="card-text"><h3 ng-bind-html="SkipValidation(item.headline)">{{item.headline}}</h3></section><section class="card-button"><button class="{{item.color}}"><a href="#/profile/{{item.year}}/{{item.id}}" ng-click= role="button">View Profile »</a></button></section></section>';
-		var Pow = '<section id="pow{{item.id}}" resize-card feature-image="{{item.src}}" color="{{item.colorCode}}" class="col-md-3 {{item.color}}" ng-show="item.isLoading==false" blend="soft-light" alpha="1"> <section class="icon_right"><span class="{{item.classy}} "></span></section><section class="card-text"><h3 ng-bind-html="SkipValidation(item.powSlice)"></h3></section><section class="card-button"><button class="{{item.color}}"><a href="#/photo/{{item.year}}/{{item.id}}" role="button">Learn More »</a></button></section></section>';
-	var News = '<section id="news{{item.id}}" resize-card feature-image="{{item.src}}" color="{{item.colorCode}}" class="col-md-3 {{item.color}}" ng-show="item.isLoading==false" blend="soft-light" alpha="1"><section class="icon_right"><span class="{{item.classy}}"></span></section><section class="card-text"><h3 ng-bind-html="item.headline"></h3></section><section class="card-button"><button class="{{item.color}}"><a href="#/spotlight/{{item.year}}/{{item.id}}" role="button">Read the Story »</a></button></section></section>';
+	/////creates different templates for cards
+	var Profile = '<section id="image{{item.id}}" resize-card feature-image="{{item.src}}" color="{{item.colorCode}}" class="col-md-3 {{item.color}}" blend="soft-light" alpha="1"> <div class="icon_right type"><span class="{{item.classy}}"></span></div><div ng-hide="item.favorite==\'on\'" class="icon_right favorite"><span class="icon-uni-off"></span></div><div class="icon_right favorite" ng-hide="item.favorite==\'off\'"><span class="icon-uni-on"></span></div><section class="card-text"><h3 ng-bind-html="SkipValidation(item.headline)">{{item.headline}}</h3></section><section class="card-button"><a href="#/{{item.type}}/{{item.year}}/{{item.id}}" ng-click="isLoading=\'true\'"><button class="{{item.color}}" role="button">View Profile »</button></a></section></section>';
+		var Pow = '<section id="pow{{item.id}}" resize-card feature-image="{{item.src}}" color="{{item.colorCode}}" class="col-md-3 {{item.color}}" .bigImg .row .col-md-3 blend="soft-light" alpha="1"> <div class="icon_right type"><span class="{{item.classy}}"></span></div><div ng-hide="item.favorite==\'on\'" class="icon_right favorite"><span class="icon-uni-off"></span></div><div class="icon_right favorite" ng-hide="item.favorite==\'off\'"><span class="icon-uni-on"></span></div><section class="card-text"><h3 ng-bind-html="SkipValidation(item.powSlice)"></h3></section><section class="card-button"><a href="#/{{item.type}}/{{item.year}}/{{item.id}}" ng-click="isLoading=\'true\'"> <button class="{{item.color}}" role="button">Learn More »</button></a></section></section>';
+	var News = '<section id="news{{item.id}}" resize-card feature-image="{{item.src}}" color="{{item.colorCode}}" class="col-md-3 {{item.color}}" .bigImg .row .col-md-3 blend="soft-light" alpha="1"><div class="icon_right type"><span class="{{item.classy}}"></span></div><div ng-hide="item.favorite==\'on\'" class="icon_right favorite"><span class="icon-uni-off"></span></div><div class="icon_right favorite" ng-hide="item.favorite==\'off\'"><span class="icon-uni-on"></span></div><section class="card-text"><h3 ng-bind-html="item.headline"></h3></section><section class="card-button"><a href="#/{{item.type}}/{{item.year}}/{{item.id}}" ng-click="isLoading=\'true\'" ><button class="{{item.color}}"role="button">Read the Story »</button></a></section></section>';
 	
 	
-	var Article = '<section class="col-md-3 {{item.color}}"><section class="icon_right"><span class="{{item.classy}}"></span></section> <section class="card-text"><h3 ng-bind-html="SkipValidation(item.headline)"></h3><p>Check out this article from <em> {{item.mediaoutlet}}</em>.<p></section><section class="card-button"><button class="{{item.color}}"><a href="{{articleurl}}" role="button">Read Article »</a></button></section></section>';
+	var Article = '<section class="col-md-3 {{item.color}}"><div class="icon_right type"><span class="{{item.classy}}"></span></div><div ng-hide="item.favorite==\'on\'" class="icon_right favorite"><span class="icon-uni-off"></span></div><div class="icon_right favorite" ng-hide="item.favorite==\'off\'"><span class="icon-uni-on"></span></div> <section class="card-text"><h3 ng-bind-html="SkipValidation(item.headline)"></h3><p>Check out this article from <em> {{item.mediaoutlet}}</em>.<p></section><section class="card-button"><a href="{{item.url}}" target="_blank"><button class="{{item.color}}" role="button">Read Article »</button></a></section></section>';
 
-	var Lesson = '<section class="col-md-3 {{item.color}}"><section class="icon_right"><span class="icon-chalkboard2 "></span></section> <section class="card-text"><h3 ng-bind-html="SkipValidation(item.headline)">}</h3><p>{{item.lessonSlice}}</p></section><section class="card-button"><button class="{{item.color}}"><a href="{{item.url}}" target="_blank" role="button">View Lesson»</a></button></section></section>';
-	var Quotes = '<section id="quotes{{item.id}}" resize-card feature-image="{{item.src}}" color="{{item.colorCode}}" class="col-md-3 {{item.color}}" ng-show="item.isLoading==false" blend="soft-light" alpha="1"><section class="icon_right"><span class="{{item.classy}}"></span></section><section class="card-text"><h3 ng-bind-html="item.quoteSlice"></h3></section><section class="card-button"><button class="{{item.color}}"><a href="#/quotes/{{item.year}}/{{item.id}}" role="button">Read the Story »</a></button></section></section>';
-	var Stat='<section id="stats{{item.id}}" resize-card  color="{{item.colorCode}}" class="col-md-3 {{item.color}}"  blend="soft-light" alpha="1"><section class="icon_right"><span class="{{item.classy}}"></span></section><section class="card-text"><h3>Year: {{item.year}}<br>No. of Teachers: {{item.numofteachers}}<br>Days at Sea: {{item.days}}<br>Hours at Sea: {{item.hours}}<br> Students Reached: {{item.students}}<br>Blogs Written: {{item.posts}}<br>Photos: {{item.num_images}}<br>States: <span class="states">{{item.stateStr}}</span></h3></section></section>'
-	var Map='<section id="map{{item.id}}" resize-card  color="{{item.colorCode}}" class="col-md-3 {{item.color}}"  blend="soft-light" alpha="1"><section class="icon_right"><span class="{{item.classy}}"></span></section><section class="card-text"><h3>{{item.headline}}</h3><br><div class="svg_us" ng-include="\'svg/US_Map.svg\'" imgaeonload"></section></section>'
-
+	var Lesson = '<section class="col-md-3 {{item.color}}"><div class="icon_right type"><span class="{{item.classy}}"></span></div><div ng-hide="item.favorite==\'on\'" class="icon_right favorite"><span class="icon-uni-off"></span></div><div class="icon_right favorite" ng-hide="item.favorite==\'off\'"><span class="icon-uni-on"></span></div> <section class="card-text"><h3 ng-bind-html="SkipValidation(item.headline)">}</h3><p>{{item.lessonSlice}}</p></section><section class="card-button"><a href="{{item.url}}" target="_blank"><button class="{{item.color}}" role="button">View Lesson»</button></a></section></section>';
+	var Quotes = '<section id="quotes{{item.id}}" resize-card feature-image="{{item.src}}" color="{{item.colorCode}}" class="col-md-3 {{item.color}}" .bigImg .row .col-md-3 blend="soft-light" alpha="1"><div class="icon_right type"><span class="{{item.classy}}"></span></div><div ng-hide="item.favorite==\'on\'" class="icon_right favorite"><span class="icon-uni-off"></span></div><div class="icon_right favorite" ng-hide="item.favorite==\'off\'"><span class="icon-uni-on"></span></div><section class="card-text"><h3 ng-bind-html="item.quoteSlice"></h3></section><section class="card-button"><button class="{{item.color}}"><a href="#/{{item.type}}/{{item.year}}/{{item.id}}" role="button" ng-click="isLoading=\'true\'">Read the Quote »</a></button></section></section>';
+	var Stat='<section id="stats{{item.id}}" resize-card  color="{{item.colorCode}}" class="col-md-3 {{item.color}}"  blend="soft-light" alpha="1"><div class="icon_right type"><span class="{{item.classy}}"></span></div><div ng-hide="item.favorite==\'on\'" class="icon_right favorite"><span class="icon-uni-off"></span></div><div class="icon_right favorite" ng-hide="item.favorite==\'off\'"><span class="icon-uni-on"></span></div><section class="card-text"><h3>Year: {{item.year}}<br>No. of Teachers: {{item.numofteachers}}<br>Days at Sea: {{item.days}}<br>Hours at Sea: {{item.hours}}<br> Students Reached: {{item.students}}<br>Blogs Written: {{item.posts}}<br>Photos: {{item.num_images}}<br>States: <span class="states">{{item.stateStr}}</span></h3></section></section>'
+	var Map='<section  ng-click="bigMap(item.year); hideMap=false;"  id="map{{item.id}}" resize-card  color="{{item.colorCode}}" class="col-md-3 {{item.color}}"  blend="soft-light" alpha="1"><div class="icon_right type"><span class="{{item.classy}}"></span></div><div ng-hide="item.favorite==\'on\'" class="icon_right favorite"><span class="icon-uni-off"></span></div><div class="icon_right favorite" ng-hide="item.favorite==\'off\'"><span class="icon-uni-on"></span></div><section class="card-text"><h3>{{item.headline}}</h3><br><div ng-enter="bigMap(item.year)" class="svg_us" ng-include="\'svg/US_Map.svg\'" imgaeonload"></div></section></section>'
+	////assigns template to a type
 	var getTemplate = function(contentType) {
 		var template = '';
 
@@ -123,7 +123,7 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
 		link : function(scope, elm, attr) {
 			var z=0;
 			var images = [];
-			
+			////checks the attribute type to assign a specific card template to a card
 			elm.html(getTemplate(attr.type));
 			var deferred = $q.defer();
 
@@ -134,8 +134,20 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
 			});
 		}
 	};
-}).directive('clearStorage', function($window) {
+}).directive('bigImage', function() {
 	return {
+		//creates a modal for popup images
+		restrict : 'AE',
+		scope : true,
+		templateUrl : 'partials/popup.html',
+		
+
+	};
+})	
+	
+.directive('clearStorage', function($window) {
+	return {
+		////////clears sessionStorage object on refresh
 		restrict : 'AE',
 
 		link : function() {
@@ -153,7 +165,7 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
 }).directive('cellWidth', function($window) {
 	return {
 		restrict : 'AE',
-
+		/////controls the width of a table cell
 		link : function(scope, element) {
 			
 			
@@ -188,7 +200,7 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
 }).directive('navHeight', function($window) {
 	return {
 		restrict : 'AE',
-
+		///controls the height of navigation tag
 		link : function(scope, element){
 			var w = angular.element($window);
 				scope.navHeight = w.height()*.75;
@@ -210,7 +222,7 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
 	return function(scope, element){
 			var w = angular.element($window);
 				
-					
+				////controls the height of container div	
 				scope.getWindowDimensions = function() {
 					return {
 						'h' : w.height(),
@@ -219,19 +231,21 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
 				};
 				scope.$watch(scope.getWindowDimensions, function(newValue, oldValue) {
 				if (window.innerHeight > 1800) {
-				scope.wHeight = w.height()*.97
+				scope.wHeight = w.height()*.83
 				} else if (window.innerHeight < 1799 && window.innerHeight >= 1600) {
-					scope.wHeight = window.innerWidth*.95
+					scope.wHeight = window.innerWidth*.83
+				}else if (window.innerHeight < 1599 && window.innerHeight >= 1401) {
+					scope.wHeight = window.innerWidth*.83
 				} else if (window.innerHeight < 1400 && window.innerHeight >= 1200) {
-					scope.wHeight = window.innerWidth*.93
+					scope.wHeight = window.innerWidth*.89
 				}else if (window.innerHeight >=1001 && window.innerHeight < 1199) {
-					scope.wHeight = window.innerHeight*.9
+					scope.wHeight = window.innerHeight*.83
 				}else if (window.innerHeight >= 900 && window.innerHeight < 1000) {
-					scope.wHeight = window.innerHeight*.88
+					scope.wHeight = window.innerHeight*.83
 				}else if (window.innerHeight >= 800 && window.innerHeight <899) {
-					scope.wHeight = window.innerHeight*.88
+					scope.wHeight = window.innerHeight*.83
 				}else if (window.innerHeight >=700 && window.innerHeight < 799) {
-					scope.wHeight = window.innerHeight*.85
+					scope.wHeight = window.innerHeight*.79
 				}else if (window.innerHeight >= 600 && window.innerHeight <699) {
 					scope.wHeight = window.innerHeight*.81
 				}else if (window.innerHeight > 500 && window.innerHeight <= 599) {
@@ -281,17 +295,23 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
 
 .directive('bottomPostion', function($window, $timeout) {
 	return {
+		/////controls bottom postion of the article tag on the feature pages
 		restrict : 'AE',
 
 		link : function(scope, element, attrs) {
-		var articleHeight=$('article').height();
-		
+		var articleHeight=$('.main').height() + $('article h2').height()+parseInt($('article h2').css('padding-top'), 10)+parseInt($('article h2').css('padding-bottom'), 10)+parseInt($('article').css('padding-top'),10)+parseInt($('article').css('padding-bottom'), 10)+headerHeight+parseInt($('.container').css('margin-top'),10);		
 		
 		var w = angular.element($window);
+		if(w.width()>767)
+		{
+			var headerHeight=75;
+		}
+		else{
+			var headerHeight=50;
+		}
 		if(w.width()>w.height())
 				{
 				var w_ratio = w.width()/w.height();		
-				console.log(w_ratio);
 				$(element).css({
 				'top':  (w.height()*w_ratio),
 				'margin-top': w.height()-articleHeight,
@@ -302,7 +322,6 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
 				else{
 					var w_ratio = w.height()/w.width();	
 					
-					console.log(w_ratio);
 					$(element).css({
 					'top':  (w.height()*w_ratio),
 					'margin-top': w.height()-articleHeight,
@@ -312,11 +331,10 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
 				}	
 			
 			w.bind('resize', function(){
-				var articleHeight=$('.main').height() + $('article h2').height()+parseInt($('article h2').css('padding-top'), 10)+parseInt($('article h2').css('padding-bottom'), 10)+parseInt($('article').css('padding-top'),10)+parseInt($('article').css('padding-bottom'), 10)+$('header').height()+parseInt($('.container').css('margin-top'),10);		
+				var articleHeight=$('.main').height() + $('article h2').height()+parseInt($('article h2').css('padding-top'), 10)+parseInt($('article h2').css('padding-bottom'), 10)+parseInt($('article').css('padding-top'),10)+parseInt($('article').css('padding-bottom'), 10)+headerHeight+parseInt($('.container').css('margin-top'),10);		
 				if(w.width()>w.height())
 				{
 				var w_ratio = w.width()/w.height();		
-				console.log(w_ratio);
 				$(element).css({
 				'top':  (w.height()*w_ratio),
 				'margin-top': w.height()-articleHeight,
@@ -327,7 +345,6 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
 				else{
 					var w_ratio = w.height()/w.width();	
 					
-					console.log(w_ratio);
 					$(element).css({
 					'top':  (w.height()*w_ratio),
 					'margin-top': w.height()-articleHeight,
@@ -341,15 +358,13 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
 			
 			attrs.$observe('loading', function(){
 				
-		console.log(w.width()+':'+w.height())
 			
 				
 				$timeout(function(){
-				var articleHeight=$('.main').height() + $('article h2').height()+parseInt($('article h2').css('padding-top'), 10)+parseInt($('article h2').css('padding-bottom'), 10)+parseInt($('article').css('padding-top'),10)+parseInt($('article').css('padding-bottom'), 10)+$('header').height()+parseInt($('.container').css('margin-top'),10);		
+				var articleHeight=$('.main').height() + $('article h2').height()+parseInt($('article h2').css('padding-top'), 10)+parseInt($('article h2').css('padding-bottom'), 10)+parseInt($('article').css('padding-top'),10)+parseInt($('article').css('padding-bottom'), 10)+headerHeight+parseInt($('.container').css('margin-top'),10);		
 				if(w.width()>w.height())
 				{
 				var w_ratio = w.width()/w.height();		
-				console.log(w_ratio);
 				$(element).css({
 				'top':  (w.height()*w_ratio),
 				'margin-top': w.height()-articleHeight,
@@ -360,7 +375,6 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
 				else{
 					var w_ratio = w.height()/w.width();	
 					
-					console.log(w_ratio);
 					$(element).css({
 					'top':  (w.height()*w_ratio),
 					'margin-top': w.height()-articleHeight,
@@ -383,7 +397,6 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
 		restrict : 'AE',
 
 		link : function(scope, element) {
-			console.log($('article h2').css('padding-top'));
 			var w = angular.element($window);
 			$(element).css({
 				'height' :($('article h2').height())
@@ -447,314 +460,23 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
 		};
 		}
 	};
+}).directive('scrollDownHider', function() {
+	console.log('scrolling');
+	
+	return function(scope, element, attrs) {
+		
+		element.bind("scroll", function() {
+			
+			if ($(this).scrollTop() >= 200) {
+                 scope.showDiv = false;
+             } else  {
+                 scope.showDiv = true;
+             }
+            scope.$apply();
+		});
+	};
 })
-.directive('wpCarousel', function(HomepageData) {
-
-	return {
-		restrict : 'AE',
-		scope : true,
-		template : '<p>{{data}}</p>',
-		//controller:controller,
-		link : function(scope, element, attrs) {
-			scope.wp = [];
-			//console.log(scope.wp);
-		},
-	};
-}).directive('slideShow', function(Slideshow, $timeout, preloadImage) {
-
-	return {
-		restrict : 'AE',
-		scope : true,
-		templateUrl : 'partials/slideshow.html',
-		link : function(scope) {
-			Slideshow.loadSlideData('19uuws3BhCGqVKp1Zl1uq-e4L1bbG9vla3DDZqMiL').then(function(data) {
-				scope.slides = data;
-
-				scope.slideimages = [];
-				//////////////Preload the first 3 images//////////////
-
-				////////////////No preloading for image number 4 and greater///////////
-				for (var z = 0; z < scope.slides.length; z++) {
-					scope.slides[z].finalImage = scope.slides[z].imageurl;
-
-				}
-				scope.slides[0].visible = true;
-				scope.slides[0].classy = 'active';
-				scope.slideshow_width = scope.slides.length * 620;
-				scope.playhider = true;
-
-			});
-
-			scope.timer
-			scope.remaining = scope.timer / 1000;
-
-			var sliderFunc = function() {
-				scope.timeout = $timeout(function() {
-					scope.remaining--;
-					scope.next();
-					scope.timer = $timeout(sliderFunc, 3000);
-				}, 3000);
-			};
-
-			sliderFunc();
-
-			/*scope.$on('$destroy', function() {
-			 $timeout.cancel(timer); // when the scope is getting destroyed, cancel the timer
-			 });*/
-
-			scope.next = function() {
-				for (var i = 0; i < scope.slides.length; i++) {
-					scope.slides[i].visible = false;
-					scope.slides[i].classy = 'inactive';
-				}
-				if (scope.currentIndex < scope.slides.length - 1) {
-					scope.currentIndex = scope.currentIndex + 1;
-					scope.slides[scope.currentIndex].visible = true;
-					scope.slides[scope.currentIndex].classy = 'active';
-				} else {
-					scope.currentIndex = 0;
-					scope.slides[scope.currentIndex].visible = true;
-					scope.slides[scope.currentIndex].classy = 'active';
-				}
-				//console.log(scope.currentIndex);
-
-			};
-			scope.prev = function() {
-				for (var i = 0; i < scope.slides.length; i++) {
-					scope.slides[i].visible = false;
-					scope.slides[i].classy = 'inactive';
-
-				}
-				if (scope.currentIndex > 0) {
-					scope.currentIndex = scope.currentIndex - 1;
-					scope.slides[scope.currentIndex].visible = true;
-					scope.slides[scope.currentIndex].classy = 'active';
-
-				} else {
-					scope.currentIndex = scope.slides.length - 1;
-					scope.slides[scope.currentIndex].visible = true;
-					scope.slides[scope.currentIndex].classy = 'active';
-				}
-			};
-			scope.numberClick = function(num) {
-				for (var i = 0; i < scope.slides.length; i++) {
-					scope.slides[i].visible = false;
-					scope.slides[i].classy = 'inactive';
-				}
-				scope.currentIndex = (num - 1)
-				scope.slides[scope.currentIndex].visible = true;
-				scope.slides[scope.currentIndex].classy = 'active';
-				scope.playhider = false;
-				$timeout.cancel(scope.timer);
-
-			};
-			scope.playPause = function() {
-				if (scope.playhider == false) {
-					scope.playhider = true;
-					$timeout.cancel(scope.timer);
-					sliderFunc();
-
-				} else {
-					scope.playhider = false;
-					$timeout.cancel(scope.timer);
-
-				}
-
-			};
-
-		}
-	};
-}).directive('slideShow', function(Alumni, POW, $timeout, $q, $injector) {
-
-	return {
-		restrict : 'AE',
-		scope : true,
-		templateUrl : 'partials/slideshow.html',
-		link : function(scope, element, attrs, tabsCtrl) {
-			scope.checkContents = false;
-			if (attrs.service == 'POW') {
-				scope.name = "Photos of the Week";
-				scope.tagline = "Snapshots of learning"
-			} else {
-				scope.name = "Alumni Association";
-				scope.tagline = "The Cruise is just the beginning..."
-			}
-			scope.windowWidth = window.innerWidth;
-			$injector.get(attrs.service).getData().then(function(data) {
-
-				scope.slides = data;
-
-				scope.checkContents = true;
-
-				scope.slideimages = [];
-				//////////////Preload the first 3 images//////////////
-
-				////////////////No preloading for image number 4 and greater///////////
-				for (var z = 0; z < scope.slides.length; z++) {
-					scope.slides[z].finalImage = scope.slides[z].src;
-					scope.slides[z].isLoading = true;
-					scope.image = new Image()
-					scope.image.src = scope.slides[z].src;
-					scope.image.isLoading = true;
-
-					scope.preload(scope.image, z);
-				}
-				scope.slides[0].visible = true;
-				scope.slides[0].classy = 'active';
-				scope.playhider = true;
-
-			});
-			scope.preload = function(img, number) {
-				$(img).bind('load', function() {
-					img.isLoading = false;
-					scope.slides[number].isLoading = false;
-					scope.$apply();
-				});
-			};
-			scope.timer
-			scope.remaining = scope.timer / 1000;
-
-			var sliderFunc = function() {
-
-				scope.timeout = $timeout(function() {
-					scope.remaining--;
-					scope.next();
-
-					scope.timer = $timeout(sliderFunc, 5000);
-				}, 5000);
-			};
-
-			sliderFunc();
-
-			/*scope.$on('$destroy', function() {
-			 $timeout.cancel(timer); // when the scope is getting destroyed, cancel the timer
-			 });*/
-
-			scope.next = function() {
-				for (var i = 0; i < scope.slides.length; i++) {
-					scope.slides[i].visible = false;
-					scope.slides[i].classy = 'inactive';
-				}
-				if (scope.currentIndex < scope.slides.length - 1) {
-					scope.currentIndex = scope.currentIndex + 1;
-					scope.slides[scope.currentIndex].visible = true;
-					scope.slides[scope.currentIndex].classy = 'active';
-				} else {
-					scope.currentIndex = 0;
-					scope.slides[scope.currentIndex].visible = true;
-					scope.slides[scope.currentIndex].classy = 'active';
-				}
-				//console.log(scope.currentIndex);
-
-			};
-			scope.prev = function() {
-				for (var i = 0; i < scope.slides.length; i++) {
-					scope.slides[i].visible = false;
-					scope.slides[i].classy = 'inactive';
-
-				}
-				if (scope.currentIndex > 0) {
-					scope.currentIndex = scope.currentIndex - 1;
-					scope.slides[scope.currentIndex].visible = true;
-					scope.slides[scope.currentIndex].classy = 'active';
-
-				} else {
-					scope.currentIndex = scope.slides.length - 1;
-					scope.slides[scope.currentIndex].visible = true;
-					scope.slides[scope.currentIndex].classy = 'active';
-				}
-			};
-			scope.numberClick = function(num) {
-				for (var i = 0; i < scope.slides.length; i++) {
-					scope.slides[i].visible = false;
-					scope.slides[i].classy = 'inactive';
-				}
-				scope.currentIndex = (num - 1)
-				scope.slides[scope.currentIndex].visible = true;
-				scope.slides[scope.currentIndex].classy = 'active';
-				scope.playhider = false;
-				$timeout.cancel(scope.timer);
-
-			};
-			scope.playPause = function() {
-				if (scope.playhider == false) {
-					scope.playhider = true;
-					$timeout.cancel(scope.timer);
-					sliderFunc();
-
-				} else {
-					scope.playhider = false;
-					$timeout.cancel(scope.timer);
-
-				}
-
-			};
-
-		}
-	};
-}).directive('paginationPlease', function() {
-	return {
-
-		restrict : 'AE',
-		scope : true,
-		replace : true,
-		templateUrl : 'partials/pagination.html',
-		link : function(scope, element, attrs, routeParams) {
-
-			scope.prevPageDisabled = function() {
-				return scope.currentPage === 0 ? "disabled" : "";
-			};
-
-			scope.pageCount = function() {
-				return Math.ceil(scope.data.length / scope.itemsPerPage) - 1;
-			};
-
-			scope.nextPage = function() {
-				if (scope.currentPage < scope.pageCount()) {
-					scope.currentPage++;
-					// alert(scope.currentPage)
-					scope.filtered_data.length = 0;
-					window.scrollTo(0, 200);
-					for (var y = (scope.itemsPerPage * scope.currentPage); y < ((scope.itemsPerPage * scope.currentPage) + scope.itemsPerPage); y++) {
-						if (y < scope.data.length) {
-							scope.filtered_data.push(scope.data[y]);
-						}
-					}
-				}
-			};
-
-			scope.nextPageDisabled = function() {
-				return scope.currentPage === scope.pageCount() ? "disabled" : "";
-			};
-
-		}
-	};
-
-}).directive('paginationRoutes', function() {
-
-	return {
-
-		restrict : 'AE',
-		scope : true,
-		replace : true,
-		templateUrl : 'partials/pagination-routes.html',
-		link : function(scope) {
-			scope.data = [];
-			scope.prevPageDisabled = function() {
-				return scope.currentPage === 0 ? "disabled" : "";
-			};
-
-			scope.nextPageDisabled = function() {
-				return scope.currentPage === (scope.pageCount() - 1) ? "disabled" : "";
-			};
-			scope.pageCount = function() {
-				return Math.ceil(scope.data.length / scope.itemsPerPage) - 1;
-			};
-
-		}
-	};
-
-}).directive('ngEnter', function() {
+.directive('ngEnter', function() {
 	return function(scope, element, attrs) {
 		element.bind("keydown keypress", function(event) {
 			if (event.which === 13) {
@@ -766,25 +488,8 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
 			}
 		});
 	};
-}).directive('wpVideos', function() {
-	return {
-
-		restrict : 'AE',
-		scope : true,
-
-		link : function(scope, element, attr) {
-			attr.$observe('flashvars', function(value) {
-
-				if (value != "") {
-					element.html('<embed type="application/x-shockwave-flash" src="http://s0.videopress.com/player.swf?v=1.03" width="' + attr.width + '" height="' + attr.height + '" wmode="direct" seamlesstabbing="true" allowfullscreen="true" allowscriptaccess="always" overstretch="true" flashvars="guid=' + scope.src.src + '&amp;isDynamicSeeking=true">');
-				} else {
-					element.html("<section>NO Video</section>");
-					// We have to put something into the DOM
-				}
-			});
-		}
-	};
 }).directive('resizeCard', function($window) {
+	/////resizes card on window width change - for responsiveness
 	return function(scope, element) {
 		var w = angular.element($window);
 		scope.getWindowDimensions = function() {
@@ -827,6 +532,7 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
 	};
 })
 .directive('imageonload', function() {
+	///sets up preloader
 	return {
 		restrict : 'A',
 
@@ -870,7 +576,6 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
 		link : function(scope, element, attrs) {
 
 			element.bind('load', function() {
-				//console.log('dir'+TabsDataFetch.count)
 				if (attrs.number == 0) {
 
 					$('.loading').addClass('ng-hide');
@@ -900,6 +605,7 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
 		}
 	};
 }).directive('featureImage', function($window) {
+	//////controls size of background image on cards - makes site responsive
 	return {
 		link: function(scope, element, attrs) {
 		var w = angular.element($window);
@@ -943,21 +649,20 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
 			};
 			element.css({
 			'background-image' : 'url(' + url +')',
-			'background-color': 'rgba('+color+',' +alpha+')',
-			'background-size' : 'cover',
-			'background-blend-mode': blend
+			//'background-color': 'rgba('+color+',' +alpha+')',
+			//'background-size' : 'cover',
+			//'background-blend-mode': 'soft-light',
+			//'-webkit-background-blend-mode':'soft-light'
 			});
 			element.isLoading="true"
 			var image= new Image() ;
-		   // console.log(url);
-			image.src=url;
+		 	image.src=url;
 		  	image.isLoading=true;
 		  	
 		  	$(image).bind('load', function(){
 		  			$('#'+loader).addClass('ng-hide');
 					$('#'+id).removeClass('ng-hide');
 					//scope.alldata[number].isLoading=false;		
-					//console.log(scope.alldata[number].isLoading)	
 					scope.$apply();
 					});
 
@@ -967,12 +672,23 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
 			scope.$apply();
 		});
 		
-
+		attrs.$observe('featureImageBig', function(){
+			element.css({
+			'background-image' : 'url(' + url +')',
+			//'background-color': 'rgba('+color+',' +alpha+')',
+			//'background-size' : 'cover',
+			//'background-blend-mode': 'soft-light',
+			//'-webkit-background-blend-mode':'soft-light'
+			});
+			
+			
+		});
 			
 		}
 	};
 }).directive('featureImageBig', function($window) {
 	return {
+		////controls size of background images on feature pages
 		link: function(scope, element, attrs) {
 			scope.isLoading=true;
 			
@@ -991,7 +707,7 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
 		};
 		scope.$watch(scope.getWindowDimensions, function(newValue, oldValue) {
 			
-				scope.windowWidth = window.innerWidth;
+				scope.windowWidth = window.innerWidth*2;
 			
 			scope.styles = function() {
 				return {
@@ -1001,21 +717,16 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
 			};
 			element.css({
 			'background-image' : 'url(' + attrs.featureImageBig + '?w='+scope.windowWidth+')',
-			'background-color': 'rgba('+color+', '+alpha+')',
-			'background-size' : 'cover',
-			'background-blend-mode':blend
+			//'background-color': 'rgba('+color+', '+alpha+')',
+			//'background-size' : 'cover',
+			//'background-blend-mode':blend
 			});
 			element.isLoading="true"
-		//console.log(url)
 			var image= new Image() ;
-		   // console.log(url);
-			image.src=attrs.featureImageBig;
+		  image.src=attrs.featureImageBig;
 		  	scope.isLoading=true;
-		  	///console.log(scope.image);
 		  	$(image).bind('load', function(){
 					scope.isLoading=false
-					//scope.alldata[number].isLoading=false;		
-					//console.log(scope.alldata[number].isLoading)	
 					scope.$apply();
 					});
 
@@ -1032,19 +743,16 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
 		
 		attrs.$observe('featureImageBig', function(){
 			var url = attrs.featureImageBig;
-			console.log(attrs.featureImageBig)
 			var color = attrs.color;
 			var blend =attrs.blend;
 			var alpha = attrs.alpha;
-			console.log(url);
 			element.css({
 			'background-image' : 'url(' + attrs.featureImageBig + '?w='+scope.windowWidth+')',
-			'background-color': 'rgba('+color+', '+alpha+')',
-			'background-size' : 'cover',
-			'background-blend-mode':blend
+			//'background-color': 'rgba('+color+', '+alpha+')',
+			//'background-size' : 'cover',
+			//'background-blend-mode':blend
 			});
 			scope.isLoading=false
-		//console.log(url)
 			
 		});
 		
@@ -1056,6 +764,7 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
 })
 .directive('ngDelay', ['$timeout', function ($timeout) {
     return {
+    	////adds a delay to an action
         restrict: 'A',
         scope: true,
         compile: function (element, attributes) {
@@ -1086,9 +795,9 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
         }
     };
 }]).directive(
+			////delegates click, mouseover, mouseout events, etc;
             "eventDelegate",
             function( $parse ) {
-            	console.log('clicked')
             	
                 // I bind the DOM and event handlers to the scope.
                 function link( $scope, element, attributes ) {
@@ -1121,8 +830,7 @@ TAS_Site.directive('naviGation', function($injector, $compile, $q) {
                         eventtype+".eventDelegate",
                         selector,
                         function( event ) {
-                        	console.log(event)
-                            // Prevent the default behavior - this is
+                        	// Prevent the default behavior - this is
                             // not a "real" link.
                             event.preventDefault();
                             // Find the scope most local to the target

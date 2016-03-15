@@ -22,7 +22,57 @@
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
-
+.icon-sort-alpha-asc:before {
+	content: "\50";
+}
+.icon-sort-alpha-desc:before {
+	content: "\51";
+}
+.icon-evernote:before {
+	content: "\37";
+	font-size:115%;
+}
+.icon-info:before {
+	content: "\31";
+}
+.icon-mail:before {
+	content: "\32";
+}
+.icon-google-plus:before {
+	content: "\33";
+}
+.icon-facebook:before {
+	content: "\34";
+}
+.icon-twitter:before {
+	content: "\35";
+}
+.icon-linkedin:before {
+	content: "\36";
+}
+.icon-info:before {
+	content: "\31";
+	
+}
+.icon-mail:before {
+	content: "\32";
+	
+}
+.icon-share:before {
+    content: "\38";
+}
+.icon-bin:before {
+	content: "\4f";
+	
+}
+.icon-uni-on:before {
+	content: "\74";
+	font-size:110%;
+}
+.icon-uni-off:before {
+	content: "\75";
+	font-size:110%;
+}
 .icon-boxes:before {
 	content: "\41";
 }

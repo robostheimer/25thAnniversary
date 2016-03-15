@@ -5,14 +5,16 @@
 TAS_Site.factory('Teacher', ['$http', '$routeParams', '$location', '$rootScope', '$sce',
 function($http, $routeParams, $location, $rootScope, $sce) {
 	return{
+		////uses TAS(Multiple Years) Fusion Table api to bring teachers info in
 		createTeacherList :function(item){
 			var teachers = {data:[], years:[]};
-
 			var year = $location.path().split('/')[1].split('/')[0];
-
 			return $http.jsonp('https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+TeacherLastName%2CTeacherFirstName%2CShipType%2C+Ship%2C+ShipUrl%2C+CruiseURL%2C+Mission%2C+CruiseDates%2C+SubjectsTaught%2C+School%2C+City%2C+State%2C+Image%2C+Grades%2C+SchoolURL%2C+WordPressURL%2C+Year+FROM+1Xh5kWI_ZHd-PZRuPcgrV_oS13HHN6JGtRK4s75Mn+ORDER%20BY+TeacherLastName%22&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK').then(function(result) {
 				if (result.data.rows != undefined) {
 					result.data.rows.forEach(function(item){
+						
+						
+						
         			var o = result.data.rows.indexOf(item);	
         				teachers.data.push({
 							lastname : item[0],
@@ -51,15 +53,14 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 							type :'profile',
 							id:'teacher_'+o,
 							randomnumber: Math.floor(Math.random()*51),
-							description:item[1]+' '+item[0]+'  of '+ item[10]+', ' +item[11]+ ' teaches '+item[8]+' at ' + item[9]+ 'and  will be aboard' + item[2]+' '+item[3]+ ' '+item[5]+ 'while scientist conduct a'+item[6] +' survey'
+							description:item[1]+' '+item[0]+'  of '+ item[10]+', ' +item[11]+ ' teaches '+item[8]+' at ' + item[9]+ 'and  will be aboard' + item[2]+' '+item[3]+ ' '+item[5]+ 'while scientist conduct a'+item[6] +' survey',
+							favorite:'off',
+							href:'/25thAnniversary/$/profile/'+item[16]+'/teacher_'+o
 							});
-							
-							
 					});
 				return teachers;	
 				}
 				else{
-					
 					var year = $location.path().split('/')[1].split('/')[0]
 					return $http.get('/JSONBackups/TeacherFusionTable.json').then(function(result) {
 					forEach (result.data.rows,function(item){
@@ -101,24 +102,20 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 								type :'profile',
 								id:'teacher_'+o,
 								randomnumber: Math.floor(Math.random()*51),
-								
-								
+								favorite:'off',
+								href:'/25thAnniversary/$/profile/'+item[16]+'/teacher_'+o
+							
 							});
 							
 						}
 					});
-					
 					return teachers;
-					
 				});
-
 				}
-				
 			}, function(error) {
 				var teachers = [];
 				var year = $location.path().split('/')[1].split('/')[0]
 				return $http.get('/JSONBackups/TeacherFusionTable.json').then(function(result) {
-					console.log($routeParams.year)
 					result.data.rows.forEach (function(item){
         			var o = result.data.rows.indexOf(item);	if (item[16] == year) {
 							teachers.push({
@@ -156,13 +153,11 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 								type :'profile',
 								id:'teacher_'+o,
 								randomnumber: Math.floor(Math.random()*51),
-								description:item[6] +':'+item[11] +':'+item[3]+':'+item[13]+':'+item[8]+':'+item[9]+':'+item.year+':'+item.city+':'+item.state
-							
+								description:item[6] +':'+item[11] +':'+item[3]+':'+item[13]+':'+item[8]+':'+item[9]+':'+item.year+':'+item.city+':'+item.state,
+								favorite:'off',
+								href:'/25thAnniversary/$/profile/'+item[16]+'/teacher_'+o
 							});
 							teachers.count=result.data.rows.length;
-							
-							
-
 						}
 					});
 					return teachers;
@@ -171,6 +166,7 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 		},
 		wpProfile: function(year, name)
 			{
+				/////Brings in WordPress data for indiv teachers for their feature page
 				return $http.get('/php/xml_json.php?q=' + year + '&n='+name).then(function(result) {
 				///sorts the blogposts by descending date///
 				result.data.items.sort(function(a, b){
@@ -250,9 +246,6 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 									
 									var post_url = WPdata.gallery_images[k].post_url[0];
 									var post_title='View Post';
-									
-									//console.log(gallery_src+':'+gallery_caption+':'+WPdata.gallery_images[k].parent[0]+':'+post_url+':'+post_title);
-										
 									ImagesArr.push(jQuery.parseJSON('{"src":"' + gallery_src + '","id":"' + ImagesArr.length + '","tabIndex":"' + ImagesArr.length + 250 + '","caption":"' + gallery_caption.replace(/&#39;;/g, '\'').replace(/&quos;/g, '\'') + '", "favorite":"off","parent":"' + WPdata.gallery_images[k].parent[0] + '","post_url":"' + post_url + '","matcher":"'+WPdata.gallery_images[k].matcher+'", "post_title":"' + post_title + '"}'));
 									images_url += posturl.replace(/\W/g, '') + ',';
 								}
@@ -272,15 +265,12 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 					var index2 = html.indexOf('[/caption]') + 10;
 					html = html.slice(0, index1) + ' ' + html.slice(index2, html.length);
 					WPdata.items[x].contentSnipp =html.Slicer(380);
-
-					//WPdata.items[x].src = ImagesArr[0];
 					var tmpstr = '';
 					var imagesObj = {};
 					WPdata.items[x].imagesArr = [];
 					WPdata.items[x].CategoriesArr = [];
 					imagesObj.src = '';
 					imagesObj.caption = '';
-
 					if (WPdata.items[x].YouTubeVideos.split(',') != "") {
 						WPdata.YT.push($sce.trustAsResourceUrl('http://www.youtube.com/embed/' + WPdata.items[x].YouTubeVideos.split(',')[0] + '??&rel=0&showinfo=0&autohide=1'));
 					}
@@ -303,14 +293,10 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 
 					}
 				}
-
 				WPdata.Videos = VideosArr;
-
 				WPdata.Images = ImagesArr.removeDuplicatesArrObj('matcher', true)
-
 				return WPdata;
 			});
-
 			},
 		createStateObj : function() {
 			var usStates = [{
@@ -594,25 +580,22 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 				num : 0,
 				isThere : false
 			}];
-
 			return usStates;
-
 		},
-
 	};
 }]);
-TAS_Site.factory('News', ['$http', '$routeParams', '$location', '$rootScope', '$sce',
-function($http, $routeParams, $location, $rootScope, $sce) {
-	return{
-	getNewsData :function(item){
-			///////////////////////////////Start Here////////////////////
-			var news = [];
-			var newsObj = {};
-			newsObj.checkContents = false;
-			return $http.jsonp('https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+ArticleYear%2C+Teacher%2C+MediaOutlet%2C+ArticleTitle%2C+MediaOutletURL%2C+ArticleURL+FROM+1EaTTZDozzJ0k3K2FMoD0O6JAfeiHcc6SB95f0hYv&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK').then(function(result) {
+	TAS_Site.factory('News', ['$http', '$routeParams', '$location', '$rootScope', '$sce',
+	function($http, $routeParams, $location, $rootScope, $sce) {
+		/////////loads News Articles from the News DB Fusion Table api
+		return{
+		getNewsData :function(item){
+				var news = [];
+				var newsObj = {};
+				newsObj.checkContents = false;
+			return $http.jsonp('https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+ArticleYear%2C+Teacher%2C+MediaOutlet%2C+ArticleTitle%2C+MediaOutletURL%2C+ArticleURL+FROM+1-1IHQax0eNNwsWjd8rRtpdxTlukzIMHbZmttKXfF&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK').then(function(result) {
 				if (result.data.rows != undefined) {
-					
 					result.data.rows.forEach (function(item){ 
+						
 					var o =result.data.rows.indexOf(item)
 						news.push({
 							articleyear : item[0],
@@ -632,6 +615,8 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 							src: 'images/newspaper.png',
 							id:'article_'+o,
 							description:item[0]+':'+item[2]+':'+item[3],
+							favorite:'off',
+							href:item[5]
 						});
 
 					});
@@ -659,18 +644,14 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 								src: 'images/newspaper.png',
 								id:'article_'+o,
 								description:item[0]+':'+item[2]+':'+item[3],
+								favorite:'off',
+								href:item[5]
 							});
 
 						});
-					
-					
-					
 				});
 				return news;	
 				}
-				//console.log(news);
-				
-
 			}, function(error) {
 				var news = [];
 				var newsObj = {};
@@ -695,6 +676,8 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 								src: 'images/newspaper.png',
 								id:'article_'+o,
 								description:item[0]+':'+item[2]+':'+item[3],
+								favorite:'off',
+								href:item[5]
 							});
 
 						});
@@ -710,7 +693,7 @@ TAS_Site.factory('AlumniSpot', ['$http', '$routeParams', '$location', '$rootScop
 function($http, $routeParams, $location, $rootScope, $sce) {
 
 	return {
-
+		//////Loads Alumni Spotlight Fusion Table data from api
 		getSpotData : function(region) {
 			var spot = [];
 			return $http.jsonp('https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+FirstName,LastName,ShortBody,LongBody,image,caption,PublishDate,Region+FROM+1z6kUehyfSNqaAGinvARZLYyjb7Dhk2F9rt49xHIV+ORDER%20BY+PublishDate+%22&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK').then(function(result) {
@@ -736,7 +719,6 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 								year: item[6].split('/')[2],					
 								region : item[7],
 								more_url : item[5].replace(/ /g, '_'),
-								hash : '/indiv_spotlight/' + item[0].replace(/ /g, '_') + '_' + item[1].replace(/ /g, '_'),
 								dataloaded : true,
 								tabIndex : 150 + i,
 								classy: 'icon-profile',
@@ -745,20 +727,15 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 								color:'green',
 								type:'article',
 								randomnumber: Math.floor(Math.random()*51),
-								
-								
-
-
-							});
+								favorite:'off',
+								href:'/25thAnniversary/$/article/'+item[6]+'/spot_'+i
+								});
 						}
-
 					});
-					
 				return spot
 				}
 				else{
 					return $http.get('JSONBackups/AlumniSpotlightTable.json').then(function(result) {
-					
 						var d = new Date();
 						var td = d.valueOf();
 						result.data.rows.reverse();
@@ -780,7 +757,6 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 									year: item[6].split('/')[2],
 									region : item[7],
 									more_url : item[5].replace(/ /g, '_'),
-									hash : '/indiv_spotlight/' + item[0].replace(/ /g, '_') + '_' + item[1].replace(/ /g, '_'),
 									dataloaded : true,
 									tabIndex : 150 + i,
 									classy: 'icon-profile',
@@ -789,20 +765,13 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 									color:'green',
 									type:'article',
 									randomnumber: Math.floor(Math.random()*51),
-									
-
+									favorite:'off',
+									href:'/25thAnniversary/$/article/'+item[6]+'/spot_'+i
 								});
 							}
-
-					
-
 					});
-
 					return spot
 				});
-				
-				
-
 			}
 			},function(error){ 
 				return $http.get('JSONBackups/AlumniSpotlightTable.json').then(function(result) {
@@ -828,7 +797,6 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 									year: item[6].split('/')[2],
 									region : item[7],
 									more_url : item[5].replace(/ /g, '_'),
-									hash : '/indiv_spotlight/' + item[0].replace(/ /g, '_') + '_' + item[1].replace(/ /g, '_'),
 									dataloaded : true,
 									tabIndex : 150 + i,
 									classy: 'icon-profile',
@@ -837,14 +805,11 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 									color:'green',
 									type:'article',
 									randomnumber: Math.floor(Math.random()*51),
-									
+									favorite:'off',
+									href:'/25thAnniversary/$/article/'+item[6]+'/spot_'+i
 								});
 							}
-
-					
-
 					});
-
 					return spot;
 				});
 				
@@ -856,11 +821,11 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 
 TAS_Site.factory('PhotosofWeek', ['$http', '$routeParams', '$location', '$rootScope', '$sce',
 function($http, $routeParams, $location, $rootScope, $sce) {
-
+	//////loads the Photos of Week Fusion Table data from  Api
 	return {
 		getPOW :function(item){
 			var pow = [];
-			return $http.jsonp('https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+PhotoURL,PhotoCaption,Facebook,ShortDescription,BlogURL,PhotoCredit,BlogTitle,PublishDate,Keywords,Tweet+FROM+19WBCSYuVJh1O2KaThKQJpLLn0VF6w3rHhbKtZMVf+ORDER%20BY+PublishDate+%22&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK').then(function(result) {
+			return $http.jsonp('https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+PhotoURL,PhotoCaption,BlogQuote,Title,BlogURL,PhotoCredit,BlogTitle,PublishDate,Keywords,Tweet+FROM+1bJsFIm19ENw-U9vkm5B_hA6H_2VxTga2BYWm-CmN+ORDER%20BY+PublishDate+%22&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK').then(function(result) {
 				if (result.data.rows != null) {
 					var d = new Date();
 					var td = d.valueOf();
@@ -891,7 +856,9 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 								color:'yellow',
 								type:'image',
 								randomnumber: Math.floor(Math.random()*51),
-								id:'image_'+i
+								id:'image_'+i,
+								favorite:'off',
+								href:'/25thAnniversary/$/image/'+item[7].split('/')[2]+'/image_'+i
 							});
 						}
 
@@ -931,8 +898,9 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 									color:'yellow',
 									type:'image',
 									randomnumber: Math.floor(Math.random()*51),
-									id:'image_'+i
-
+									id:'image_'+i,
+									favorite:'off',
+									href:'/25thAnniversary/$/image/'+item[7].split('/')[2]+'/image_'+i
 								});
 							}
 
@@ -940,8 +908,6 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 						return pow;
 					});
 				}
-
-				
 			}, function(error){
 				return $http.get('/JSONBAckups/POWFusionTable.json').then(function(result)
 					{
@@ -974,7 +940,9 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 									color:'yellow',
 									type:'image',
 									randomnumber: Math.floor(Math.random()*51),
-									id:'image_'+i
+									id:'image_'+i,
+									favorite:'off',
+									href:'/25thAnniversary/$/image/'+item[7].split('/')[2]+'/image_'+i
 
 								});
 							}
@@ -986,6 +954,7 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 		},
 		getNonPOW: function()
 		{
+			/////Loads photos from before Photos of Week was a part of website (pre-2012) from a Fusion Table
 			var nonpow = [];
 			return $http.jsonp('https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+ShortDescription,PhotoURL,PhotoCredit,BlogURL,BlogTitle,BlogExcerpt,PhotoCaption,Year+FROM+1kdK3LUF2jyyI0GCnoE3TihNmzJnr7azWtMNRdHuw&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK').then(function(result) {
 				if (result.data.rows != null) {
@@ -1011,12 +980,11 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 								color:'yellow',
 								type:'image',
 								randomnumber: Math.floor(Math.random()*51),
-								id:'nonpow_'+i
-
+								id:'nonpow_'+i,
+								favorite:'off',
+								href:'/25thAnniversary/$/image/'+item[7]+'/image_'+i
 							});
 					});
-
-					
 				return nonpow
 				}
 				else{
@@ -1042,8 +1010,9 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 								color:'yellow',
 								type:'image',
 								randomnumber: Math.floor(Math.random()*51),
-								id:'nonpow_'+i
-
+								id:'nonpow_'+i,
+								favorite:'off',
+								href:'/25thAnniversary/$/image/'+item[7]+'/image_'+i
 							});
 						});
 						return nonpow
@@ -1073,8 +1042,9 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 								color:'yellow',
 								type:'image',
 								randomnumber: Math.floor(Math.random()*51),
-								id:'nonpow_'+i
-
+								id:'nonpow_'+i,
+								favorite:'off',
+								href:'/25thAnniversary/$/image/'+item[7]+'/image_'+i
 							});
 						});
 						return nonpow
@@ -1088,6 +1058,7 @@ TAS_Site.factory('Quotes', ['$http', '$routeParams', '$location', '$rootScope', 
 function($http, $routeParams, $location, $rootScope, $sce){
 return{
 	getQuotesData :function(item){
+		/////Loads Teacher Quotes data from the Quotes Fusion Table api
 			var quotes = [];
 			return $http.jsonp('https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+Teacher,Quote, Year,PhotoUrl+FROM+1dLPLwT20qdY3hYfgwO1nUTfRhzsX1aSXcPfCZKZ8&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK').then(function(result) {
 				if (result.data.rows != null) {
@@ -1107,7 +1078,9 @@ return{
 						quote : item[1],
 						teacher:item[0],
 						src:item[3].split('?')[0],
-						headline:item[1]
+						headline:item[1],
+						favorite:'off',
+						href:'/25thAnniversary/$/image/'+item[2]+'/quote'+i
 						});
 					});
 				return quotes;
@@ -1129,7 +1102,9 @@ return{
 						quote : item[1],
 						teacher:item[0],
 						src:item[3].split('?')[0],
-						headline:item[1]
+						headline:item[1],
+						favorite:'off',
+						href:'/25thAnniversary/$/image/'+item[2]+'/quote'+i
 						});
 						return quotes;
 					});
@@ -1154,7 +1129,9 @@ return{
 						quote : item[1],
 						teacher:item[0],
 						src:item[3].split('?')[0],
-						headline:item[1]
+						headline:item[1],
+						favorite:'off',
+						href:'/25thAnniversary/$/image/'+item[2]+'/quote'+i
 						});
 						return quotes;
 					});
@@ -1169,7 +1146,7 @@ function($http, $routeParams, $location, $rootScope, $sce){
 return{
 	getLessonData : function(teachername) {
 			
-			
+			/////Loads Lessons data from Lessons DB Fusion Table api
 
 			return $http.jsonp('https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+LastName%2CFirstName%2CState%2C+YearSailed%2C+GradeLevel%2C+Size%2C+Title%2C+Keywords%2C+Objective%2C+Description%2C+URL%2c+Topics+FROM+17OXuyYjiIvxjr1Yd3DZ-SI-dzp-soOuTDNOHoSOA&key=AIzaSyBBcCEirvYGEa2QoGas7w2uaWQweDF2pi0&callback=JSON_CALLBACK').then(function(result) {
 				if (result.data.rows != undefined) {
@@ -1201,7 +1178,9 @@ return{
 							color:'dkstblue',
 							type:'lesson',
 							src: 'images/chalkboard.png',
-							randomnumber: Math.floor(Math.random()*51)
+							randomnumber: Math.floor(Math.random()*51),
+							favorite:'off',
+							href: item[10]
 						});
 						
 					});
@@ -1241,7 +1220,9 @@ return{
 								color:'dkstblue',
 								type:'lesson_',
 								src: 'images/chalkboard.png',
-								randomnumber: Math.floor(Math.random()*51)
+								randomnumber: Math.floor(Math.random()*51),
+								favorite:'off',
+								href: item[10]
 
 							});
 						}
@@ -1288,9 +1269,9 @@ return{
 								color:'dkstblue',
 								type:'lesson',
 								src: 'images/chalkboard.png',
-								randomnumber: Math.floor(Math.random()*51)
-
-
+								randomnumber: Math.floor(Math.random()*51),
+								favorite:'off',
+								href: item[10]
 							});
 						}
 					});
@@ -1308,6 +1289,7 @@ function($http, $routeParams, $q, Teacher) {
 			
 			correlateStats:function(teachers, years, stats)
 			{
+				/////Adds up stats for TAS over the years given info that was created by controller from the TAS (Multiple Years) controller
 				var obj={}
 				var arr =[];
 				var deferred=$q.defer();
@@ -1319,6 +1301,7 @@ function($http, $routeParams, $q, Teacher) {
 							
 							if(stats[x]!=undefined &&stats[x].year==years[i].year){
 						
+							stats[x].favorite='off';
 							stats[x].map={}	;
 							stats[x].map.statesArr=Teacher.createStateObj();
 							stats[x].teachers=obj2	;
@@ -1328,6 +1311,7 @@ function($http, $routeParams, $q, Teacher) {
 							stats[x].students= obj2.length*100*5;
 							stats[x].id='stat'+(x).toString();
 							stats[x].map.states=[];
+							stats[x].href='/25thAnniversary/$/cards'
 							obj2.forEach(function(teacher){
 								
 								stats[x].map.type='stat';
@@ -1339,7 +1323,11 @@ function($http, $routeParams, $q, Teacher) {
 								stats[x].map.classy= 'icon-stats';
 								stats[x].map.headline="Map for "+years[i].year
 								stats[x].map.states.push(teacher.state);
+								stats[x].map.favorite='off';
+								stats[x].map.href='/25thAnniversary/$/cards'
 								stats[x].number = x;
+								stats[x].map.src= 'images/stats.png';
+								stats[x].map.description= years[i].year+ ' Teachers at Sea by state';
 									stats[x].map.statesArr.forEach(function(state){
 										if(state.abbreviation==teacher.state)
 										{
@@ -1374,6 +1362,7 @@ function($http, $routeParams, $q, Teacher) {
 			},
 			wpStats: function(years)
 			{
+				//////////////Looks for the number of posts and images from a certain year using the xml_json_25th.php file
 				var yearStr='';
 				years.forEach(function(year){
 					yearStr+=year.year+'$$$';
@@ -1382,7 +1371,6 @@ function($http, $routeParams, $q, Teacher) {
 				var obj={posts:[], images:[], stats:[]}
 
 				return $http.get('/php/xml_json_25th.php?q='+yearStr).then(function(result){
-			
 				years.forEach(function(year){
 					var arr=[];
 					arr.year=Number();
@@ -1412,7 +1400,6 @@ function($http, $routeParams, $q, Teacher) {
 						
 
 					});
-					//console.log(result.data.images)
 					result.data.images.forEach(function(image){
 					
 					image.year=new Date(image.date["0"]).getFullYear();					
@@ -1437,43 +1424,15 @@ function($http, $routeParams, $q, Teacher) {
 							year:year.year,
 							template:'stat',
 							classy:'icon-stats',
-							headline:'Stats for ' +year.year.toString()
+							headline:'Stats for ' +year.year.toString(),
+							src: 'images/stats.png',
+							description: year.year+ ' Teachers at Sea Stats'
 							});
 					
 				});
 				return obj;	
 				
-				/*if(typeof(result.data)=='object')
-				{
-					obj.posts = result.data.items.length;
-					obj.images=result.data.gallery_images.length;
-					obj.type='stat';
-					obj.colorCode='140, 199, 192';
-					obj.color='ltgreen';
-					obj.year=year.year;
-					obj.template='stat';
-					obj.classy= 'icon-stats';
-					obj.headline=year.year;
-					
-					return obj;
-				}
-				else{
-					
-					obj.year=year.year;
-					obj.posts =Number();
-					obj.images=Number();
-					obj.type='stat';
-					obj.colorCode='140, 199, 192';
-					obj.color='ltgreen';
-					obj.template='stat';
-					obj.classy= 'icon-stats';
-					obj.headline=year.year;
-					return obj;
-				}*/
 				
-				
-				//deferred.resolve(obj);
-				//return deferred.promise;	
 				});
 			}
 			
@@ -1486,42 +1445,32 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 	return{
 		getTimelineData:function()
 		{
+		////////////loads timeline data from a local JSON file	
 		return $http.get('json/timeline.json').then(function(data){
-				var items= (data.data.feed.entry);
-				/*var td = new Date();
-				var bd = {};
-				bd.utcDate =new Date(data.data.feed.entry[0].date.$t);
-				bd.year = bd.utcDate.getFullYear();
-				bd.years = td.getFullYear() -bd.year;
-				var number = 0;
-				var month=0;
-				var year = bd.year;
-				
-				var months = 12*bd.years;*/
-				
+				var items= (data.data.feed.entry),
+				tmpTxt='',
+				td=new Date();
 				items.years=[];
-				var tmpTxt=''
-				
 				items.forEach( function(item)
 				{
-					if(!tmpTxt.match(item.gsx$year.$t))
+					var cutoffdate = new Date(item.gsx$date.$t);
+					if(!tmpTxt.match(item.gsx$year.$t)&& cutoffdate.valueOf()<td.valueOf())
 					{
 						items.years.push(
 							{'year':item.gsx$year.$t, 'state': 'notselected', color:item.gsx$color.$t, classy:'hider',noSubnav:true,
 								subNav :[
-								{type:"article", state:'notselected', checked:'notselected', color:'green', 'year':item.gsx$year.$t, on_off:'off','classy':'icon-newspaper green' }, 
-								{type:"image",state:'notselected', checked:'notselected', color:'yellow', 'year':item.gsx$year.$t, on_off:'off','classy':'icon-images yellow' },
-								{type:'profile', state:'notselected', checked:'notselected', color:'dkblue', 'year':item.gsx$year.$t, on_off:'off', 'classy':'icon-profile dkblue' },
-								{type:"quote", state:'notselected', checked:'notselected', color:'blue', 'year':item.gsx$year.$t, on_off:'off', 'classy':'icon-bubble blue' },  
-								{type:"lesson", state:'notselected', checked:'notselected', color:'dkstblue', 'year':item.gsx$year.$t, on_off:'off', 'classy':'icon-chalkboard2 dkstblue' }, 
-								{type:"stat", state:'notselected', checked:'notselected', color:'ltgreen', 'year':item.gsx$year.$t, on_off:'off', 'classy':'icon-stats ltgreen' }, 
+								{type:"article", state:'notselected', checked:'notselected', color:'green', 'year':item.gsx$year.$t, on_off:'off','classy':'icon-newspaper' }, 
+								{type:"image",state:'notselected', checked:'notselected', color:'yellow', 'year':item.gsx$year.$t, on_off:'off','classy':'icon-images ' },
+								{type:'profile', state:'notselected', checked:'notselected', color:'dkblue', 'year':item.gsx$year.$t, on_off:'off', 'classy':'icon-profile' },
+								{type:"quote", state:'notselected', checked:'notselected', color:'blue', 'year':item.gsx$year.$t, on_off:'off', 'classy':'icon-bubble' },  
+								{type:"lesson", state:'notselected', checked:'notselected', color:'dkstblue', 'year':item.gsx$year.$t, on_off:'off', 'classy':'icon-chalkboard2' }, 
+								{type:"stat", state:'notselected', checked:'notselected', color:'ltgreen', 'year':item.gsx$year.$t, on_off:'off', 'classy':'icon-stats' }, 
 								]
 						});
 					}
 					tmpTxt+=item.gsx$year.$t+',';
 					
 				});
-				//console.log(items)
 				return items;
 		});	
 		
@@ -1531,7 +1480,7 @@ function($http, $routeParams, $location, $rootScope, $sce) {
 
 TAS_Site.factory('BrowseSearch', ['$q', function( $q){
 	return{
-		
+		////////////runs a specific filter on data
 		SearchData :function(arr, query, properties, checkDupProperty)
 		{
 		var deferred = $q.defer();
@@ -1552,4 +1501,133 @@ TAS_Site.factory('BrowseSearch', ['$q', function( $q){
 		return deferred.promise;	
 		}
 	};	
+}]);
+
+
+TAS_Site.factory('Favorites', ['$http', '$routeParams', '$location', '$rootScope', '$sce',
+function($http, $routeParams, $location, $rootScope, $sce) {
+	return {
+		////looks through localStorage and adds items to FavoritesArr
+		addFavorites:function()
+		{
+			if(localStorage.getItem('FavoriteArr25th')!=null && localStorage.getItem('FavoriteArr25th')!='')
+			{
+				var favorites = jQuery.parseJSON(localStorage.getItem('FavoriteArr25th'))
+
+			}
+			else
+			{
+				favorites=[];
+				//favorites.blogHider=true;
+			}
+			favorites.forEach(function(favorite)
+				{
+					favorite.num_id=favorites.indexOf(favorite);
+				});
+			localStorage.setItem('FavoriteArr25th', JSON.stringify(favorites));
+		},
+		checkFavorites: function(obj)
+		{
+			////runs through localStorage's FavoritesArr object and checks items against it to see if they are starred
+			if(localStorage.getItem('FavoriteArr25th')!=null && localStorage.getItem('FavoriteArr25th')!='')
+			{
+				var favoritesArr = jQuery.parseJSON(localStorage.getItem('FavoriteArr25th'))
+				
+			}
+			else
+			{
+			favoritesArr=[];
+			}
+			favoritesArr.forEach(function(favorite)
+			{
+				favorite.favorite='off';
+				if(favorite.id==obj.id)
+				{
+					obj.favorite='on';
+				}
+				
+
+			});
+		},
+		///////////Sets up favorites for sharing via email and social media
+		setUpEmail : function() {
+			var favorites = [];
+			var emailTxt = '';
+			var imagesTxt = '';
+			var lessonsTxt = '';
+			var finalTxt = '';
+			if (localStorage.getItem('FavoriteArr25th') != null && localStorage.getItem('FavoriteArr25th') != '') {
+				var favorites = jQuery.parseJSON(localStorage.getItem('FavoriteArr25th'));
+
+			} else {
+				var favorites = [];
+			}
+
+			
+
+			for (var x = 0; x < favorites.length; x++) {
+				
+				var mailImg = favorites[x].src;
+				var mailUrl =  encodeURIComponent(favorites[x].href)
+				
+				var mailTitle = favorites[x].headline;
+				emailTxt += mailImg + '**' + mailUrl + '**' + mailTitle + '@@'
+			}
+			
+
+			finalTxt = '&message=' + emailTxt//&dyk=';
+			
+
+			return finalTxt;
+		},
+		////////creates short url for sharing
+		getBitLy : function(url) {
+			var bitly = 'http://api.bitly.com/v3/shorten?format=json&apiKey=R_06ae3d8226a246f2a0bb68afe44c8379&login=robostheimer&longUrl=' + url
+			return $http.get(bitly).then(function(result) {
+				
+				return result.data.data;
+			});
+		}
+	};
+}]);
+
+
+TAS_Site.factory('Sharer', ['$http', '$routeParams', '$location', '$rootScope', '$sce','$q',
+function($http, $routeParams, $location, $rootScope, $sce, $q) {
+	/////////Used for sharing on Facebooks sharer api.
+	///////necessary because with the FB API, the above Favorites.setUpEmail method does not work
+	return {
+			getCards:function(){
+			var deferred = $q.defer();	
+			var emailTxt='';
+			
+			if(localStorage.getItem('FavoriteArr25th')!=null && localStorage.getItem('FavoriteArr25th')!='')
+			{
+				var favoritesArr = jQuery.parseJSON(localStorage.getItem('FavoriteArr25th'))
+				
+			}
+			else
+			{
+			favoritesArr=[];
+				//favorites.blogHider=true;
+			}	
+			
+			favoritesArr.forEach(function(favorite)
+			{
+				
+				var mailImg = favorite.src;
+				var mailUrl =  favorite.type+'$$$'+favorite.year+'$$$'+favorite.id				
+				var mailTitle = favorite.headline;
+				emailTxt +=mailTitle+'**'+ mailImg + '**' + mailUrl + '@@'
+			});
+			
+			deferred.resolve(emailTxt)
+			return deferred.promise;
+		},
+		parseUrl:function(url){
+			var deferred = $q.defer();
+			var url = url.split('/')[3];
+			
+		}
+	};
 }]);

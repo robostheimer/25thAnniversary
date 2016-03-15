@@ -1,0 +1,116 @@
+<section ng-show="isLoadding==true" class="feature-big-loader"></section>
+<section ng-hide = "isLoading==true" id = 'image0' class="stage_container_card" feature-image-big="https://teacheratsea.files.wordpress.com/2015/03/nsta-chicago.jpg" color='4, 146, 206' blend='overlay' alpha='1'>
+	<section>
+
+	</section>
+</section>
+
+<section class="internal_search">
+	
+		
+	<section class="clear"></section>
+	<section  ng-repeat ="item in viewButtons" class="view {{item.state}}" ng-click="controlViews(item.name)">
+			<span class="icon-{{item.name}}"></span>
+			
+		</section>
+	
+		<section  class="view {{item.state}}"  ng-click="toggleButtons(item, item.state)" ng-repeat ="item in orderButtons">
+			<span class="{{item.classy}}"></span>
+			<section class="sortby"> 
+					<ul class="{{item.order}}" event-delegate="li | reOrder(active, item.order, item);" type="click">
+					<li ng-repeat="active in active_types" class="active.state">{{active.name}}</li>
+				</ul>
+			</section>
+	</section>
+	
+	</section>
+	
+
+	
+	
+
+
+
+
+<section class="container" ng-model="viewButtons" ng-hide="viewButtons[0].state=='off' " >
+		
+<div ng-show="hideMap==false"  class="bigImg">
+	<div class="bigImgClose" ng-click="hideMap=true"><img style="cursor:pointer" alt="collapse button_bigger_white" class="icon" src="/images/collapse_btn_bigger_white.png" height="30" width="30">
+	</div>	<div style="max-width:650px; margin:auto">
+
+		
+		<div class="svg_us" ng-include="'svg/Big_US_Map.svg'" imgaeonload></div>
+	</div>
+	<div class="caption" id="bigCaption" style="font-size:15px">
+		<em>States represented by {{map.year}} teachers</em>
+		
+		
+	</div>
+
+	
+</div>
+
+	<section ng-show="loading==true" class="preloader" />
+	<!--------Cards View-------------->
+	<section id="nofilter"  class="stage" body-height  infinite-scroll = "addMore()" infinite-scroll-distance="5" elmwin = 'elem' child='unfiltered'>
+		
+		<section class="row" id="unfiltered" ng-hide="loading==true"  type="click">
+			
+			<section  ng-repeat ="item in favorites" class="card" event-delegate="ca-rd section div.icon_right.favorite |favoriteClick(item)" type="click">
+
+				<ca-rd type="{{item.template}}" number="{{number}}" ></ca-rd>
+			</section>
+
+		</section>
+	</section>
+	<section ng-show="loading_more==true" class="preloader" />
+
+</section>
+<section class="container" ng-model="viewButtons"  ng-hide="viewButtons[1].state=='off'" >
+	<div ng-show="hideMap==false"  class="bigImg">
+	<div class="bigImgClose" ng-click="hideMap=true"><img style="cursor:pointer" alt="collapse button_bigger_white" class="icon" src="/images/collapse_btn_bigger_white.png" height="30" width="30">
+	</div>	<div style="max-width:650px; margin:auto">
+
+		
+		<div class="svg_us" ng-include="'svg/Big_US_Map.svg'" imgaeonload></div>
+	</div>
+	<div class="caption" id="bigCaption" style="font-size:15px">
+		<em>States represented by {{map.year}} teachers</em>
+		
+		
+	</div>
+
+	
+</div>
+
+<!--------List View-------------->
+	<section id="nofilter-list" body-height style="height: {{wHeight}}" class="stage" infinite-scroll = "addMore()" infinite-scroll-distance="5" elmwin = 'elem' child='unfiltered-table'>		
+		<section id= "unfiltered-table" ng-hide="loading==true" >
+            <table  >
+              <thead>
+                <tr>
+                  <th>Headline</th>
+                  <th>Year</th>
+                  <th>Thumbnail</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr  ng-repeat = "item in favorites">
+                  
+                  <td  class="{{item.color}} headline"><a href="#/{{item.type}}/{{item.year}}/{{item.id}}">{{item.headline}}</a></td>
+                  <td  class="{{item.color}} year">{{item.year}}</td>
+                  <td  class="{{item.color}} thumb"><span class="loading"> <img src="/images/NOAA-Logo.gif" class="no-border"/></span><img imageonload src="{{item.src}}?w=75"/ alt= "{{item.headline}}"></td>
+                  <td  class="{{item.color}} elipsis" ng-bind-html="item.description"></td>
+                  
+                </tr>
+               
+              </tbody>
+            </table>
+          </section>
+         
+	</section>
+	
+</section>	
+<navi-gation></navi-gation>
+<section class="clear"></section>
